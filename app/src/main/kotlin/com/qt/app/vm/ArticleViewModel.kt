@@ -1,43 +1,48 @@
 package com.qt.app.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.qt.app.api.Api
 import com.qt.app.api.ds.Repo
 import com.qt.app.api.dto.ArticleParamDTO
 import com.qt.app.api.vo.ArticleVO
+import com.qt.app.util.Util
 import com.qt.app.util.Util.toMap
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.jsoup.Jsoup
+import javax.inject.Inject
 
-class ArticleViewModel : ViewModel() {
+@HiltViewModel
+class ArticleViewModel @Inject constructor(
+    repo: Repo
+) : ViewModel() {
     private val service = Api.acfunArticleService
     private val detailService = Api.acfunArticleDetailService
 
-    private var _articleList = MutableLiveData<MutableList<ArticleVO>>()
-    val articleList: LiveData<MutableList<ArticleVO>> = _articleList
+    private val _articleList = MutableStateFlow<MutableList<ArticleVO>>(mutableListOf())
+    val articleList = _articleList.asStateFlow()
 
 
-    val list0 = Repo.getArticleList(0).cachedIn(viewModelScope)
-    val list1 = Repo.getArticleList(1).cachedIn(viewModelScope)
-    val list2 = Repo.getArticleList(2).cachedIn(viewModelScope)
-    val list3 = Repo.getArticleList(3).cachedIn(viewModelScope)
+    private val list0 = repo.getArticleList(0).cachedIn(viewModelScope)
+    private val list1 = repo.getArticleList(1).cachedIn(viewModelScope)
+    private val list2 = repo.getArticleList(2).cachedIn(viewModelScope)
+    private val list3 = repo.getArticleList(3).cachedIn(viewModelScope)
 
     val dataList = arrayOf(list0, list1, list2, list3)
 
-    private val _articleContent = MutableLiveData<ArticleDetail>()
-    val articleContent: LiveData<ArticleDetail> = _articleContent
+    private val _articleContent = MutableStateFlow<ArticleDetail?>(null)
+    val articleContent = _articleContent.asStateFlow()
 
     suspend fun getArticleList(next: Boolean = false) {
         val dto = ArticleParamDTO()
         val data = service.getArticlePage(dto.toMap()).data
-        _articleList.postValue(data!!)
+        _articleList.emit(data!!)
     }
 
-    private val gson = Gson()
 
     suspend fun getArticleDetail(articleId: String) {
         val data = detailService.getArticleDetail(articleId)
@@ -52,8 +57,8 @@ class ArticleViewModel : ViewModel() {
             if (content[content.lastIndex] == ';') {
                 content = content.substring(0, content.length - 1)
             }
-            val detail = gson.fromJson(content, ArticleDetail::class.java)
-            _articleContent.postValue(detail)
+            val detail = Util.gson.fromJson(content, ArticleDetail::class.java)
+            _articleContent.emit(detail)
         }
     }
 

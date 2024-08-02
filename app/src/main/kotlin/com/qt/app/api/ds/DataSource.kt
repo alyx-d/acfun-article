@@ -12,10 +12,12 @@ import com.qt.app.api.realmIdList
 import com.qt.app.api.vo.ArticleVO
 import com.qt.app.util.Util.toMap
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
 
 class DataSource(val service: AcfunArticleService, var tabId: Int = 0) : PagingSource<String, ArticleVO>() {
-    override fun getRefreshKey(state: PagingState<String, ArticleVO>): String? {
-        return null
+    override fun getRefreshKey(state: PagingState<String, ArticleVO>): String {
+        return "first_page"
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, ArticleVO> {
@@ -26,7 +28,7 @@ class DataSource(val service: AcfunArticleService, var tabId: Int = 0) : PagingS
             }.toMap()
             val response = service.getArticlePage(formData, realmIdList[tabId])
             LoadResult.Page(
-                data = response.data!!,
+                data = response.data ?: listOf(),
                 prevKey = if (currentKey == "first_page") null else currentKey,
                 nextKey = response.cursor
             )
@@ -36,7 +38,7 @@ class DataSource(val service: AcfunArticleService, var tabId: Int = 0) : PagingS
     }
 }
 
-object Repo {
+class Repo @Inject constructor() {
     fun getArticleList(tabId: Int): Flow<PagingData<ArticleVO>> {
         return Pager(
             config = PagingConfig(pageSize = 10),

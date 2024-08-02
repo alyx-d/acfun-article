@@ -1,63 +1,79 @@
 package com.qt.app.ui.home
 
-import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import com.qt.app.R
 import com.qt.app.vm.ArticleViewModel
 import org.jsoup.Jsoup
 
 @Composable
-fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStackEntry) {
+fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackStackEntry) {
     val articleId = backStackEntry.arguments?.getString("articleId")
-    val vm = viewModel(ArticleViewModel::class.java)
-    val articleDetail by vm.articleContent.observeAsState()
-    LaunchedEffect("key") {
+    val vm = hiltViewModel<ArticleViewModel>()
+    val articleDetail by vm.articleContent.collectAsState()
+    LaunchedEffect(articleDetail) {
         articleId?.let {
             vm.getArticleDetail(it)
         }
     }
-    articleDetail?.let {
+    if (articleDetail == null) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                modifier = Modifier.size(150.dp)
+                    .align(Alignment.Center),
+                painter = rememberAsyncImagePainter(R.drawable.loading_ac),
+                contentDescription = "loading",
+                contentScale = ContentScale.Fit)
+        }
+    }else {
+        val it = articleDetail!!
         Column(
             modifier = Modifier
                 .padding(10.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(text = it.title, fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
+            Text(
+                text = it.title, fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
                 modifier = Modifier.padding(bottom = 10.dp)
             )
             val html = Jsoup.parseBodyFragment(it.parts[0].content)
             html.allElements.forEach { el ->
-                if (el.nameIs("p") && el.text().isNotBlank()) {
+                if ((el.nameIs("p") || el.nameIs("div")) && el.text().isNotBlank()) {
                     Text(text = el.text())
-                }else if (el.nameIs("div") && el.text().isNotBlank()){
-                    Text(text = el.text())
-                }
-                else if(el.nameIs("img")) {
+                } else if (el.nameIs("img")) {
                     AsyncImage(
                         modifier = Modifier.fillMaxWidth(),
                         model = el.attr("src"), contentDescription = "",
-                        contentScale = ContentScale.FillWidth)
+                        contentScale = ContentScale.FillWidth
+                    )
                 }
             }
         }
     }
 }
+
+
