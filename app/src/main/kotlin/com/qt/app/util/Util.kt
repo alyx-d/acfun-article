@@ -30,16 +30,16 @@ object Util {
         .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
         .create()
 
-    fun <T> T.toMap(): Map<String, String> {
+    // 备用
+    private fun <T> T.ToMap(): Map<String, String> {
         val map = mutableMapOf<String, String>()
         return gson.fromJson(gson.toJson(this), map::class.java)
     }
 
-    // 开启压缩的情况下 无法使用反射
-    fun <T> T.ToMap(): Map<String, String> {
+    fun <T> T.toMap(): Map<String, String> {
         return mutableMapOf<String, String>().apply {
-            this@ToMap!!::class.members.filterIsInstance<KProperty1<T, *>>().forEach {
-                this[it.name] = it.get(this@ToMap).toString()
+            this@toMap!!::class.members.filterIsInstance<KProperty1<T, *>>().forEach {
+                this[it.name] = it.get(this@toMap).toString()
             }
         }
     }
