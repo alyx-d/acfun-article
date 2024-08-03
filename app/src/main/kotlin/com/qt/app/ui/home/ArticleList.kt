@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -50,11 +49,12 @@ fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEn
             val it = articleList[idx] ?: return@items
             Column(
                 modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(10.dp))
-                    .padding(10.dp)
                     .clickable {
                         navController.navigate("${Route.ArticleDetail.name}/${it.articleId}")
                     }
+                    .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(10.dp))
+                    .padding(10.dp)
+
             ) {
                 Row {
                     Text(
@@ -82,19 +82,22 @@ fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEn
                 }
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(top = 5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row {
+                    Row{
                         Text(
                             text = "UP:",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
+                            fontSize = 8.sp,
+                            modifier = Modifier
+                                .alignByBaseline()
                         )
                         Text(
                             text = it.userName,
                             fontSize = 14.sp,
-                            modifier = Modifier.widthIn(max = 150.dp),
+                            modifier = Modifier.widthIn(max = 150.dp)
+                                .alignByBaseline(),
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
                         )
@@ -102,8 +105,6 @@ fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEn
                     Text(
                         text = Util.dateFormat(it.createTime),
                         fontSize = 12.sp,
-                        modifier = Modifier
-                            .padding(start = 5.dp, top = 2.dp)
                     )
                 }
             }

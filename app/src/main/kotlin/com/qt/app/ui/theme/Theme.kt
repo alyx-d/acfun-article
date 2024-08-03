@@ -16,6 +16,7 @@ private val DarkColorScheme = darkColorScheme(
     secondary = PurpleGrey80,
     tertiary = Pink80,
     background = Color(0xFF1C1B1F),
+    surface = Color(0xFF1F1F20)
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -27,14 +28,14 @@ private val LightColorScheme = lightColorScheme(
 
     */
     background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    surface = Color(0xDAEEEEEE),
 )
 
 @Composable
 fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
