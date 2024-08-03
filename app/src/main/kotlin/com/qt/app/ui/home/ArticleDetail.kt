@@ -1,5 +1,7 @@
 package com.qt.app.ui.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,18 +19,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.decode.ImageDecoderDecoder
 import com.qt.app.R
 import com.qt.app.vm.ArticleViewModel
 import org.jsoup.Jsoup
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackStackEntry) {
     val articleId = backStackEntry.arguments?.getString("articleId")
@@ -40,15 +46,21 @@ fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackS
         }
     }
     if (articleDetail == null) {
+        val context = LocalContext.current
+        val imageLoader = ImageLoader.Builder(context)
+            .components { add(ImageDecoderDecoder.Factory()) }
+            .build()
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
-                modifier = Modifier.size(150.dp)
+                modifier = Modifier
+                    .size(150.dp)
                     .align(Alignment.Center),
-                painter = rememberAsyncImagePainter(R.drawable.loading_ac),
+                painter = rememberAsyncImagePainter(R.drawable.loading_ac, imageLoader),
                 contentDescription = "loading",
-                contentScale = ContentScale.Fit)
+                contentScale = ContentScale.Fit,
+            )
         }
-    }else {
+    } else {
         val it = articleDetail!!
         Column(
             modifier = Modifier
