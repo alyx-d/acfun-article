@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import java.time.Instant
 
 data class CommentListParamDTO(
-    var sourceId: Int, // 评论ID
+    var sourceId: String, // 评论ID
     var sourceType: Int = 3,
     var page: Int = 1,
     var pivotCommentId: Int = 0,

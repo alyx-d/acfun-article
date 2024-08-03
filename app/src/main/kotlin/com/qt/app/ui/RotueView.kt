@@ -12,7 +12,6 @@ import androidx.navigation.navArgument
 import com.qt.app.ui.article.ArticleDetail
 import com.qt.app.ui.article.ArticleList
 
-@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun RouteView(navController: NavHostController, modifier : Modifier) {
     NavHost(

@@ -19,9 +19,9 @@ class ArticleCommentViewModel @Inject constructor(
     private val _commentList: MutableStateFlow<PagingData<Comment>> = MutableStateFlow(PagingData.empty())
     val commentList = _commentList.asStateFlow()
 
-    suspend fun getCommentList(sourceId: Int) {
-        repo.getArticleCommentList(sourceId).cachedIn(viewModelScope).collect {
-            _commentList.emit(it)
+    suspend fun getCommentList(sourceId: String) {
+        repo.getArticleCommentList(sourceId).cachedIn(viewModelScope).collect { data ->
+            _commentList.emit(data)
         }
     }
 }

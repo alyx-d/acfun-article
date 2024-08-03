@@ -24,6 +24,14 @@ data class Comment(
     var userHeadImgInfo: UserHeadImgInfo,
     var replyTo: Int,
     var replyToUserName: String,
+    var floor: Int,
+    var deviceModel: String,
+    var headUrl: List<HeadUrl>,
+    var info: CommentPage, // 保留信息
+)
+
+data class HeadUrl(
+    var url: String,
 )
 
 data class UserHeadImgInfo (

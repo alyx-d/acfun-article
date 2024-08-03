@@ -1,7 +1,10 @@
 package com.qt.app.util
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.content.Context
+import android.os.Build.VERSION.SDK_INT
+import coil.ImageLoader
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import com.google.gson.GsonBuilder
 import com.google.gson.ToNumberPolicy
 import com.qt.app.api.dto.ArticleListParamDTO
@@ -17,7 +20,11 @@ fun main() {
 }
 
 object Util {
-    val dateFormater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    private val dateFormater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+    fun imageLoader(context: Context) = ImageLoader.Builder(context)
+        .components { add(if (SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory()) }
+        .build()
 
     fun dateFormat(value: Long): String {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.of("UTC+8"))

@@ -9,8 +9,9 @@ import com.qt.app.util.Util.toMap
 
 class ArticleCommentsDataSource(
     private val service: AcfunArticleCommentsService,
-    private val sourceId: Int,
+    private val sourceId: String,
 ) : PagingSource<Int, Comment>() {
+
     override fun getRefreshKey(state: PagingState<Int, Comment>): Int {
         return 1
     }
@@ -23,7 +24,7 @@ class ArticleCommentsDataSource(
             val data = service.getArticleCommentList(param)
             return if (data.curPage > data.totalPage) LoadResult.Error(RuntimeException("无更多数据"))
             else LoadResult.Page(
-                data = data.rootComments,
+                data = data.rootComments.onEach { item -> item.info = data },
                 prevKey = if (currPage == 1) null else currPage - 1,
                 nextKey = currPage + 1
             )

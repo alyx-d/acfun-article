@@ -22,7 +22,8 @@ class Repo @Inject constructor() {
         return Api.acfunArticleDetailService.getArticleDetail(articleId)
     }
 
-    fun getArticleCommentList(sourceId: Int): Flow<PagingData<Comment>> {
+
+    fun getArticleCommentList(sourceId: String): Flow<PagingData<Comment>> {
         return Pager(
             config = PagingConfig(pageSize = 50),
             pagingSourceFactory = { ArticleCommentsDataSource(Api.acfunArticleCommentsService, sourceId) }
