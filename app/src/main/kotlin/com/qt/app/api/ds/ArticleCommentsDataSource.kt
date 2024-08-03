@@ -12,8 +12,8 @@ class ArticleCommentsDataSource(
     private val sourceId: String,
 ) : PagingSource<Int, Comment>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Comment>): Int {
-        return 1
+    override fun getRefreshKey(state: PagingState<Int, Comment>): Int? {
+        return null
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> {
@@ -22,11 +22,10 @@ class ArticleCommentsDataSource(
             val param = CommentListParamDTO(sourceId).apply { page = currPage }
                 .toMap()
             val data = service.getArticleCommentList(param)
-            return if (data.curPage > data.totalPage) LoadResult.Error(RuntimeException("无更多数据"))
-            else LoadResult.Page(
+            LoadResult.Page(
                 data = data.rootComments.onEach { item -> item.info = data },
                 prevKey = if (currPage == 1) null else currPage - 1,
-                nextKey = currPage + 1
+                nextKey = if (data.rootComments.isNotEmpty()) currPage + 1 else null
             )
         } catch (ex: Exception) {
             LoadResult.Error(ex)

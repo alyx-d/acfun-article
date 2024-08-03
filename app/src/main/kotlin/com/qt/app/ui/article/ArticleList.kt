@@ -36,17 +36,14 @@ fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEn
     val vm = hiltViewModel<ArticleViewModel>()
     val arguments = backStackEntry.arguments!!
     val tabId = arguments.getInt("tabId")
-    val articleList = vm.articleList.collectAsLazyPagingItems()
-    LaunchedEffect(tabId) {
-        vm.getArticleList(tabId)
-    }
+    val articleList = vm.articleListTab[tabId].collectAsLazyPagingItems()
     LazyColumn(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface),
         contentPadding = PaddingValues(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        items(articleList.itemCount, { idx -> articleList[idx]?.articleId!! }) { idx ->
+        items(articleList.itemCount) { idx ->
             val it = articleList[idx] ?: return@items
             Column(
                 modifier = Modifier

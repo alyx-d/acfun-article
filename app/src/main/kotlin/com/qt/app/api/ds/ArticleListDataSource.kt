@@ -16,21 +16,25 @@ import javax.inject.Inject
 
 
 class ArticleListDataSource(private val service: AcfunArticleService, private var tabId: Int = 0) : PagingSource<String, ArticleVO>() {
-    override fun getRefreshKey(state: PagingState<String, ArticleVO>): String {
-        return "first_page"
+    override fun getRefreshKey(state: PagingState<String, ArticleVO>): String? {
+        return null
     }
+
+    private val cursor = mutableListOf<String>()
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, ArticleVO> {
         val currentKey = params.key ?: "first_page"
         return try {
             val formData = ArticleListParamDTO().apply {
                 this.cursor = currentKey
+                this.limit = params.loadSize
             }.toMap()
+            cursor.add(currentKey)
             val response = service.getArticlePage(formData, realmIdList[tabId])
             LoadResult.Page(
                 data = response.data ?: listOf(),
-                prevKey = if (currentKey == "first_page") null else currentKey,
-                nextKey = response.cursor
+                prevKey = if (currentKey == "first_page") null else cursor[cursor.lastIndex - 1],
+                nextKey = if (response.data == null || response.data!!.isEmpty()) null else response.cursor
             )
         } catch (ex: Exception) {
             LoadResult.Error(ex)

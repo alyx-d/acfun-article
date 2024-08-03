@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.qt.app.R
 import com.qt.app.api.vo.Comment
-import com.qt.app.util.Util.imageLoader
 
 @Composable
 fun ArticleComment(comment: Comment?) {
@@ -41,17 +41,15 @@ fun ArticleComment(comment: Comment?) {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                model = c.headUrl[0].url,
-                contentDescription = "",
-                imageLoader = imageLoader(context),
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(RoundedCornerShape(50))
-                    .padding(horizontal = 5.dp)
-                ,
-
-            )
+            Box(modifier = Modifier.padding(horizontal = 5.dp)) {
+                AsyncImage(
+                    model = c.headUrl[0].url,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(RoundedCornerShape(50)),
+                )
+            }
             Text(
                 text = c.userName,
                 fontSize = 13.sp,
@@ -65,10 +63,31 @@ fun ArticleComment(comment: Comment?) {
                 .padding(start = 60.dp)
                 .fillMaxWidth()
         ) {
-            Text(
-                text = c.content,
-                fontSize = 12.sp
-            )
+            val rex = Regex(pattern = "\\[img=图片].+\\[/img]")
+            val imgs = rex.findAll(c.content).mapTo(mutableListOf()) {
+                it.value.substring(8, it.value.length - 6)
+            }
+            if (imgs.isNotEmpty()) {
+                c.content = rex.replace(c.content, "-=-=-")
+                var idx = 0
+                c.content.split("-=-=-").forEach { text ->
+                    if (text.isNotBlank()) {
+                        Text(
+                            text = text,
+                            fontSize = 12.sp
+                        )
+                    }
+                    if (idx < imgs.size) {
+                        AsyncImage(model = imgs[idx++], contentDescription = "",
+                            contentScale = ContentScale.Inside)
+                    }
+                }
+            }else {
+                Text(
+                    text = c.content,
+                    fontSize = 12.sp
+                )
+            }
             Box(
                 modifier = Modifier.padding(top = 5.dp)
             ) {
@@ -130,7 +149,7 @@ private fun Test() {
             Text(
                 text = "好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶",
                 fontSize = 12.sp,
-                )
+            )
             Box(
                 modifier = Modifier.padding(top = 5.dp)
             ) {

@@ -18,18 +18,14 @@ class ArticleViewModel @Inject constructor(
     private val repo: Repo
 ) : ViewModel() {
 
-    private val _articleList = MutableStateFlow<PagingData<ArticleVO>>(PagingData.empty())
-    val articleList = _articleList.asStateFlow()
+    private val _articleList0 = repo.getArticleList(0).cachedIn(viewModelScope)
+    private val _articleList1 = repo.getArticleList(1).cachedIn(viewModelScope)
+    private val _articleList2 = repo.getArticleList(2).cachedIn(viewModelScope)
+    private val _articleList3 = repo.getArticleList(3).cachedIn(viewModelScope)
+    val articleListTab = arrayOf(_articleList0, _articleList1, _articleList2, _articleList3)
 
     private val _articleContent = MutableStateFlow<ArticleDetail?>(null)
     val articleContent = _articleContent.asStateFlow()
-
-    suspend fun getArticleList(tabId: Int) {
-        repo.getArticleList(tabId).cachedIn(viewModelScope).collect {
-            _articleList.emit(it)
-        }
-    }
-
 
     suspend fun getArticleDetail(articleId: String) {
         val data = repo.getArticleDetail(articleId)
