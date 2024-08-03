@@ -68,9 +68,9 @@ fun ArticleComment(comment: Comment?) {
                 it.value.substring(8, it.value.length - 6)
             }
             if (imgs.isNotEmpty()) {
-                c.content = rex.replace(c.content, "-=-=-")
+                val content = rex.replace(c.content, "-=-=-")
                 var idx = 0
-                c.content.split("-=-=-").forEach { text ->
+                content.split("-=-=-").forEach { text ->
                     if (text.isNotBlank()) {
                         Text(
                             text = text,
