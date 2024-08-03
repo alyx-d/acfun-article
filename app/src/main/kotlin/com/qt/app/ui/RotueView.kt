@@ -2,7 +2,6 @@ package com.qt.app.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -10,10 +9,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.qt.app.ui.home.ArticleDetail
-import com.qt.app.ui.home.ArticleList
+import com.qt.app.ui.article.ArticleDetail
+import com.qt.app.ui.article.ArticleList
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun RouteView(navController: NavHostController, modifier : Modifier) {
     NavHost(

@@ -1,7 +1,5 @@
-package com.qt.app.ui.home
+package com.qt.app.ui.article
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -32,13 +31,15 @@ import com.qt.app.ui.Route
 import com.qt.app.util.Util
 import com.qt.app.vm.ArticleViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEntry) {
     val vm = hiltViewModel<ArticleViewModel>()
     val arguments = backStackEntry.arguments!!
     val tabId = arguments.getInt("tabId")
-    val articleList = vm.dataList[tabId].collectAsLazyPagingItems()
+    val articleList = vm.articleList.collectAsLazyPagingItems()
+    LaunchedEffect(tabId) {
+        vm.getArticleList(tabId)
+    }
     LazyColumn(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface),
@@ -52,7 +53,10 @@ fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEn
                     .clickable {
                         navController.navigate("${Route.ArticleDetail.name}/${it.articleId}")
                     }
-                    .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(10.dp))
+                    .background(
+                        color = MaterialTheme.colorScheme.background,
+                        shape = RoundedCornerShape(10.dp)
+                    )
                     .padding(10.dp)
 
             ) {
@@ -86,18 +90,16 @@ fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEn
                         .padding(top = 5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row{
+                    Row(modifier= Modifier.alignByBaseline()){
                         Text(
                             text = "UP:",
-                            fontSize = 8.sp,
-                            modifier = Modifier
-                                .alignByBaseline()
+                            fontSize = 10.sp,
                         )
                         Text(
                             text = it.userName,
                             fontSize = 14.sp,
-                            modifier = Modifier.widthIn(max = 150.dp)
-                                .alignByBaseline(),
+                            modifier = Modifier
+                                .widthIn(max = 150.dp),
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
                         )

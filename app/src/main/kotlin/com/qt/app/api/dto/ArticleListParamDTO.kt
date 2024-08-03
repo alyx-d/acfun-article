@@ -1,7 +1,7 @@
 package com.qt.app.api.dto
 
 
-data class ArticleParamDTO (
+data class ArticleListParamDTO (
     var cursor: String = "first_page",
     var onlyOrigin: Boolean = false,
     var limit: Int = 10,

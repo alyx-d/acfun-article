@@ -7,7 +7,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.qt.app.api.AcfunArticleService
 import com.qt.app.api.Api
-import com.qt.app.api.dto.ArticleParamDTO
+import com.qt.app.api.dto.ArticleListParamDTO
 import com.qt.app.api.realmIdList
 import com.qt.app.api.vo.ArticleVO
 import com.qt.app.util.Util.toMap
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
-class DataSource(val service: AcfunArticleService, var tabId: Int = 0) : PagingSource<String, ArticleVO>() {
+class ArticleListDataSource(private val service: AcfunArticleService, private var tabId: Int = 0) : PagingSource<String, ArticleVO>() {
     override fun getRefreshKey(state: PagingState<String, ArticleVO>): String {
         return "first_page"
     }
@@ -23,7 +23,7 @@ class DataSource(val service: AcfunArticleService, var tabId: Int = 0) : PagingS
     override suspend fun load(params: LoadParams<String>): LoadResult<String, ArticleVO> {
         val currentKey = params.key ?: "first_page"
         return try {
-            val formData = ArticleParamDTO().apply {
+            val formData = ArticleListParamDTO().apply {
                 this.cursor = currentKey
             }.toMap()
             val response = service.getArticlePage(formData, realmIdList[tabId])
@@ -35,14 +35,5 @@ class DataSource(val service: AcfunArticleService, var tabId: Int = 0) : PagingS
         } catch (ex: Exception) {
             LoadResult.Error(ex)
         }
-    }
-}
-
-class Repo @Inject constructor() {
-    fun getArticleList(tabId: Int): Flow<PagingData<ArticleVO>> {
-        return Pager(
-            config = PagingConfig(pageSize = 10),
-            pagingSourceFactory = { DataSource(Api.acfunArticleService, tabId) },
-        ).flow
     }
 }

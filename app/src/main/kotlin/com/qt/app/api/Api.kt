@@ -1,8 +1,9 @@
 package com.qt.app.api
 
 import android.util.Log
-import com.qt.app.api.dto.ArticleParamDTO
+import com.qt.app.api.dto.ArticleListParamDTO
 import com.qt.app.api.vo.ArticleVO
+import com.qt.app.api.vo.CommentPage
 import com.qt.app.api.vo.RA
 import com.qt.app.util.Util.toMap
 import okhttp3.OkHttpClient
@@ -17,6 +18,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.QueryMap
 import java.util.concurrent.TimeUnit
 
 val realmIdList = arrayOf(
@@ -30,7 +32,7 @@ interface AcfunArticleService {
     @POST("/rest/pc-direct/article/feed")
     @FormUrlEncoded
     suspend fun getArticlePage(
-        @FieldMap formData: Map<String, String> = ArticleParamDTO().toMap(),
+        @FieldMap formData: Map<String, String> = ArticleListParamDTO().toMap(),
         @Field("realmId") realmId: Array<Int> = realmIdList[0]
     ): RA<MutableList<ArticleVO>>
 }
@@ -41,17 +43,22 @@ interface AcfunArticleDetailService {
     suspend fun getArticleDetail(@Path("articleId") articleId: String): String
 }
 
+interface AcfunArticleCommentsService {
+    @GET("/rest/pc-direct/comment/list")
+    suspend fun getArticleCommentList(@QueryMap query: Map<String, String>): CommentPage
+}
+
 object Api {
     const val BASE_URL = "https://www.acfun.cn"
     fun client(): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
-//            .addNetworkInterceptor(HttpLoggingInterceptor {
-//                Log.d("HttpLog", it)
-//            }.apply {
-//                setLevel(HttpLoggingInterceptor.Level.BODY)
-//            })
+            .addNetworkInterceptor(HttpLoggingInterceptor {
+                Log.d("HttpLog", it)
+            }.apply {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            })
             .build()
     }
 
@@ -76,4 +83,7 @@ object Api {
 
     val acfunArticleDetailService: AcfunArticleDetailService =
         retrofitHtml().create(AcfunArticleDetailService::class.java)
+
+    val acfunArticleCommentsService: AcfunArticleCommentsService =
+        retrofit().create(AcfunArticleCommentsService::class.java)
 }

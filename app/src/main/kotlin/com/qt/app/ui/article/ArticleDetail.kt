@@ -1,4 +1,4 @@
-package com.qt.app.ui.home
+package com.qt.app.ui.article
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -9,8 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,12 +25,15 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import com.qt.app.R
+import com.qt.app.vm.ArticleCommentViewModel
 import com.qt.app.vm.ArticleViewModel
+import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -39,10 +41,14 @@ import org.jsoup.Jsoup
 fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackStackEntry) {
     val articleId = backStackEntry.arguments?.getString("articleId")
     val vm = hiltViewModel<ArticleViewModel>()
+    val cvm = hiltViewModel<ArticleCommentViewModel>()
     val articleDetail by vm.articleContent.collectAsState()
+    val comments = cvm.commentList.collectAsLazyPagingItems()
     LaunchedEffect(articleDetail) {
         articleId?.let {
             vm.getArticleDetail(it)
+            delay(100)
+            cvm.getCommentList(articleId.toInt())
         }
     }
     if (articleDetail == null) {
@@ -61,30 +67,41 @@ fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackS
             )
         }
     } else {
-        val it = articleDetail!!
-        Column(
-            modifier = Modifier
-                .padding(10.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(
-                text = it.title, fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
-            val html = Jsoup.parseBodyFragment(it.parts[0].content)
-            html.allElements.forEach { el ->
-                if ((el.nameIs("p") || el.nameIs("div")) && el.text().isNotBlank()) {
-                    Text(text = el.text())
-                } else if (el.nameIs("img")) {
-                    AsyncImage(
-                        modifier = Modifier.fillMaxWidth(),
-                        model = el.attr("src"), contentDescription = "",
-                        contentScale = ContentScale.FillWidth
+        val it = articleDetail ?: return
+        LazyColumn {
+            item {
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                ) {
+                    Text(
+                        text = it.title, fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(bottom = 10.dp)
                     )
+                    val html = Jsoup.parseBodyFragment(it.parts[0].content)
+                    html.allElements.forEach { el ->
+                        if ((el.nameIs("p") || el.nameIs("div")) && el.text().isNotBlank()) {
+                            Text(text = el.text())
+                        } else if (el.nameIs("img")) {
+                            AsyncImage(
+                                modifier = Modifier.fillMaxWidth(),
+                                model = el.attr("src"), contentDescription = "",
+                                contentScale = ContentScale.FillWidth
+                            )
+                        }
+                    }
                 }
             }
+            if (comments.itemCount == 0) {
+                item { Text(text = "无评论") }
+            }
+            item { Text(text = "count = ${comments.itemCount}") }
+            items(comments.itemCount) {
+                ArticleComment(comments[it])
+            }
         }
+
     }
 }
 
