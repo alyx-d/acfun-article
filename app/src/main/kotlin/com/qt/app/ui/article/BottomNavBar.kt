@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
@@ -21,10 +20,10 @@ import com.qt.app.ui.displayBottomBar
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     var selected by remember { mutableIntStateOf(0) }
-//    val itemArr = arrayOf("综合", "吐槽", "游戏", "动漫", "涂鸦", "漫文")
+    // val itemArr = arrayOf("综合", "吐槽", "游戏", "动漫", "涂鸦", "漫文")
     val itemArr = arrayOf("综合", "吐槽", "游戏", "涂鸦")
     val entry by navController.currentBackStackEntryAsState()
-    val bottomBarState = rememberSaveable {
+    val bottomBarState = remember {
         mutableStateOf(false)
     }
     bottomBarState.value = displayBottomBar.any { it.route == entry?.destination?.route }
@@ -38,12 +37,14 @@ fun BottomNavBar(navController: NavHostController) {
                         val args = mapOf(
                             "tabId" to index,
                         )
-                        selected = index
-                        navController.navigate(Routers.ArticleList.path(args)) {
-                            launchSingleTop = true
+                        if (index != selected) {
+                            navController.navigate(Routers.ArticleList.path(args)) {
+                                launchSingleTop = true
+                            }
                         }
+                        selected = index
                     },
-                    icon = {  },
+                    icon = { /* TODO */ },
                     colors = NavigationBarItemDefaults.colors(
                         selectedTextColor = Color.Red,
                         indicatorColor = Color.Red

@@ -13,7 +13,7 @@ import javax.inject.Inject
 class Repo @Inject constructor() {
     fun getArticleList(tabId: Int): Flow<PagingData<ArticleVO>> {
         return Pager(
-            config = PagingConfig(pageSize = 10, prefetchDistance = 5),
+            config = PagingConfig(pageSize = 20, prefetchDistance = 5),
             pagingSourceFactory = { ArticleListDataSource(Api.acfunArticleService, tabId) },
         ).flow
     }
@@ -25,7 +25,7 @@ class Repo @Inject constructor() {
 
     fun getArticleCommentList(sourceId: String): Flow<PagingData<Comment>> {
         return Pager(
-            config = PagingConfig(pageSize = 10, prefetchDistance = 5),
+            config = PagingConfig(pageSize = 20, prefetchDistance = 5),
             pagingSourceFactory = { ArticleCommentsDataSource(Api.acfunArticleCommentsService, sourceId) }
         ).flow
     }

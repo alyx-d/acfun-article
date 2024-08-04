@@ -79,7 +79,7 @@ fun ArticleComment(comment: Comment?) {
                                 .padding(end = 10.dp),
                             text = it,
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
                 }
@@ -109,7 +109,7 @@ fun CommentContent(content: String) {
                 Text(
                     text = text,
                     fontSize = 12.sp,
-                    lineHeight = 16.sp,
+                    lineHeight = 12.sp,
                 )
             }
             if (idx < imgs.size) {
