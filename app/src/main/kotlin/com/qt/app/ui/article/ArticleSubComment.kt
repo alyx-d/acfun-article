@@ -39,7 +39,6 @@ fun ArticleSubComment(subComment: SubComment, subCommentCountFormat: String) {
                     },
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    lineHeight = 15.sp
                 )
             }
             Text(text = "共有${subCommentCountFormat}条回复 >", fontSize = 11.sp)

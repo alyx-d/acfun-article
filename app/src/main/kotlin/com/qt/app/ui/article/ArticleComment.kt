@@ -109,7 +109,6 @@ fun CommentContent(content: String) {
                 Text(
                     text = text,
                     fontSize = 12.sp,
-                    lineHeight = 12.sp,
                 )
             }
             if (idx < imgs.size) {
