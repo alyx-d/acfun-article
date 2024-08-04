@@ -63,32 +63,7 @@ fun ArticleComment(comment: Comment?) {
                 .padding(start = 60.dp)
                 .fillMaxWidth()
         ) {
-            val rex = Regex(pattern = "\\[img=图片].+\\[/img]")
-            val imgs = rex.findAll(c.content).mapTo(mutableListOf()) {
-                it.value.substring(8, it.value.length - 6)
-            }
-            if (imgs.isNotEmpty()) {
-                val str = "||-=-=-||"
-                val content = rex.replace(c.content, str)
-                var idx = 0
-                content.split(str).forEach { text ->
-                    if (text.isNotBlank()) {
-                        Text(
-                            text = text,
-                            fontSize = 12.sp
-                        )
-                    }
-                    if (idx < imgs.size) {
-                        AsyncImage(model = imgs[idx++], contentDescription = "",
-                            contentScale = ContentScale.Inside)
-                    }
-                }
-            }else {
-                Text(
-                    text = c.content,
-                    fontSize = 12.sp
-                )
-            }
+            CommentContent(c.content)
             Box(
                 modifier = Modifier.padding(top = 5.dp)
             ) {
@@ -116,6 +91,36 @@ fun ArticleComment(comment: Comment?) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CommentContent(content: String) {
+    val rex = Regex(pattern = "\\[img=图片].+\\[/img]")
+    val imgs = rex.findAll(content).mapTo(mutableListOf()) {
+        it.value.substring(8, it.value.length - 6)
+    }
+    if (imgs.isNotEmpty()) {
+        val str = "||-=-=-||"
+        val c = rex.replace(content, str)
+        var idx = 0
+        c.split(str).forEach { text ->
+            if (text.isNotBlank()) {
+                Text(
+                    text = text,
+                    fontSize = 12.sp
+                )
+            }
+            if (idx < imgs.size) {
+                AsyncImage(model = imgs[idx++], contentDescription = "",
+                    contentScale = ContentScale.Inside)
+            }
+        }
+    }else {
+        Text(
+            text = content,
+            fontSize = 12.sp
+        )
     }
 }
 
