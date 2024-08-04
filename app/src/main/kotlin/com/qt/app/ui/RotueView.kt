@@ -34,16 +34,12 @@ enum class Routers(
     val arguments: List<NamedNavArgument> = listOf(),
     val path: (Map<String, Any>) -> String
 ) {
-    ArticleList("article?tabId={tabId}&refresh={refresh}", listOf(
+    ArticleList("article?tabId={tabId}", listOf(
         navArgument("tabId") {
             type = NavType.IntType
             defaultValue = 0
-        },
-        navArgument("refresh") {
-            type = NavType.BoolType
-            defaultValue = false
         }
-    ), { map -> "article?tabId=${map["tabId"]}&refresh=${map["refresh"]}" }),
+    ), { map -> "article?tabId=${map["tabId"]}" }),
     ArticleDetail("article-detail/{articleId}", listOf(
         navArgument("articleId") {
             type = NavType.StringType
