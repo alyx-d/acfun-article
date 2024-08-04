@@ -87,7 +87,7 @@ fun ArticleComment(comment: Comment?) {
             if (c.info.subCommentsMap.isNotEmpty()) {
                 c.info.subCommentsMap.let { map ->
                     val subComment = map[c.commentId] ?: return
-                    ArticleSubComment(subComment)
+                    ArticleSubComment(subComment, c.subCommentCountFormat)
                 }
             }
         }

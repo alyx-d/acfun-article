@@ -7,10 +7,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.qt.app.api.vo.SubComment
 
 @Composable
-fun ArticleSubComment(subComment: SubComment) {
+fun ArticleSubComment(subComment: SubComment, subCommentCountFormat: String) {
     Card(
         shape = ShapeDefaults.ExtraSmall,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
@@ -44,7 +42,7 @@ fun ArticleSubComment(subComment: SubComment) {
                     lineHeight = 15.sp
                 )
             }
-            Text(text = "共有${subComment.subComments.size}条回复 >", fontSize = 11.sp)
+            Text(text = "共有${subCommentCountFormat}条回复 >", fontSize = 11.sp)
         }
     }
 }

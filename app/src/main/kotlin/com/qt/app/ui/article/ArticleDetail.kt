@@ -50,7 +50,6 @@ fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackS
     LaunchedEffect(articleDetail) {
         articleId?.let {
             vm.getArticleDetail(it)
-            delay(10)
             cvm.getCommentList(it)
         }
     }
