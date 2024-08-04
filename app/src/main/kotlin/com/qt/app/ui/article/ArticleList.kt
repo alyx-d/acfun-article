@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -27,7 +26,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.qt.app.ui.Route
+import com.qt.app.ui.Routers
 import com.qt.app.util.Util
 import com.qt.app.vm.ArticleViewModel
 
@@ -48,7 +47,7 @@ fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEn
             Column(
                 modifier = Modifier
                     .clickable {
-                        navController.navigate("${Route.ArticleDetail.name}/${it.articleId}")
+                        navController.navigate(Routers.ArticleDetail.path(mapOf("articleId" to it.articleId)))
                     }
                     .background(
                         color = MaterialTheme.colorScheme.background,
