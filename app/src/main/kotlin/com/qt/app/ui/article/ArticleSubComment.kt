@@ -7,10 +7,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.qt.app.api.vo.SubComment
 
 @Composable
-fun ArticleSubComment(subComment: SubComment) {
+fun ArticleSubComment(subComment: SubComment, subCommentCountFormat: String?) {
     Card(
         shape = ShapeDefaults.ExtraSmall,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
@@ -32,7 +30,12 @@ fun ArticleSubComment(subComment: SubComment) {
             subComment.subComments.forEach {
                 Text(
                     buildAnnotatedString {
-                        withStyle(SpanStyle(fontSize = 10.sp, color = MaterialTheme.colorScheme.secondary)) {
+                        withStyle(
+                            SpanStyle(
+                                fontSize = 10.sp,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        ) {
                             append("${it.userName}: ")
                         }
                         withStyle(SpanStyle(fontSize = 11.sp)) {
@@ -41,10 +44,11 @@ fun ArticleSubComment(subComment: SubComment) {
                     },
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    lineHeight = 15.sp
                 )
             }
-            Text(text = "共有${subComment.subComments.size}条回复 >", fontSize = 11.sp)
+            subCommentCountFormat?.let {
+                Text(text = "共有${it}条回复 >", fontSize = 11.sp)
+            }
         }
     }
 }
@@ -62,7 +66,12 @@ fun ArticleSubCommentTest() {
         ) {
             Text(
                 buildAnnotatedString {
-                    withStyle(SpanStyle(fontSize = 11.sp, color = MaterialTheme.colorScheme.scrim)) {
+                    withStyle(
+                        SpanStyle(
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.scrim
+                        )
+                    ) {
                         append("用户名: ")
                     }
                     withStyle(SpanStyle(fontSize = 12.sp)) {
@@ -71,7 +80,6 @@ fun ArticleSubCommentTest() {
                 },
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                lineHeight = 18.sp
             )
             Text(text = "共有12条回复 >", fontSize = 11.sp)
         }

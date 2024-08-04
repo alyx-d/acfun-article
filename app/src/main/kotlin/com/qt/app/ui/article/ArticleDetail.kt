@@ -1,7 +1,5 @@
 package com.qt.app.ui.article
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,10 +27,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import coil.decode.ImageDecoderDecoder
 import com.qt.app.R
 import com.qt.app.util.Util.imageLoader
 import com.qt.app.vm.ArticleCommentViewModel
@@ -47,7 +43,7 @@ fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackS
     val cvm = hiltViewModel<ArticleCommentViewModel>()
     val articleDetail by vm.articleContent.collectAsState()
     val comments = cvm.commentList.collectAsLazyPagingItems()
-    LaunchedEffect(articleDetail) {
+    LaunchedEffect(articleId) {
         articleId?.let {
             vm.getArticleDetail(it)
             delay(10)

@@ -33,7 +33,7 @@ import com.qt.app.vm.ArticleViewModel
 @Composable
 fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEntry) {
     val vm = hiltViewModel<ArticleViewModel>()
-    val arguments = backStackEntry.arguments!!
+    val arguments = backStackEntry.arguments ?: return
     val tabId = arguments.getInt("tabId")
     val articleList = vm.articleListTab[tabId].collectAsLazyPagingItems()
     LazyColumn(

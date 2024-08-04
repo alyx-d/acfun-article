@@ -57,7 +57,7 @@ object Api {
             .addNetworkInterceptor(HttpLoggingInterceptor {
                 Log.d("HttpLog", it)
             }.apply {
-                setLevel(HttpLoggingInterceptor.Level.BODY)
+                // setLevel(HttpLoggingInterceptor.Level.BODY)
             })
             .build()
     }

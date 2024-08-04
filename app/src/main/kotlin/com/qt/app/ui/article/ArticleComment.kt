@@ -79,7 +79,7 @@ fun ArticleComment(comment: Comment?) {
                                 .padding(end = 10.dp),
                             text = it,
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
                 }
@@ -87,7 +87,7 @@ fun ArticleComment(comment: Comment?) {
             if (c.info.subCommentsMap.isNotEmpty()) {
                 c.info.subCommentsMap.let { map ->
                     val subComment = map[c.commentId] ?: return
-                    ArticleSubComment(subComment)
+                    ArticleSubComment(subComment, c.subCommentCountFormat)
                 }
             }
         }
@@ -109,7 +109,6 @@ fun CommentContent(content: String) {
                 Text(
                     text = text,
                     fontSize = 12.sp,
-                    lineHeight = 16.sp,
                 )
             }
             if (idx < imgs.size) {
