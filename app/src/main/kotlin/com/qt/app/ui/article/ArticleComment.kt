@@ -43,7 +43,7 @@ fun ArticleComment(comment: Comment?) {
         ) {
             Box(modifier = Modifier.padding(horizontal = 5.dp)) {
                 AsyncImage(
-                    model = c.headUrl[0].url,
+                    model = c.userHeadImgInfo.thumbnailImageCdnUrl,
                     contentDescription = "",
                     modifier = Modifier
                         .size(50.dp)
@@ -68,9 +68,10 @@ fun ArticleComment(comment: Comment?) {
                 it.value.substring(8, it.value.length - 6)
             }
             if (imgs.isNotEmpty()) {
-                val content = rex.replace(c.content, "-=-=-")
+                val str = "||-=-=-||"
+                val content = rex.replace(c.content, str)
                 var idx = 0
-                content.split("-=-=-").forEach { text ->
+                content.split(str).forEach { text ->
                     if (text.isNotBlank()) {
                         Text(
                             text = text,
@@ -107,7 +108,12 @@ fun ArticleComment(comment: Comment?) {
                         )
                     }
                 }
-
+            }
+            if (c.info.subCommentsMap.isNotEmpty()) {
+                c.info.subCommentsMap.let { map ->
+                    val subComment = map[c.commentId] ?: return
+                    ArticleSubComment(subComment)
+                }
             }
         }
     }
@@ -165,6 +171,7 @@ private fun Test() {
                 }
 
             }
+            ArticleSubCommentTest()
         }
     }
 }

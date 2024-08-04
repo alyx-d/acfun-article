@@ -34,7 +34,7 @@ class ArticleListDataSource(private val service: AcfunArticleService, private va
             LoadResult.Page(
                 data = response.data ?: listOf(),
                 prevKey = if (currentKey == "first_page") null else cursor[cursor.lastIndex - 1],
-                nextKey = if (response.data == null || response.data!!.isEmpty()) null else response.cursor
+                nextKey = response.cursor
             )
         } catch (ex: Exception) {
             LoadResult.Error(ex)
