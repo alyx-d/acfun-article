@@ -108,7 +108,8 @@ fun CommentContent(content: String) {
             if (text.isNotBlank()) {
                 Text(
                     text = text,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
                 )
             }
             if (idx < imgs.size) {
@@ -160,6 +161,7 @@ private fun Test() {
             Text(
                 text = "好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶",
                 fontSize = 12.sp,
+                lineHeight = 15.sp,
             )
             Box(
                 modifier = Modifier.padding(top = 5.dp)

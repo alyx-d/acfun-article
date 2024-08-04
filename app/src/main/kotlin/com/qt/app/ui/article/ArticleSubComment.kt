@@ -40,7 +40,8 @@ fun ArticleSubComment(subComment: SubComment) {
                         }
                     },
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 15.sp
                 )
             }
             Text(text = "共有${subComment.subComments.size}条回复 >", fontSize = 11.sp)
@@ -69,7 +70,8 @@ fun ArticleSubCommentTest() {
                     }
                 },
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                lineHeight = 18.sp
             )
             Text(text = "共有12条回复 >", fontSize = 11.sp)
         }

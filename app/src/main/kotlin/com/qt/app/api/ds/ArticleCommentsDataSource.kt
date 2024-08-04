@@ -24,7 +24,6 @@ class ArticleCommentsDataSource(
             if (totalPage > - 1 && currPage > totalPage) return LoadResult.Error(Exception("没有下一页"))
             val param = CommentListParamDTO(sourceId).apply {
                 page = currPage
-                limit = params.loadSize
             }
                 .toMap()
             val data = service.getArticleCommentList(param)

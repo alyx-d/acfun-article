@@ -27,7 +27,6 @@ class ArticleListDataSource(private val service: AcfunArticleService, private va
         return try {
             val formData = ArticleListParamDTO().apply {
                 this.cursor = currentKey
-                this.limit = params.loadSize
             }.toMap()
             cursor.add(currentKey)
             val response = service.getArticlePage(formData, realmIdList[tabId])

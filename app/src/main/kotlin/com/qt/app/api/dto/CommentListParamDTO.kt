@@ -8,7 +8,7 @@ data class CommentListParamDTO(
     var sourceId: String, // 评论ID
     var sourceType: Int = 3,
     var page: Int = 1,
-    var limit: Int = 10,
+    var limit: Int = 20,
     var pivotCommentId: Int = 0,
 //    var newPivotCommentId: Int
     var t: Long = Instant.now().toEpochMilli(),
