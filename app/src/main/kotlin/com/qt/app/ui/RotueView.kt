@@ -42,7 +42,7 @@ enum class Routers(
     ), { map -> "article?tabId=${map["tabId"]}" }),
     ArticleDetail("article-detail/{articleId}", listOf(
         navArgument("articleId") {
-            type = NavType.StringType
+            type = NavType.IntType
         }), { map -> "article-detail/${map["articleId"]}" }),
 }
 

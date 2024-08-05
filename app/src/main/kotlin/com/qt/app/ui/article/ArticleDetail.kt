@@ -38,7 +38,7 @@ import org.jsoup.Jsoup
 
 @Composable
 fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackStackEntry) {
-    val articleId = backStackEntry.arguments?.getString("articleId")
+    val articleId = backStackEntry.arguments?.getInt("articleId")
     val vm = hiltViewModel<ArticleViewModel>()
     val cvm = hiltViewModel<ArticleCommentViewModel>()
     val articleDetail by vm.articleContent.collectAsState()

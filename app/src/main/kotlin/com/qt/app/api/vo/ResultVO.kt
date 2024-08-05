@@ -1,6 +1,6 @@
 package com.qt.app.api.vo
 
-data class RA <T> (
+data class ResultVO <T> (
     var cursor: String = "",
     var result: Int = 0,
     var data: T? = null,

@@ -27,7 +27,7 @@ class ArticleViewModel @Inject constructor(
     private val _articleContent = MutableStateFlow<ArticleDetail?>(null)
     val articleContent = _articleContent.asStateFlow()
 
-    suspend fun getArticleDetail(articleId: String) {
+    suspend fun getArticleDetail(articleId: Int) {
         val data = repo.getArticleDetail(articleId)
         // 解析
         val document = Jsoup.parse(data)

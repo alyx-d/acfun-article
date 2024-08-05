@@ -9,7 +9,7 @@ import com.qt.app.util.Util.toMap
 
 class ArticleCommentsDataSource(
     private val service: AcfunArticleCommentsService,
-    private val sourceId: String,
+    private val sourceId: Int,
 ) : PagingSource<Int, Comment>() {
 
     override fun getRefreshKey(state: PagingState<Int, Comment>): Int? {

@@ -3,8 +3,9 @@ package com.qt.app.api
 import android.util.Log
 import com.qt.app.api.dto.ArticleListParamDTO
 import com.qt.app.api.vo.ArticleVO
-import com.qt.app.api.vo.CommentPage
-import com.qt.app.api.vo.RA
+import com.qt.app.api.vo.CommentPageVO
+import com.qt.app.api.vo.ResultVO
+import com.qt.app.api.vo.SubCommentPageVO
 import com.qt.app.util.Util.toMap
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,18 +35,22 @@ interface AcfunArticleService {
     suspend fun getArticlePage(
         @FieldMap formData: Map<String, String> = ArticleListParamDTO().toMap(),
         @Field("realmId") realmId: Array<Int> = realmIdList[0]
-    ): RA<MutableList<ArticleVO>>
+    ): ResultVO<MutableList<ArticleVO>>
 }
 
 interface AcfunArticleDetailService {
     @GET("/a/ac{articleId}")
     @Headers("UserAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-    suspend fun getArticleDetail(@Path("articleId") articleId: String): String
+    suspend fun getArticleDetail(@Path("articleId") articleId: Int): String
 }
 
 interface AcfunArticleCommentsService {
+
     @GET("/rest/pc-direct/comment/list")
-    suspend fun getArticleCommentList(@QueryMap query: Map<String, String>): CommentPage
+    suspend fun getArticleCommentList(@QueryMap query: Map<String, String>): CommentPageVO
+
+    @GET("/rest/pc-direct/comment/sublist")
+    suspend fun getArticleSubCommentList(@QueryMap query: Map<String, String>): SubCommentPageVO
 }
 
 object Api {

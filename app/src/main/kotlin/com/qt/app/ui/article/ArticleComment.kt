@@ -30,7 +30,6 @@ import com.qt.app.api.vo.Comment
 @Composable
 fun ArticleComment(comment: Comment?) {
     val c = comment ?: return
-    val context = LocalContext.current
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(10))
@@ -85,10 +84,7 @@ fun ArticleComment(comment: Comment?) {
                 }
             }
             if (c.info.subCommentsMap.isNotEmpty()) {
-                c.info.subCommentsMap.let { map ->
-                    val subComment = map[c.commentId] ?: return
-                    ArticleSubComment(subComment, c.subCommentCountFormat)
-                }
+                ArticleSubComment(c)
             }
         }
     }
