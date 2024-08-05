@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -85,7 +86,8 @@ fun ArticleSubComment(comment: Comment) {
             onDismissRequest = {
                 showBottomSheet = false
             },
-            sheetState = sheetState
+            sheetState = sheetState,
+            scrimColor = Color(0x5CFFFFFF)
         ) {
             LazyColumn {
                 items(subCommentList.itemCount) {

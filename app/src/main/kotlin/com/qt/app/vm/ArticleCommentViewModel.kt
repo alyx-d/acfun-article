@@ -17,10 +17,10 @@ class ArticleCommentViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _commentList: MutableStateFlow<PagingData<Comment>> = MutableStateFlow(PagingData.empty())
-    val commentList = _commentList.asStateFlow()
+    val commentList = _commentList.cachedIn(viewModelScope)
 
     suspend fun getCommentList(sourceId: Int) {
-        repo.getArticleCommentList(sourceId).cachedIn(viewModelScope).collect { data ->
+        repo.getArticleCommentList(sourceId).collect { data ->
             _commentList.emit(data)
         }
     }
