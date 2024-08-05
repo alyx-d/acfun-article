@@ -6,6 +6,7 @@ import com.qt.app.api.vo.ArticleVO
 import com.qt.app.api.vo.CommentPageVO
 import com.qt.app.api.vo.ResultVO
 import com.qt.app.api.vo.SubCommentPageVO
+import com.qt.app.api.vo.UserEmotionVO
 import com.qt.app.util.Util.toMap
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -45,6 +46,9 @@ interface AcfunArticleDetailService {
 }
 
 interface AcfunArticleCommentsService {
+
+    @POST("/rest/pc-direct/emotion/getUserEmotion")
+    suspend fun getUserEmotion(): UserEmotionVO
 
     @GET("/rest/pc-direct/comment/list")
     suspend fun getArticleCommentList(@QueryMap query: Map<String, String>): CommentPageVO

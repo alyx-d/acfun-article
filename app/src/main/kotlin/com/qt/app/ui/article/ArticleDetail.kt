@@ -46,6 +46,7 @@ fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackS
     LaunchedEffect(articleId) {
         articleId?.let {
             vm.getArticleDetail(it)
+            cvm.getUserEmotion()
             cvm.getCommentList(it)
         }
     }

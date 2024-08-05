@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,9 +25,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.qt.app.R
 import com.qt.app.api.vo.Comment
+import com.qt.app.vm.ArticleCommentViewModel
 
 @Composable
 fun ArticleComment(comment: Comment?) {
@@ -92,9 +96,16 @@ fun ArticleComment(comment: Comment?) {
 
 @Composable
 fun CommentContent(content: String) {
-    val rex = Regex(pattern = "\\[img=图片].+\\[/img]")
+    val cvm = hiltViewModel<ArticleCommentViewModel>()
+    val emotionMap by cvm.userEmotion.collectAsState()
+    val rex = Regex(pattern = "\\[img=图片].+\\[/img]|\\[emot=acfun,\\d+/]")
     val imgs = rex.findAll(content).mapTo(mutableListOf()) {
-        it.value.substring(8, it.value.length - 6)
+        if (it.value.contains("img")) {
+            it.value.substring(8, it.value.length - 6)
+        }else {
+            val id = it.value.substring(12, it.value.length - 2)
+            emotionMap[id]?.smallImageInfo?.thumbnailImageCdnUrl ?: ""
+        }
     }
     if (imgs.isNotEmpty()) {
         val str = "||-=-=-||"

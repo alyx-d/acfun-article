@@ -9,6 +9,7 @@ import com.qt.app.api.ds.ArticleSubCommentDataSource
 import com.qt.app.api.vo.ArticleVO
 import com.qt.app.api.vo.Comment
 import com.qt.app.api.vo.SubComment
+import com.qt.app.api.vo.UserEmotionVO
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -37,5 +38,9 @@ class Repo @Inject constructor() {
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),
             pagingSourceFactory = {ArticleSubCommentDataSource( Api.acfunArticleCommentsService,sourceId, rootCommentId)}
         ).flow
+    }
+
+    suspend fun getUserEmotion(): UserEmotionVO {
+        return Api.acfunArticleCommentsService.getUserEmotion()
     }
 }
