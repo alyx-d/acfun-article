@@ -73,6 +73,9 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
         val imageViewerState = remember {
             mutableStateOf(false)
         }
+        val currImage = remember {
+            mutableStateOf<String?>(null)
+        }
         Box {
             LazyColumn(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
@@ -99,6 +102,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                         .fillMaxWidth()
                                         .clickable {
                                             imageViewerState.value = true
+                                            currImage.value = src
                                         },
                                     model = src,
                                     imageLoader = imageLoader(context),
@@ -137,7 +141,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
             }
             if (imageViewerState.value && imageSet.isNotEmpty()) {
                 AnimatedVisibility(visible = imageViewerState.value) {
-                    ImageViewer(imageViewerState, imageSet)
+                    ImageViewer(imageViewerState, imageSet, currImage)
                 }
             }
         }
