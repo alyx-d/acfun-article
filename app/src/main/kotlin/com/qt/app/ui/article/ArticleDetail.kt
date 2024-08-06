@@ -1,6 +1,7 @@
 package com.qt.app.ui.article
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +37,7 @@ import com.qt.app.vm.ArticleViewModel
 import org.jsoup.Jsoup
 
 @Composable
-fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackStackEntry) {
+fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStackEntry) {
     val articleId = backStackEntry.arguments?.getInt("articleId")
     val vm = hiltViewModel<ArticleViewModel>()
     val cvm = hiltViewModel<ArticleCommentViewModel>()
@@ -63,7 +64,9 @@ fun ArticleDetail(navHostController: NavHostController, backStackEntry: NavBackS
         }
     } else {
         val it = articleDetail ?: return
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
             item {
                 Column(
                     modifier = Modifier
