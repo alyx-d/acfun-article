@@ -57,7 +57,7 @@ fun ArticleSubCommentSheet(comment: SubComment?) {
                 .padding(start = 60.dp)
                 .fillMaxWidth()
         ) {
-            if (c.replyToUserName.isNotBlank()) {
+            if (c.replyToUserName.isNotBlank() && c.content.contains("回复 @").not()) {
                 c.content = "回复 @${c.replyToUserName}: ${c.content}"
             }
             CommentContent(c.content)
