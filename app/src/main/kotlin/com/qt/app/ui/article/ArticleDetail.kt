@@ -33,7 +33,6 @@ import com.qt.app.R
 import com.qt.app.util.Util.imageLoader
 import com.qt.app.vm.ArticleCommentViewModel
 import com.qt.app.vm.ArticleViewModel
-import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 
 @Composable

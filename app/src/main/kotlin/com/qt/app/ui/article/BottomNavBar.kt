@@ -6,6 +6,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +19,7 @@ import com.qt.app.ui.Routers
 import com.qt.app.ui.displayBottomBar
 
 @Composable
-fun BottomNavBar(navController: NavHostController) {
+fun BottomNavBar(navController: NavHostController, refreshState: MutableState<Boolean>) {
     var selected by remember { mutableIntStateOf(0) }
     // val itemArr = arrayOf("综合", "吐槽", "游戏", "动漫", "涂鸦", "漫文")
     val itemArr = arrayOf("综合", "吐槽", "游戏", "涂鸦")
@@ -41,6 +42,8 @@ fun BottomNavBar(navController: NavHostController) {
                             navController.navigate(Routers.ArticleList.path(args)) {
                                 launchSingleTop = true
                             }
+                        } else {
+                            refreshState.value = true
                         }
                         selected = index
                     },

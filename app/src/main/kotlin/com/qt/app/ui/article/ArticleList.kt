@@ -11,17 +11,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -31,14 +39,31 @@ import com.qt.app.util.Util
 import com.qt.app.vm.ArticleViewModel
 
 @Composable
-fun ArticleList(navController: NavHostController, backStackEntry: NavBackStackEntry) {
-    val vm = hiltViewModel<ArticleViewModel>()
+fun ArticleList(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry,
+    refreshState: MutableState<Boolean>
+) {
     val arguments = backStackEntry.arguments ?: return
+    val vm = hiltViewModel<ArticleViewModel>()
     val tabId = arguments.getInt("tabId")
     val articleList = vm.articleListTab[tabId].collectAsLazyPagingItems()
+    val context = LocalContext.current
+    if (articleList.itemCount == 0) {
+        PageLoading(context = context)
+    }
+    val state = rememberLazyListState()
+    if (refreshState.value) {
+        articleList.refresh()
+        refreshState.value = false
+        LaunchedEffect(Unit) {
+            state.scrollToItem(0)
+        }
+    }
     LazyColumn(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface),
+        state = state,
         contentPadding = PaddingValues(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {

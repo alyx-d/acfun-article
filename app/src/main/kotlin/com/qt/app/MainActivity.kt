@@ -7,6 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.qt.app.ui.RouteView
@@ -22,11 +25,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 val navController = rememberNavController()
+                val refreshState = remember { mutableStateOf(false) }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = { BottomNavBar(navController) }
+                    bottomBar = { BottomNavBar(navController, refreshState) }
                 ) { innerPadding ->
-                    RouteView(navController, Modifier.padding(innerPadding))
+                    Surface(modifier = Modifier.padding(innerPadding)) {
+                        RouteView(navController, refreshState)
+                    }
                 }
             }
         }

@@ -1,7 +1,7 @@
 package com.qt.app.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -12,16 +12,15 @@ import com.qt.app.ui.article.ArticleDetail
 import com.qt.app.ui.article.ArticleList
 
 @Composable
-fun RouteView(navController: NavHostController, modifier: Modifier) {
+fun RouteView(navController: NavHostController, refreshState: MutableState<Boolean>) {
     NavHost(
-        modifier = modifier,
         navController = navController,
         startDestination = Routers.ArticleList.route
     ) {
         composable(
             route = Routers.ArticleList.route,
             arguments = Routers.ArticleList.arguments
-        ) { backStackEntry -> ArticleList(navController, backStackEntry) }
+        ) { backStackEntry -> ArticleList(navController, backStackEntry, refreshState) }
         composable(
             route = Routers.ArticleDetail.route,
             arguments = Routers.ArticleDetail.arguments
