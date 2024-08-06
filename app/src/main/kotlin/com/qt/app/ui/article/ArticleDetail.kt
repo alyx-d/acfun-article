@@ -1,7 +1,9 @@
 package com.qt.app.ui.article
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -31,6 +35,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.qt.app.R
+import com.qt.app.ui.common.ImageViewer
 import com.qt.app.util.Util.imageLoader
 import com.qt.app.vm.ArticleCommentViewModel
 import com.qt.app.vm.ArticleViewModel
@@ -50,8 +55,8 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
             cvm.getCommentList(it)
         }
     }
+    val context = LocalContext.current
     if (articleDetail == null) {
-        val context = LocalContext.current
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 modifier = Modifier
@@ -64,56 +69,78 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
         }
     } else {
         val it = articleDetail ?: return
-        LazyColumn(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
-        ) {
-            item {
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp)
-                ) {
-                    Text(
-                        text = it.title, fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(bottom = 10.dp)
-                    )
-                    val html = Jsoup.parseBodyFragment(it.parts[0].content)
-                    html.allElements.forEach { el ->
-                        if ((el.nameIs("p") || el.nameIs("div")) && el.text().isNotBlank()) {
-                            Text(text = el.text())
-                        } else if (el.nameIs("img")) {
-                            AsyncImage(
-                                modifier = Modifier.fillMaxWidth(),
-                                model = el.attr("src"), contentDescription = "",
-                                contentScale = ContentScale.FillWidth
-                            )
+        val imageSet = remember { mutableSetOf<String>() }
+        val imageViewerState = remember {
+            mutableStateOf(false)
+        }
+        Box {
+            LazyColumn(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            ) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp)
+                    ) {
+                        Text(
+                            text = it.title, fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(bottom = 10.dp)
+                        )
+                        val html = Jsoup.parseBodyFragment(it.parts[0].content)
+                        html.allElements.forEach { el ->
+                            if ((el.nameIs("p") || el.nameIs("div")) && el.text().isNotBlank()) {
+                                Text(text = el.text())
+                            } else if (el.nameIs("img")) {
+                                val src = el.attr("src")
+                                imageSet.add(src)
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            imageViewerState.value = true
+                                        },
+                                    model = src,
+                                    imageLoader = imageLoader(context),
+                                    contentDescription = "",
+                                    contentScale = ContentScale.FillWidth
+                                )
+                            }
                         }
                     }
                 }
+                if (comments.itemCount == 0) {
+                    item {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
+                            textAlign = TextAlign.Center,
+                            text = "暂无评论",
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
+                } else {
+                    val commentCount = comments[0]?.info?.commentCount ?: 0
+                    item {
+                        Text(
+                            modifier = Modifier.padding(start = 5.dp),
+                            text = "全部评论 $commentCount",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                items(comments.itemCount) {
+                    ArticleComment(comments[it])
+                }
             }
-            if (comments.itemCount == 0) {
-                item { Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    textAlign = TextAlign.Center,
-                    text = "暂无评论",
-                    color = MaterialTheme.colorScheme.secondary
-                ) }
-            }else {
-                val commentCount = comments[0]?.info?.commentCount ?: 0
-                item { Text(
-                    modifier = Modifier.padding(start = 5.dp),
-                    text = "全部评论 $commentCount",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                ) }
-            }
-            items(comments.itemCount) {
-                ArticleComment(comments[it])
+            if (imageViewerState.value && imageSet.isNotEmpty()) {
+                AnimatedVisibility(visible = imageViewerState.value) {
+                    ImageViewer(imageViewerState, imageSet)
+                }
             }
         }
-
     }
 }
 
