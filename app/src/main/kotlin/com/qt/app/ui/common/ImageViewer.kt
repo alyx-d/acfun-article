@@ -2,6 +2,8 @@ package com.qt.app.ui.common
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -17,10 +19,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -31,7 +39,7 @@ import coil.compose.AsyncImage
 import com.qt.app.util.Util.imageLoader
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ImageViewer(
     imageViewerState: MutableState<Boolean>,
@@ -47,12 +55,15 @@ fun ImageViewer(
         pagerState.scrollToPage(index)
     }
     val context = LocalContext.current
+    var scale by remember { mutableFloatStateOf(1f) }
+    val state = rememberTransformableState { zoomChange, _, _ ->
+        scale *= zoomChange
+    }
     Box {
         HorizontalPager(
             modifier = Modifier
                 .background(Color.Black)
-                .padding(top = 20.dp)
-            ,
+                .padding(top = 20.dp),
             state = pagerState,
         ) { idx ->
             Card(
@@ -81,7 +92,14 @@ fun ImageViewer(
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .graphicsLayer(
+                                scaleX = scale.coerceIn(0.5f..4f),
+                                scaleY = scale.coerceIn(0.5f..4f),
+                            )
+                            .transformable(state)
+                            .pointerInteropFilter { false }
+                            .fillMaxWidth(),
                         model = imageList[idx],
                         contentDescription = null,
                         imageLoader = imageLoader(context),
@@ -97,12 +115,13 @@ fun ImageViewer(
                 .align(Alignment.TopStart)
                 .padding(start = 20.dp, top = 20.dp),
             horizontalArrangement = Arrangement.Start
-        ){
+        ) {
             Text(
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                text = "${pagerState.currentPage + 1} / ${pagerState.pageCount}")
+                fontSize = 16.sp,
+                text = "${pagerState.currentPage + 1} / ${pagerState.pageCount}"
+            )
         }
     }
 }
