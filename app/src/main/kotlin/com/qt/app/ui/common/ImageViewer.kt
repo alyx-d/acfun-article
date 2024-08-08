@@ -21,11 +21,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInteropFilter
@@ -55,10 +57,6 @@ fun ImageViewer(
         pagerState.scrollToPage(index)
     }
     val context = LocalContext.current
-    var scale by remember { mutableFloatStateOf(1f) }
-    val state = rememberTransformableState { zoomChange, _, _ ->
-        scale *= zoomChange
-    }
     Box {
         HorizontalPager(
             modifier = Modifier
@@ -66,6 +64,12 @@ fun ImageViewer(
                 .padding(top = 20.dp),
             state = pagerState,
         ) { idx ->
+            var scale by remember { mutableFloatStateOf(1f) }
+            var offset by remember { mutableStateOf(Offset.Zero) }
+            val state = rememberTransformableState { zoomChange, offsetChange, _ ->
+                scale *= zoomChange
+                offset += offsetChange
+            }
             Card(
                 modifier = Modifier
                     .graphicsLayer {
@@ -88,17 +92,18 @@ fun ImageViewer(
                 Box(
                     modifier = Modifier
                         .padding(top = 20.dp)
+                        .graphicsLayer(
+                            scaleX = scale.coerceIn(0.5f..3f),
+                            scaleY = scale.coerceIn(0.5f..3f),
+                            translationX = offset.x,
+                            translationY = offset.y
+                        )
+                        .transformable(state)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
                         modifier = Modifier
-                            .graphicsLayer(
-                                scaleX = scale.coerceIn(0.5f..4f),
-                                scaleY = scale.coerceIn(0.5f..4f),
-                            )
-                            .transformable(state)
-                            .pointerInteropFilter { false }
                             .fillMaxWidth(),
                         model = imageList[idx],
                         contentDescription = null,
