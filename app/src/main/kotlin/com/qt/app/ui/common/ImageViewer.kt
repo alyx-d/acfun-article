@@ -60,16 +60,9 @@ fun ImageViewer(
     Box {
         HorizontalPager(
             modifier = Modifier
-                .background(Color.Black)
-                .padding(top = 20.dp),
+                .background(Color.Black),
             state = pagerState,
         ) { idx ->
-            var scale by remember { mutableFloatStateOf(1f) }
-            var offset by remember { mutableStateOf(Offset.Zero) }
-            val state = rememberTransformableState { zoomChange, offsetChange, _ ->
-                scale *= zoomChange
-                offset += offsetChange
-            }
             Card(
                 modifier = Modifier
                     .graphicsLayer {
@@ -91,14 +84,6 @@ fun ImageViewer(
             ) {
                 Box(
                     modifier = Modifier
-                        .padding(top = 20.dp)
-                        .graphicsLayer(
-                            scaleX = scale.coerceIn(0.5f..3f),
-                            scaleY = scale.coerceIn(0.5f..3f),
-                            translationX = offset.x,
-                            translationY = offset.y
-                        )
-                        .transformable(state)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
