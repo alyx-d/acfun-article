@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "com.qt.app"
-    compileSdk = 34
+    compileSdk = Configurations.targetSdk
 
     defaultConfig {
         applicationId = "com.qt.app"
-        minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = Configurations.midSdk
+        targetSdk = Configurations.midSdk
+        versionCode = Configurations.versionCode
+        versionName = Configurations.versonName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -64,16 +64,12 @@ dependencies {
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.retrofit2.converter.scalars)
     implementation(libs.okhttp3.logging.interceptor)
-    implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.paging.rumtime)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

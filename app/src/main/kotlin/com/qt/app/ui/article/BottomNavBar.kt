@@ -15,7 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.qt.app.ui.Routers
+import com.qt.app.ui.AcfunScreens
 import com.qt.app.ui.displayBottomBar
 
 @Composable
@@ -35,11 +35,8 @@ fun BottomNavBar(navController: NavHostController, refreshState: MutableState<Bo
                     label = { Text(text = s) },
                     selected = selected == index,
                     onClick = {
-                        val args = mapOf(
-                            "tabId" to index,
-                        )
                         if (index != selected) {
-                            navController.navigate(Routers.ArticleList.path(args)) {
+                            navController.navigate(AcfunScreens.ArticleList.createRoute(index)) {
                                 launchSingleTop = true
                             }
                         } else {

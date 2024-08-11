@@ -12,29 +12,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.qt.app.ui.Routers
+import com.qt.app.ui.AcfunScreens
 import com.qt.app.util.Util
 import com.qt.app.vm.ArticleViewModel
 
@@ -72,7 +68,7 @@ fun ArticleList(
             Column(
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(Routers.ArticleDetail.path(mapOf("articleId" to it.articleId)))
+                        navController.navigate(AcfunScreens.ArticleDetail.createRoute(it.articleId))
                     }
                     .background(
                         color = MaterialTheme.colorScheme.background,

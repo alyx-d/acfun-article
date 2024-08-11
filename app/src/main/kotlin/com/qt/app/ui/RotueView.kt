@@ -15,35 +15,61 @@ import com.qt.app.ui.article.ArticleList
 fun RouteView(navController: NavHostController, refreshState: MutableState<Boolean>) {
     NavHost(
         navController = navController,
-        startDestination = Routers.ArticleList.route
+        startDestination = AcfunScreens.ArticleList.route
     ) {
         composable(
-            route = Routers.ArticleList.route,
-            arguments = Routers.ArticleList.arguments
+            route = AcfunScreens.ArticleList.route,
+            arguments = AcfunScreens.ArticleList.arguments
         ) { backStackEntry -> ArticleList(navController, backStackEntry, refreshState) }
         composable(
-            route = Routers.ArticleDetail.route,
-            arguments = Routers.ArticleDetail.arguments
+            route = AcfunScreens.ArticleDetail.route,
+            arguments = AcfunScreens.ArticleDetail.arguments
         ) { backStackEntry -> ArticleDetail(navController, backStackEntry) }
     }
 }
 
-enum class Routers(
-    val route: String,
-    val arguments: List<NamedNavArgument> = listOf(),
-    val path: (Map<String, Any>) -> String
+val displayBottomBar =
+    arrayOf(AcfunScreens.ArticleList)
+
+sealed class AcfunScreens(
+    val name: String,
+    val arguments: List<NamedNavArgument> = emptyList()
 ) {
-    ArticleList("article?tabId={tabId}", listOf(
-        navArgument("tabId") {
+    val route = name.appendArguments(arguments)
+
+    data object ArticleList: AcfunScreens(
+        name = "article-list",
+        arguments = listOf(navArgument("tabId") {
             type = NavType.IntType
             defaultValue = 0
-        }
-    ), { map -> "article?tabId=${map["tabId"]}" }),
-    ArticleDetail("article-detail/{articleId}", listOf(
-        navArgument("articleId") {
+        })
+    ) {
+        fun createRoute(tabId: Int): String =
+            route.replace("{${arguments.first().name}}", tabId.toString())
+    }
+
+    data object ArticleDetail: AcfunScreens(
+        name = "article-detail",
+        arguments = listOf(navArgument("articleId") {
             type = NavType.IntType
-        }), { map -> "article-detail/${map["articleId"]}" }),
+        })
+    ) {
+        fun createRoute(articleId: Int) =
+            route.replace("{${arguments.first().name}}", articleId.toString())
+    }
+
 }
 
-val displayBottomBar =
-    arrayOf(Routers.ArticleList)
+private fun String.appendArguments(arguments: List<NamedNavArgument>): String {
+    val requiredArguments = arguments.filter { it.argument.defaultValue == null }
+        .takeIf { it.isNotEmpty() }
+        ?.joinToString(prefix = "/", separator = "/") { "{${it.name}}" }
+        .orEmpty()
+    val optionalArguments = arguments.filter { it.argument.defaultValue != null }
+        .takeIf { it.isNotEmpty() }
+        ?.joinToString(prefix = "?", separator = "&") { "${it.name}={${it.name}}" }
+        .orEmpty()
+    return "$this$requiredArguments$optionalArguments"
+}
+
+
