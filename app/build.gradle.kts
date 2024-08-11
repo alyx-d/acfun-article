@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.qt.app"
         minSdk = Configurations.midSdk
-        targetSdk = Configurations.midSdk
+        targetSdk = Configurations.targetSdk
         versionCode = Configurations.versionCode
         versionName = Configurations.versonName
 
