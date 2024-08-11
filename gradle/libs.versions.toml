@@ -17,6 +17,7 @@ jsoup = "1.18.1"
 hilt = "2.49"
 kapt = "2.0.0"
 hiltNavigationCompose = "1.2.0"
+ksp = "2.0.0-1.0.24"
 
 
 [libraries]
@@ -59,3 +60,4 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt" }
 google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
