@@ -1,18 +1,12 @@
 package com.qt.app.api.ds
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.qt.app.api.AcfunArticleService
-import com.qt.app.api.Api
 import com.qt.app.api.dto.ArticleListParamDTO
-import com.qt.app.api.realmIdList
+import com.qt.app.api.service.AcfunArticleService
+import com.qt.app.api.service.realmIdList
 import com.qt.app.api.vo.ArticleVO
 import com.qt.app.util.Util.toMap
-import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 
 class ArticleListDataSource(private val service: AcfunArticleService, private var tabId: Int = 0) : PagingSource<String, ArticleVO>() {

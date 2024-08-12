@@ -3,18 +3,19 @@ package com.qt.app.vm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.qt.app.api.Api
-import com.qt.app.api.Repo
+import com.qt.app.api.Repository
 import com.qt.app.api.vo.ArticleDetailVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
 import javax.inject.Inject
 
 @HiltViewModel
 class ArticleViewModel @Inject constructor(
-    private val repo: Repo
+    private val repo: Repository,
+    private val json: Json,
 ) : ViewModel() {
 
     private val _articleList0 = repo.getArticleList(0).cachedIn(viewModelScope)
@@ -39,7 +40,7 @@ class ArticleViewModel @Inject constructor(
             if (content[content.lastIndex] == ';') {
                 content = content.substring(0, content.length - 1)
             }
-            val detail = Api.json.decodeFromString<ArticleDetailVO>(content)
+            val detail = json.decodeFromString<ArticleDetailVO>(content)
             _articleContent.emit(detail)
         }
     }
