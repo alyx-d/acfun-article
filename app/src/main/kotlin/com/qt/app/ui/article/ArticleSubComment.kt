@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleSubComment(comment: Comment) {
-    val subComment = comment.info.subCommentsMap[comment.commentId] ?: return
+    val subComment = comment.info?.subCommentsMap?.get(comment.commentId) ?: return
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -75,8 +75,10 @@ fun ArticleSubComment(comment: Comment) {
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            comment.subCommentCountFormat?.let {
-                Text(text = "共有${it}条回复 >", fontSize = 11.sp)
+            comment.subCommentCountFormat.let {
+                if (it.isNotBlank()) {
+                    Text(text = "共有${it}条回复 >", fontSize = 11.sp)
+                }
             }
         }
     }

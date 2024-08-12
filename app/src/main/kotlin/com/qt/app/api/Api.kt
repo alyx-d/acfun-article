@@ -8,10 +8,12 @@ import com.qt.app.api.vo.ResultVO
 import com.qt.app.api.vo.SubCommentPageVO
 import com.qt.app.api.vo.UserEmotionVO
 import com.qt.app.util.Util.toMap
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.Field
 import retrofit2.http.FieldMap
@@ -66,15 +68,16 @@ object Api {
             .addNetworkInterceptor(HttpLoggingInterceptor {
                 Log.d("HttpLog", it)
             }.apply {
-                 // setLevel(HttpLoggingInterceptor.Level.BODY)
+                  setLevel(HttpLoggingInterceptor.Level.BODY)
             })
             .build()
     }
 
+    val json = Json { ignoreUnknownKeys = true}
     fun retrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(json.asConverterFactory("application/json; charset=utf8".toMediaType()))
             .client(client())
             .build()
     }

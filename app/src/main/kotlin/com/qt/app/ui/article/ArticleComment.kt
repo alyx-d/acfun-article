@@ -87,7 +87,7 @@ fun ArticleComment(comment: Comment?) {
                     }
                 }
             }
-            if (c.info.subCommentsMap.isNotEmpty()) {
+            if (c.info?.subCommentsMap?.isNotEmpty() == true) {
                 ArticleSubComment(c)
             }
         }

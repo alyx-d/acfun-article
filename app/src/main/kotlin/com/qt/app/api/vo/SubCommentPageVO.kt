@@ -1,5 +1,8 @@
 package com.qt.app.api.vo
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SubCommentPageVO(
     var contentTitle: String,
     var curPage: Int,
@@ -8,6 +11,7 @@ data class SubCommentPageVO(
     var subComments: List<SubComment>
 )
 
+@Serializable
 data class SubComment(
     var commentId: Int,
     var userId: Int,

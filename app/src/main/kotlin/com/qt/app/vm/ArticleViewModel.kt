@@ -1,27 +1,16 @@
 package com.qt.app.vm
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import androidx.paging.compose.LazyPagingItems
+import com.qt.app.api.Api
 import com.qt.app.api.Repo
-import com.qt.app.util.Util
+import com.qt.app.api.vo.ArticleDetailVO
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 @HiltViewModel
 class ArticleViewModel @Inject constructor(
@@ -34,7 +23,7 @@ class ArticleViewModel @Inject constructor(
     private val _articleList3 = repo.getArticleList(3).cachedIn(viewModelScope)
     val articleListTab = arrayOf(_articleList0, _articleList1, _articleList2, _articleList3)
 
-    private val _articleContent = MutableStateFlow<ArticleDetail?>(null)
+    private val _articleContent = MutableStateFlow<ArticleDetailVO?>(null)
     val articleContent = _articleContent.asStateFlow()
 
     suspend fun getArticleDetail(articleId: Int) {
@@ -50,21 +39,10 @@ class ArticleViewModel @Inject constructor(
             if (content[content.lastIndex] == ';') {
                 content = content.substring(0, content.length - 1)
             }
-            val detail = Util.gson.fromJson(content, ArticleDetail::class.java)
+            val detail = Api.json.decodeFromString<ArticleDetailVO>(content)
             _articleContent.emit(detail)
         }
     }
-
-    data class Part(
-        var title: String,
-        var content: String,
-    )
-
-    data class ArticleDetail(
-        var title: String,
-        var articleId: Int,
-        var parts: List<Part>,
-    )
 }
 
 

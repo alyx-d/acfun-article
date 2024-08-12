@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.google.dagger.hilt.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
 }
 
 android {
@@ -61,7 +62,8 @@ dependencies {
     implementation(libs.coil.kt.compose)
     implementation(libs.coil.kt.gif)
     implementation(libs.retrofit2)
-    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.jetbrains.kotlinx.serialization.json)
+    implementation(libs.retrofit2.converter.kotlinx.serialization)
     implementation(libs.retrofit2.converter.scalars)
     implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.androidx.navigation.compose)

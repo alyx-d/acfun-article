@@ -1,10 +1,14 @@
 package com.qt.app.api.vo
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class UserEmotionVO(
     var result: Int,
     var emotionPackageList: List<EmotionPackage>
 )
 
+@Serializable
 data class EmotionPackage(
     var authorId: Int,
     var name: String,
@@ -13,11 +17,13 @@ data class EmotionPackage(
     var emotions: List<Emotion>,
 )
 
+@Serializable
 data class ImageInfo(
     var thumbnailImageCdnUrl: String,
     var size: Int,
 )
 
+@Serializable
 data class Emotion(
     var id: Int,
     var packageId: Int,

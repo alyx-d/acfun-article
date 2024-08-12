@@ -5,8 +5,6 @@ import android.os.Build.VERSION.SDK_INT
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import com.google.gson.GsonBuilder
-import com.google.gson.ToNumberPolicy
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -30,15 +28,6 @@ object Util {
     fun dateFormat(value: Long): String {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.of("UTC+8"))
             .format(dateFormater)
-    }
-    val gson = GsonBuilder()
-        .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
-        .create()
-
-    // 备用
-    private fun <T> T.ToMap(): Map<String, String> {
-        val map = mutableMapOf<String, String>()
-        return gson.fromJson(gson.toJson(this), map::class.java)
     }
 
     fun <T> T.toMap(): Map<String, String> {
