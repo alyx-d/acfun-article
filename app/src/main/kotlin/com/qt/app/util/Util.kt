@@ -2,6 +2,7 @@ package com.qt.app.util
 
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT
+import android.widget.Toast
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
@@ -21,6 +22,9 @@ fun main() {
 object Util {
     private val dateFormater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
+    fun showToast(msg: String, context: Context) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+    }
     fun imageLoader(context: Context) = ImageLoader.Builder(context)
         .components { add(if (SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory()) }
         .build()
