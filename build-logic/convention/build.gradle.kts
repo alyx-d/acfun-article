@@ -12,7 +12,7 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("") {
+        register("appVersion") {
             id = "com.qt.app.version"
             implementationClass = "VersionPlugin"
         }

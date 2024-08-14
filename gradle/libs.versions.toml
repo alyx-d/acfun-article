@@ -18,6 +18,7 @@ hilt = "2.52"
 hiltNavigationCompose = "1.2.0"
 ksp = "2.0.10-1.0.24"
 kotlinxJson = "1.7.1"
+unspecified = "unspecified"
 
 
 [libraries]
@@ -68,4 +69,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 #local-plugin
-qt-app-version = { id = "com.qt.app.version", version = "unspecified"}
+qt-app-version = { id = "com.qt.app.version", version.ref = "unspecified"}
