@@ -5,18 +5,19 @@ plugins {
     alias(libs.plugins.google.dagger.hilt.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
+    alias(libs.plugins.qt.app.version)
 }
 
 android {
     namespace = "com.qt.app"
-    compileSdk = Configurations.targetSdk
+    compileSdk = VersionConfig.targetSdk
 
     defaultConfig {
         applicationId = "com.qt.app"
-        minSdk = Configurations.midSdk
-        targetSdk = Configurations.targetSdk
-        versionCode = Configurations.versionCode
-        versionName = Configurations.versonName
+        minSdk = VersionConfig.midSdk
+        targetSdk = VersionConfig.targetSdk
+        versionCode = VersionConfig.versionCode
+        versionName = VersionConfig.versonName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

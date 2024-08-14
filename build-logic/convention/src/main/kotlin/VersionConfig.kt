@@ -1,4 +1,4 @@
-object Configurations {
+object VersionConfig {
     const val targetSdk = 34
     const val midSdk = 26
     const val majorVersion = 1
