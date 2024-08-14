@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.qt.app.R
 import com.qt.app.api.vo.Comment
+import com.qt.app.util.Util
 import com.qt.app.vm.ArticleCommentViewModel
 
 @Composable
@@ -47,6 +48,7 @@ fun ArticleComment(comment: Comment?) {
             Box(modifier = Modifier.padding(horizontal = 5.dp)) {
                 AsyncImage(
                     model = c.userHeadImgInfo.thumbnailImageCdnUrl,
+                    imageLoader = Util.imageLoader(LocalContext.current),
                     contentDescription = "",
                     modifier = Modifier
                         .size(50.dp)

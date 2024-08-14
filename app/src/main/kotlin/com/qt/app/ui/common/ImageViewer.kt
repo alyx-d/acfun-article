@@ -30,7 +30,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil.compose.AsyncImage
 import coil.imageLoader
-import com.qt.app.util.Util.gifLoader
+import com.qt.app.App
+import com.qt.app.util.Util
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
@@ -79,13 +80,12 @@ fun ImageViewer(
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    val imageLoader = if (imageList[idx].endsWith(".gif")) gifLoader(context) else context.imageLoader
                     AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth(),
                         model = imageList[idx],
                         contentDescription = null,
-                        imageLoader = imageLoader,
+                        imageLoader = Util.imageLoader(context),
                         contentScale = ContentScale.FillWidth
                     )
                 }

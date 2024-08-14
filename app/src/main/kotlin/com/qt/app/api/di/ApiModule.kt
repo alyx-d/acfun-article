@@ -35,7 +35,7 @@ internal object ApiModule {
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor {
-                Log.d("HttpLog", it)
+                // Log.d("HttpLog", it)
             }.apply { level = HttpLoggingInterceptor.Level.BODY })
             .build()
 

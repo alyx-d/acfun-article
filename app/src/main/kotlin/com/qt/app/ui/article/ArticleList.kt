@@ -88,6 +88,7 @@ fun ArticleList(
                 }
                 AsyncImage(
                     model = it.coverImgInfo.thumbnailImageCdnUrl,
+                    imageLoader = Util.imageLoader(context),
                     contentDescription = "",
                     modifier = Modifier
                         .fillMaxWidth()

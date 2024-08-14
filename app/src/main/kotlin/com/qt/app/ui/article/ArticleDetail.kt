@@ -28,10 +28,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import coil.imageLoader
+import coil.request.ImageRequest
+import com.qt.app.App
 import com.qt.app.ui.common.ImageViewer
-import com.qt.app.util.Util.gifLoader
+import com.qt.app.util.Util
 import com.qt.app.vm.ArticleCommentViewModel
 import com.qt.app.vm.ArticleViewModel
 import org.jsoup.Jsoup
@@ -83,19 +87,33 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                             } else if (el.nameIs("img")) {
                                 val src = el.attr("src")
                                 imageSet.add(src)
-                                val imageLoader = if (src.endsWith(".gif")) gifLoader(context) else context.imageLoader
-                                AsyncImage(
+                                SubcomposeAsyncImage(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable {
                                             imageViewerState.value = true
                                             currImage.value = src
                                         },
-                                    model = src,
-                                    imageLoader = imageLoader,
+                                    model = ImageRequest.Builder(context)
+                                        .data(src)
+                                        .crossfade(true)
+                                        .build(),
+                                    imageLoader = Util.imageLoader(context),
                                     contentDescription = "",
                                     contentScale = ContentScale.FillWidth
-                                )
+                                ) {
+                                    when (val state = painter.state) {
+                                        AsyncImagePainter.State.Empty -> {
+                                        }
+                                        is AsyncImagePainter.State.Error -> {
+                                        }
+                                        is AsyncImagePainter.State.Loading -> {
+                                        }
+                                        is AsyncImagePainter.State.Success -> {
+                                            SubcomposeAsyncImageContent()
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
+import com.qt.app.App
 import com.qt.app.R
-import com.qt.app.util.Util.gifLoader
+import com.qt.app.util.Util
 
 @Composable
 fun PageLoading(context: Context) {
@@ -24,7 +26,7 @@ fun PageLoading(context: Context) {
             modifier = Modifier
                 .size(150.dp)
                 .align(Alignment.Center),
-            painter = rememberAsyncImagePainter(R.drawable.loading_ac, gifLoader(context)),
+            painter = rememberAsyncImagePainter(R.drawable.loading_ac, Util.imageLoader(context)),
             contentDescription = "loading",
             contentScale = ContentScale.FillBounds,
         )

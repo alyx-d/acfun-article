@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.qt.app.api.vo.SubComment
+import com.qt.app.util.Util
 
 @Composable
 fun ArticleSubCommentSheet(comment: SubComment?) {
@@ -38,6 +40,7 @@ fun ArticleSubCommentSheet(comment: SubComment?) {
             Box(modifier = Modifier.padding(horizontal = 5.dp)) {
                 AsyncImage(
                     model = c.userHeadImgInfo.thumbnailImageCdnUrl,
+                    imageLoader = Util.imageLoader(LocalContext.current),
                     contentDescription = "",
                     modifier = Modifier
                         .size(50.dp)

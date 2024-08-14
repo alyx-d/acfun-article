@@ -6,6 +6,9 @@ import android.widget.Toast
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
+import okhttp3.OkHttpClient
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -25,9 +28,35 @@ object Util {
     fun showToast(msg: String, context: Context) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
-    fun gifLoader(context: Context) = ImageLoader.Builder(context)
-        .components { add(if (SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory()) }
-        .build()
+
+    fun imageLoader(context: Context): ImageLoader = lazy {
+        ImageLoader.Builder(context)
+            .components {
+                if (SDK_INT >= 28) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+            }
+            .memoryCache {
+                MemoryCache.Builder(context)
+                    .maxSizePercent(0.2)
+                    .build()
+            }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(context.filesDir.resolve("image_cache"))
+                    .maxSizeBytes(512L * 1024 * 1024)
+                    .build()
+            }
+            .okHttpClient {
+                OkHttpClient.Builder()
+                    .build()
+            }
+            .crossfade(true)
+            .respectCacheHeaders(false)
+            .build()
+    }.value
 
     fun dateFormat(value: Long): String {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.of("UTC+8"))
