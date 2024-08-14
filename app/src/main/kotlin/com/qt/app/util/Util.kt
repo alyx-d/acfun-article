@@ -25,7 +25,7 @@ object Util {
     fun showToast(msg: String, context: Context) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
-    fun imageLoader(context: Context) = ImageLoader.Builder(context)
+    fun gifLoader(context: Context) = ImageLoader.Builder(context)
         .components { add(if (SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory()) }
         .build()
 

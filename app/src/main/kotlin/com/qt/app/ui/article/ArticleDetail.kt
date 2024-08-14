@@ -1,16 +1,13 @@
 package com.qt.app.ui.article
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,7 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -33,10 +29,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import com.qt.app.R
+import coil.imageLoader
 import com.qt.app.ui.common.ImageViewer
-import com.qt.app.util.Util.imageLoader
+import com.qt.app.util.Util.gifLoader
 import com.qt.app.vm.ArticleCommentViewModel
 import com.qt.app.vm.ArticleViewModel
 import org.jsoup.Jsoup
@@ -57,16 +52,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
     }
     val context = LocalContext.current
     if (articleDetail == null) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                modifier = Modifier
-                    .size(150.dp)
-                    .align(Alignment.Center),
-                painter = rememberAsyncImagePainter(R.drawable.loading_ac, imageLoader(context)),
-                contentDescription = "loading",
-                contentScale = ContentScale.Fit,
-            )
-        }
+        PageLoading(context = context)
     } else {
         val it = articleDetail ?: return
         val imageSet = remember { mutableSetOf<String>() }
@@ -97,6 +83,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                             } else if (el.nameIs("img")) {
                                 val src = el.attr("src")
                                 imageSet.add(src)
+                                val imageLoader = if (src.endsWith(".gif")) gifLoader(context) else context.imageLoader
                                 AsyncImage(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -105,7 +92,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                             currImage.value = src
                                         },
                                     model = src,
-                                    imageLoader = imageLoader(context),
+                                    imageLoader = imageLoader,
                                     contentDescription = "",
                                     contentScale = ContentScale.FillWidth
                                 )
