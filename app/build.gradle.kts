@@ -45,6 +45,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeCompiler {
+        enableStrongSkippingMode = true
+    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
     }
