@@ -1,11 +1,8 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.qt.app.android.application)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.google.dagger.hilt.android)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
-    alias(libs.plugins.qt.app.version)
 }
 
 android {

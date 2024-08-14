@@ -67,6 +67,8 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
 #local-plugin
-qt-app-version = { id = "com.qt.app.version", version.ref = "unspecified"}
+qt-app-android-application = { id = "com.qt.app.android.application", version.ref = "unspecified"}
+qt-app-android-library = { id = "com.qt.app.android.library", version.ref = "unspecified"}

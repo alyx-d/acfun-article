@@ -12,9 +12,13 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("appVersion") {
-            id = "com.qt.app.version"
-            implementationClass = "VersionPlugin"
+        register("androidApplication") {
+            id = "com.qt.app.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register("androidLibrary") {
+            id = "com.qt.app.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
         }
     }
 }

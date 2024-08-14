@@ -1,24 +1,31 @@
 package com.qt.app
 
+import VersionConfig
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
-import org.gradle.api.Project
 
 
-internal fun Project.configureKotlinAndroid(
+internal fun configureKotlinAndroid(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
 ) {
     commonExtension.apply {
 
-        compileSdk = 34
+        compileSdk = VersionConfig.targetSdk
 
         defaultConfig {
-            minSdk = 26
+            minSdk = VersionConfig.midSdk
+        }
+
+        buildFeatures {
+            compose = true
         }
 
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_17
             targetCompatibility = JavaVersion.VERSION_17
+        }
+        lint {
+            targetSdk = VersionConfig.targetSdk
         }
     }
 }
