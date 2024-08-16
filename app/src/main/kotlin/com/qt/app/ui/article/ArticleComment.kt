@@ -1,6 +1,5 @@
 package com.qt.app.ui.article
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,14 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.qt.app.R
 import com.qt.app.api.vo.Comment
 import com.qt.app.util.Util
 import com.qt.app.vm.ArticleCommentViewModel
@@ -68,7 +64,7 @@ fun ArticleComment(comment: Comment?) {
                 .padding(start = 60.dp)
                 .fillMaxWidth()
         ) {
-            CommentContent(c.content)
+            ContentImageParse(c.content)
             Box(
                 modifier = Modifier.padding(top = 5.dp)
             ) {
@@ -97,7 +93,7 @@ fun ArticleComment(comment: Comment?) {
 }
 
 @Composable
-fun CommentContent(content: String) {
+fun ContentImageParse(content: String, fontSize: Int = 12) {
     val cvm = hiltViewModel<ArticleCommentViewModel>()
     val emotionMap by cvm.userEmotion.collectAsState()
     val rex = Regex(pattern = "\\[img=图片].+\\[/img]|\\[img].+\\[/img]|\\[emot=acfun,\\d+/]")
@@ -117,7 +113,7 @@ fun CommentContent(content: String) {
             if (text.isNotBlank()) {
                 Text(
                     text = text,
-                    fontSize = 12.sp,
+                    fontSize = fontSize.sp,
                 )
             }
             if (idx < imgs.size) {
@@ -128,7 +124,7 @@ fun CommentContent(content: String) {
     }else {
         Text(
             text = content,
-            fontSize = 12.sp
+            fontSize = fontSize.sp
         )
     }
 }

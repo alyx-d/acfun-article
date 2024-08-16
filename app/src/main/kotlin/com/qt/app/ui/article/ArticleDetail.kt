@@ -81,10 +81,11 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                 fontSize = 20.sp,
                                 modifier = Modifier.padding(bottom = 10.dp)
                             )
-                            val html = Jsoup.parseBodyFragment(it.parts[0].content)
-                            html.allElements.forEach { el ->
-                                if ((el.nameIs("p") || el.nameIs("div")) && el.text().isNotBlank()) {
-                                    Text(text = el.text())
+                            val html = Jsoup.parse(it.parts[0].content)
+                            html.body().allElements.forEach { el ->
+                                if ((el.nameIs("p") || el.nameIs("div")) && el.ownText().isNotBlank()) {
+                                    // 可能存在存在表情包
+                                    ContentImageParse(el.ownText(), fontSize = 16)
                                 } else if (el.nameIs("img")) {
                                     val src = el.attr("src")
                                     imageSet.add(src)

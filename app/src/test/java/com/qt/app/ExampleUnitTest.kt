@@ -1,5 +1,6 @@
 package com.qt.app
 
+import org.jsoup.Jsoup
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -12,6 +13,11 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        val html = Jsoup.parseBodyFragment("<div><div>如上</div></div>")
+        html.body().allElements.forEach {
+            if ((it.nameIs("div") || it.nameIs("p"))) {
+                println(it.ownText())
+            }
+        }
     }
 }
