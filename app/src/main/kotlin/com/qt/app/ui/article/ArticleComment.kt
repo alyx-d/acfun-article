@@ -56,7 +56,11 @@ fun ArticleComment(comment: Comment?) {
                 fontSize = 13.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = if (c.nameRed == 1) Color.Red else Color.Unspecified
+                color = when(c.nameColor) {
+                    1 -> Color.Red
+                    2 -> Color(0xFF984ffd)
+                    else -> Color.Unspecified
+                }
             )
         }
         Column(

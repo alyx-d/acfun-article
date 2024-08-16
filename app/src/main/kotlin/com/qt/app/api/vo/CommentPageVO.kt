@@ -24,6 +24,7 @@ data class Comment(
     var subCommentCountFormat: String = "",
     var postDate: String,
     var nameRed: Int,
+    var nameColor: Int,
     var sourceId: Int,
     var sourceType: Int,
     var userHeadImgInfo: UserHeadImgInfo,
