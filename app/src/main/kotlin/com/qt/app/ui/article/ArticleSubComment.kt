@@ -89,11 +89,11 @@ fun ArticleSubComment(comment: Comment) {
                 showBottomSheet = false
             },
             sheetState = sheetState,
-            scrimColor = Color(0x5CFFFFFF)
+            scrimColor = Color(0x00FFFFFF)
         ) {
             LazyColumn {
                 items(subCommentList.itemCount) {
-                    ArticleSubCommentSheet(subCommentList[it])
+                    ArticleSubCommentItem(subCommentList[it])
                 }
             }
         }

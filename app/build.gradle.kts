@@ -59,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:ui-state"))
     implementation(libs.jsoup)
     implementation(libs.coil.kt.compose)
     implementation(libs.coil.kt.gif)

@@ -7,6 +7,7 @@ import com.qt.app.api.vo.ResultVO
 import com.qt.app.api.vo.SubCommentPageVO
 import com.qt.app.api.vo.UserEmotionVO
 import com.qt.app.util.Util.toMap
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
@@ -46,7 +47,7 @@ interface AcfunArticleDetailService {
 
     @GET("/a/ac{articleId}")
     @Headers("UserAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-    suspend fun getArticleDetail(@Path("articleId") articleId: Int): String
+    suspend fun getArticleDetail(@Path("articleId") articleId: Int): Response<String>
 }
 
 interface AcfunArticleCommentsService {

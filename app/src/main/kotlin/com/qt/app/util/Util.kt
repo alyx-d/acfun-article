@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.reflect.KProperty1
 
 fun main() {
-    val s = "[img=图片]垃圾[/img]123[emot=acfun,1111/]"
+    val s = "[img=图片]134[/img]123[emot=acfun,1111/]"
     val rex = Regex(pattern = "\\[img=图片].+\\[/img]|\\[emot=acfun,\\d+/]")
     rex.findAll(s).forEach { println(it.value) }
 //    println(rex.replace(s, "-=-=-"))

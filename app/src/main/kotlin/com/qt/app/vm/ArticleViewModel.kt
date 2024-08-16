@@ -5,9 +5,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.qt.app.api.Repository
 import com.qt.app.api.vo.ArticleDetailVO
+import com.qt.app.ui.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
 import javax.inject.Inject
@@ -24,24 +27,30 @@ class ArticleViewModel @Inject constructor(
     private val _articleList3 = repo.getArticleList(3).cachedIn(viewModelScope)
     val articleListTab = arrayOf(_articleList0, _articleList1, _articleList2, _articleList3)
 
-    private val _articleContent = MutableStateFlow<ArticleDetailVO?>(null)
-    val articleContent = _articleContent.asStateFlow()
+    private val _articleDetailUiState = MutableStateFlow<UiState>(UiState.Loading)
+    val articleDetailUiState = _articleDetailUiState.asStateFlow()
 
-    suspend fun getArticleDetail(articleId: Int) {
-        val data = repo.getArticleDetail(articleId)
-        // 解析
-        val document = Jsoup.parse(data)
-        val script = document.select("#main > script")
-        if (script.isNotEmpty()) {
-            val html = script[0].html()
-            val len = html.length
-            var content = html.substring(21, len - 45)
-            content = content.trim()
-            if (content[content.lastIndex] == ';') {
-                content = content.substring(0, content.length - 1)
+    fun getArticleDetail(articleId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repo.getArticleDetail(articleId)
+            if (response.isSuccessful && response.body() != null) {
+                // 解析
+                val document = Jsoup.parse(response.body()!!)
+                val script = document.select("#main > script")
+                if (script.isNotEmpty()) {
+                    val html = script[0].html()
+                    val len = html.length
+                    var content = html.substring(21, len - 45)
+                    content = content.trim()
+                    if (content[content.lastIndex] == ';') {
+                        content = content.substring(0, content.length - 1)
+                    }
+                    val detail = json.decodeFromString<ArticleDetailVO>(content)
+                    _articleDetailUiState.emit(UiState.Success(detail))
+                }
+            }else {
+                _articleDetailUiState.emit(UiState.Error())
             }
-            val detail = json.decodeFromString<ArticleDetailVO>(content)
-            _articleContent.emit(detail)
         }
     }
 }

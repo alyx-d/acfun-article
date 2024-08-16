@@ -31,10 +31,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import coil.imageLoader
 import coil.request.ImageRequest
-import com.qt.app.App
+import com.qt.app.api.vo.ArticleDetailVO
 import com.qt.app.ui.common.ImageViewer
+import com.qt.app.ui.state.UiState
 import com.qt.app.util.Util
 import com.qt.app.vm.ArticleCommentViewModel
 import com.qt.app.vm.ArticleViewModel
@@ -45,7 +45,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
     val articleId = backStackEntry.arguments?.getInt("articleId")
     val vm = hiltViewModel<ArticleViewModel>()
     val cvm = hiltViewModel<ArticleCommentViewModel>()
-    val articleDetail by vm.articleContent.collectAsState()
+    val articleDetailUiState by vm.articleDetailUiState.collectAsState()
     val comments = cvm.commentList.collectAsLazyPagingItems()
     LaunchedEffect(articleId) {
         articleId?.let {
@@ -55,98 +55,100 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
         }
     }
     val context = LocalContext.current
-    if (articleDetail == null) {
-        PageLoading(context = context)
-    } else {
-        val it = articleDetail ?: return
-        val imageSet = remember { mutableSetOf<String>() }
-        val imageViewerState = remember {
-            mutableStateOf(false)
-        }
-        val currImage = remember {
-            mutableStateOf<String?>(null)
-        }
-        Box {
-            LazyColumn(
-                modifier = Modifier.background(MaterialTheme.colorScheme.background)
-            ) {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .padding(10.dp)
-                    ) {
-                        Text(
-                            text = it.title, fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(bottom = 10.dp)
-                        )
-                        val html = Jsoup.parseBodyFragment(it.parts[0].content)
-                        html.allElements.forEach { el ->
-                            if ((el.nameIs("p") || el.nameIs("div")) && el.text().isNotBlank()) {
-                                Text(text = el.text())
-                            } else if (el.nameIs("img")) {
-                                val src = el.attr("src")
-                                imageSet.add(src)
-                                SubcomposeAsyncImage(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            imageViewerState.value = true
-                                            currImage.value = src
-                                        },
-                                    model = ImageRequest.Builder(context)
-                                        .data(src)
-                                        .crossfade(true)
-                                        .build(),
-                                    imageLoader = Util.imageLoader(context),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.FillWidth
-                                ) {
-                                    when (val state = painter.state) {
-                                        AsyncImagePainter.State.Empty -> {
-                                        }
-                                        is AsyncImagePainter.State.Error -> {
-                                        }
-                                        is AsyncImagePainter.State.Loading -> {
-                                        }
-                                        is AsyncImagePainter.State.Success -> {
-                                            SubcomposeAsyncImageContent()
+    when(articleDetailUiState) {
+        is UiState.Error -> {}
+        UiState.Loading -> PageLoading(context = context)
+        is UiState.Success -> {
+            val it = (articleDetailUiState as UiState.Success).data as ArticleDetailVO
+            val imageSet = remember { mutableSetOf<String>() }
+            val imageViewerState = remember {
+                mutableStateOf(false)
+            }
+            val currImage = remember {
+                mutableStateOf<String?>(null)
+            }
+            Box {
+                LazyColumn(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                ) {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .padding(10.dp)
+                        ) {
+                            Text(
+                                text = it.title, fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                modifier = Modifier.padding(bottom = 10.dp)
+                            )
+                            val html = Jsoup.parseBodyFragment(it.parts[0].content)
+                            html.allElements.forEach { el ->
+                                if ((el.nameIs("p") || el.nameIs("div")) && el.text().isNotBlank()) {
+                                    Text(text = el.text())
+                                } else if (el.nameIs("img")) {
+                                    val src = el.attr("src")
+                                    imageSet.add(src)
+                                    SubcomposeAsyncImage(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                imageViewerState.value = true
+                                                currImage.value = src
+                                            },
+                                        model = ImageRequest.Builder(context)
+                                            .data(src)
+                                            .crossfade(true)
+                                            .build(),
+                                        imageLoader = Util.imageLoader(context),
+                                        contentDescription = "",
+                                        contentScale = ContentScale.FillWidth
+                                    ) {
+                                        when (val state = painter.state) {
+                                            AsyncImagePainter.State.Empty -> {
+                                            }
+                                            is AsyncImagePainter.State.Error -> {
+                                            }
+                                            is AsyncImagePainter.State.Loading -> {
+                                            }
+                                            is AsyncImagePainter.State.Success -> {
+                                                SubcomposeAsyncImageContent()
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                if (comments.itemCount == 0) {
-                    item {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp),
-                            textAlign = TextAlign.Center,
-                            text = "暂无评论",
-                            color = MaterialTheme.colorScheme.secondary
-                        )
+                    if (comments.itemCount == 0) {
+                        item {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(50.dp),
+                                textAlign = TextAlign.Center,
+                                text = "暂无评论",
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        }
+                    } else {
+                        val commentCount = comments[0]?.info?.commentCount ?: 0
+                        item {
+                            Text(
+                                modifier = Modifier.padding(start = 5.dp),
+                                text = "全部评论 $commentCount",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
-                } else {
-                    val commentCount = comments[0]?.info?.commentCount ?: 0
-                    item {
-                        Text(
-                            modifier = Modifier.padding(start = 5.dp),
-                            text = "全部评论 $commentCount",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                    items(comments.itemCount) {
+                        ArticleComment(comments[it])
                     }
                 }
-                items(comments.itemCount) {
-                    ArticleComment(comments[it])
-                }
-            }
-            if (imageViewerState.value && imageSet.isNotEmpty()) {
-                AnimatedVisibility(visible = imageViewerState.value) {
-                    ImageViewer(imageViewerState, imageSet, currImage)
+                if (imageViewerState.value && imageSet.isNotEmpty()) {
+                    AnimatedVisibility(visible = imageViewerState.value) {
+                        ImageViewer(imageViewerState, imageSet, currImage)
+                    }
                 }
             }
         }

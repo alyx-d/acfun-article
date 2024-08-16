@@ -100,7 +100,7 @@ fun ArticleComment(comment: Comment?) {
 fun CommentContent(content: String) {
     val cvm = hiltViewModel<ArticleCommentViewModel>()
     val emotionMap by cvm.userEmotion.collectAsState()
-    val rex = Regex(pattern = "\\[img=图片].+\\[/img]|\\[emot=acfun,\\d+/]")
+    val rex = Regex(pattern = "\\[img=图片].+\\[/img]|\\[img].+\\[/img]|\\[emot=acfun,\\d+/]")
     val imgs = rex.findAll(content).mapTo(mutableListOf()) {
         if (it.value.contains("img")) {
             it.value.substring(8, it.value.length - 6)
@@ -130,63 +130,5 @@ fun CommentContent(content: String) {
             text = content,
             fontSize = 12.sp
         )
-    }
-}
-
-@Preview
-@Composable
-private fun Test() {
-    val nameRed = 1
-    Column(
-        modifier = Modifier
-            .clip(RoundedCornerShape(10))
-            .background(Color.White)
-            .padding(5.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(R.drawable.loading_ac),
-                contentDescription = "",
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(RoundedCornerShape(50)),
-            )
-            Text(
-                text = "用户名",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = if (nameRed == 1) Color.Red else Color.Unspecified
-            )
-        }
-        Column(
-            modifier = Modifier
-                .padding(start = 50.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶好耶",
-                fontSize = 12.sp,
-                lineHeight = 15.sp,
-            )
-            Box(
-                modifier = Modifier.padding(top = 5.dp)
-            ) {
-                Row {
-                    Text(
-                        modifier = Modifier
-                            .alignByBaseline()
-                            .padding(end = 10.dp),
-                        text = "#1",
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                }
-
-            }
-            ArticleSubCommentTest()
-        }
     }
 }

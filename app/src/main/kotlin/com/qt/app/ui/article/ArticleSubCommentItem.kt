@@ -24,7 +24,7 @@ import com.qt.app.api.vo.SubComment
 import com.qt.app.util.Util
 
 @Composable
-fun ArticleSubCommentSheet(comment: SubComment?) {
+fun ArticleSubCommentItem(comment: SubComment?) {
     val c = comment ?: return
     Column(
         modifier = Modifier

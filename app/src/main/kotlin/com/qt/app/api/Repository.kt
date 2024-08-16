@@ -14,6 +14,7 @@ import com.qt.app.api.vo.Comment
 import com.qt.app.api.vo.SubComment
 import com.qt.app.api.vo.UserEmotionVO
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import javax.inject.Inject
 
 class Repository @Inject constructor(
@@ -28,7 +29,7 @@ class Repository @Inject constructor(
         ).flow
     }
 
-    suspend fun getArticleDetail(articleId: Int): String {
+    suspend fun getArticleDetail(articleId: Int): Response<String> {
         return acfunArticleDetailService.getArticleDetail(articleId)
     }
 
