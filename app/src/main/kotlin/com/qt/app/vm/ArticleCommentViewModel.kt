@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.qt.app.api.Repository
-import com.qt.app.api.vo.Comment
-import com.qt.app.api.vo.Emotion
+import com.qt.app.api.vo.CommentPageVO
+import com.qt.app.api.vo.UserEmotionVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +17,7 @@ class ArticleCommentViewModel @Inject constructor(
     private val repo: Repository,
 ) : ViewModel() {
 
-    private val _commentList: MutableStateFlow<PagingData<Comment>> = MutableStateFlow(PagingData.empty())
+    private val _commentList: MutableStateFlow<PagingData<CommentPageVO.Comment>> = MutableStateFlow(PagingData.empty())
     val commentList = _commentList.cachedIn(viewModelScope)
 
     suspend fun getCommentList(sourceId: Int) {
@@ -26,13 +26,13 @@ class ArticleCommentViewModel @Inject constructor(
         }
     }
 
-    private val _userEmotion = MutableStateFlow<Map<String, Emotion>>(mapOf())
+    private val _userEmotion = MutableStateFlow<Map<String, UserEmotionVO.Emotion>>(mapOf())
     val userEmotion = _userEmotion.asStateFlow()
 
     suspend fun getUserEmotion() {
         val data = repo.getUserEmotion()
         if (data.result == 0) {
-            val map = mutableMapOf<String, Emotion>()
+            val map = mutableMapOf<String, UserEmotionVO.Emotion>()
             data.emotionPackageList.forEach { pack ->
                 pack.emotions.forEach { emo ->
                     map[emo.id.toString()] = emo

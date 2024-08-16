@@ -7,10 +7,12 @@ data class ArticleDetailVO(
     var title: String,
     var articleId: Int,
     var parts: List<Part>,
-)
+) {
+    @Serializable
+    data class Part(
+        var title: String,
+        var content: String,
+    )
+}
 
-@Serializable
-data class Part(
-    var title: String,
-    var content: String,
-)
+

@@ -24,12 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.qt.app.api.vo.Comment
+import com.qt.app.api.vo.CommentPageVO
 import com.qt.app.util.Util
 import com.qt.app.vm.ArticleCommentViewModel
 
 @Composable
-fun ArticleComment(comment: Comment?) {
+fun ArticleComment(comment: CommentPageVO.Comment?) {
     val c = comment ?: return
     Column(
         modifier = Modifier

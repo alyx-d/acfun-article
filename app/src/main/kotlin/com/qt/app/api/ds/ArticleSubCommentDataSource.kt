@@ -4,19 +4,19 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.qt.app.api.dto.SubCommentListParamDTO
 import com.qt.app.api.service.AcfunArticleCommentsService
-import com.qt.app.api.vo.SubComment
+import com.qt.app.api.vo.SubCommentPageVO
 import com.qt.app.util.Util.toMap
 
 class ArticleSubCommentDataSource(
     private val service: AcfunArticleCommentsService,
     private val sourceId: Int,
     private val rootCommentId: Int,
-) : PagingSource<Int, SubComment>() {
-    override fun getRefreshKey(state: PagingState<Int, SubComment>): Int? {
+) : PagingSource<Int, SubCommentPageVO.SubComment>() {
+    override fun getRefreshKey(state: PagingState<Int, SubCommentPageVO.SubComment>): Int? {
         return null
     }
     private var totalPage: Int = -1
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SubComment> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SubCommentPageVO.SubComment> {
         val currPage = params.key ?: 1
         return try {
             if (totalPage > -1 && currPage > totalPage) return LoadResult.Error(Exception("no more"))

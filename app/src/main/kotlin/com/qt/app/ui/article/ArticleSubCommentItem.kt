@@ -20,11 +20,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.qt.app.api.vo.SubComment
+import com.qt.app.api.vo.SubCommentPageVO
 import com.qt.app.util.Util
 
 @Composable
-fun ArticleSubCommentItem(comment: SubComment?) {
+fun ArticleSubCommentItem(comment: SubCommentPageVO.SubComment?) {
     val c = comment ?: return
     Column(
         modifier = Modifier

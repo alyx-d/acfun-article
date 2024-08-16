@@ -10,8 +10,8 @@ import com.qt.app.api.service.AcfunArticleCommentsService
 import com.qt.app.api.service.AcfunArticleDetailService
 import com.qt.app.api.service.AcfunArticleService
 import com.qt.app.api.vo.ArticleVO
-import com.qt.app.api.vo.Comment
-import com.qt.app.api.vo.SubComment
+import com.qt.app.api.vo.CommentPageVO
+import com.qt.app.api.vo.SubCommentPageVO
 import com.qt.app.api.vo.UserEmotionVO
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -34,14 +34,14 @@ class Repository @Inject constructor(
     }
 
 
-    fun getArticleCommentList(sourceId: Int): Flow<PagingData<Comment>> {
+    fun getArticleCommentList(sourceId: Int): Flow<PagingData<CommentPageVO.Comment>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),
             pagingSourceFactory = { ArticleCommentsDataSource(acfunArticleCommentsService, sourceId) }
         ).flow
     }
 
-    fun getArticleSubCommentList(sourceId: Int, rootCommentId: Int): Flow<PagingData<SubComment>> {
+    fun getArticleSubCommentList(sourceId: Int, rootCommentId: Int): Flow<PagingData<SubCommentPageVO.SubComment>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),
             pagingSourceFactory = {ArticleSubCommentDataSource( acfunArticleCommentsService,sourceId, rootCommentId)}

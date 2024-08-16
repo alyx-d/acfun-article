@@ -18,9 +18,10 @@ data class ArticleVO (
     var userName: String,
     var viewCount: Int,
     var coverImgInfo: CoverImgInfo
-)
-@Serializable
-data class CoverImgInfo(
-    var animated: Boolean,
-    var thumbnailImageCdnUrl: String,
-)
+) {
+    @Serializable
+    data class CoverImgInfo(
+        var animated: Boolean,
+        var thumbnailImageCdnUrl: String,
+    )
+}

@@ -4,21 +4,21 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.qt.app.api.dto.CommentListParamDTO
 import com.qt.app.api.service.AcfunArticleCommentsService
-import com.qt.app.api.vo.Comment
+import com.qt.app.api.vo.CommentPageVO
 import com.qt.app.util.Util.toMap
 
 class ArticleCommentsDataSource(
     private val service: AcfunArticleCommentsService,
     private val sourceId: Int,
-) : PagingSource<Int, Comment>() {
+) : PagingSource<Int, CommentPageVO.Comment>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Comment>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, CommentPageVO.Comment>): Int? {
         return null
     }
 
     private var totalPage: Int = -1
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CommentPageVO.Comment> {
         val currPage = params.key ?: 1
         return try {
             if (totalPage > - 1 && currPage > totalPage) return LoadResult.Error(Exception("没有下一页"))

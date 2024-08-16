@@ -30,13 +30,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.qt.app.api.vo.Comment
+import com.qt.app.api.vo.CommentPageVO
 import com.qt.app.vm.ArticleSubCommentViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleSubComment(comment: Comment) {
+fun ArticleSubComment(comment: CommentPageVO.Comment) {
     val subComment = comment.info?.subCommentsMap?.get(comment.commentId) ?: return
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
