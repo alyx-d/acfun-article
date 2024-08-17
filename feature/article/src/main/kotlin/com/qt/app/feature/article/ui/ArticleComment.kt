@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.qt.app.feature.article.api.vo.CommentPageVO
+import com.qt.app.feature.article.ui.common.usernameColor
 import com.qt.app.feature.article.util.Util
 import com.qt.app.feature.article.vm.ArticleCommentViewModel
 
@@ -54,16 +55,15 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
                     imageLoader = Util.imageLoader(context),
                     contentDescription = "",
                     modifier = Modifier
-                        .size(50.dp)
+                        .size(40.dp)
                         .clip(RoundedCornerShape(50))
                         .align(Alignment.Center)
                     ,
                 )
                 AsyncImage(model = c.avatarImage, contentDescription = null,
                     imageLoader = Util.imageLoader(context),
-                    modifier = Modifier.size(75.dp)
+                    modifier = Modifier.size(50.dp)
                         .align(Alignment.Center)
-                        .absoluteOffset(y = (-5).dp)
                 )
             }
             Text(
@@ -71,11 +71,7 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
                 fontSize = 13.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = when(c.nameColor) {
-                    1 -> Color.Red
-                    2 -> Color(0xFF984ffd)
-                    else -> Color.Unspecified
-                }
+                color = usernameColor(c.nameColor)
             )
         }
         Column(

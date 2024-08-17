@@ -5,10 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +21,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -28,17 +34,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import coil.request.ImageRequest
+import com.qt.app.core.ui.state.UiState
 import com.qt.app.feature.article.api.vo.ArticleDetailVO
 import com.qt.app.feature.article.ui.common.PageLoading
+import com.qt.app.feature.article.ui.common.usernameColor
 import com.qt.app.feature.article.util.Util
-import com.qt.app.ui.common.ImageViewer
-import com.qt.app.core.ui.state.UiState
 import com.qt.app.feature.article.vm.ArticleCommentViewModel
 import com.qt.app.feature.article.vm.ArticleViewModel
+import com.qt.app.ui.common.ImageViewer
 import org.jsoup.Jsoup
 
 @Composable
@@ -56,7 +63,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
         }
     }
     val context = LocalContext.current
-    when(articleDetailUiState) {
+    when (articleDetailUiState) {
         is UiState.Error -> {}
         UiState.Loading -> PageLoading(context = context)
         is UiState.Success -> {
@@ -80,11 +87,38 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                             Text(
                                 text = it.title, fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
-                                modifier = Modifier.padding(bottom = 10.dp)
                             )
+                            Spacer(modifier = Modifier.padding(vertical = 5.dp))
+                            Row {
+                                arrayOf(
+                                    it.createTime,
+                                    "${it.formatViewCount}人阅读",
+                                    "AC${it.articleId}"
+                                ).forEach {
+                                    Text(text = it, color = MaterialTheme.colorScheme.secondary)
+                                    Spacer(modifier = Modifier.padding(end = 10.dp))
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.padding(vertical = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                AsyncImage(
+                                    model = it.user.userHeadImgInfo.thumbnailImageCdnUrl,
+                                    contentDescription = null,
+                                    imageLoader = Util.imageLoader(LocalContext.current),
+                                    modifier = Modifier
+                                        .padding(horizontal = 5.dp)
+                                        .size(40.dp)
+                                        .clip(RoundedCornerShape(50))
+                                )
+                                Text(text = it.user.name, color = usernameColor(it.user.nameColor))
+                            }
                             val html = Jsoup.parse(it.parts[0].content)
                             html.body().allElements.forEach { el ->
-                                if ((el.nameIs("p") || el.nameIs("div")) && el.ownText().isNotBlank()) {
+                                if ((el.nameIs("p") || el.nameIs("div")) && el.ownText()
+                                        .isNotBlank()
+                                ) {
                                     // 可能存在存在表情包
                                     ContentImageParse(el.ownText(), fontSize = 16)
                                 } else if (el.nameIs("img")) {
@@ -105,12 +139,15 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                         when (val state = painter.state) {
                                             AsyncImagePainter.State.Empty -> {
                                             }
+
                                             is AsyncImagePainter.State.Error -> {
                                                 Text(text = "图片加载失败")
                                             }
+
                                             is AsyncImagePainter.State.Loading -> {
                                                 Text(text = "图片加载中")
                                             }
+
                                             is AsyncImagePainter.State.Success -> {
                                                 SubcomposeAsyncImageContent()
                                             }
