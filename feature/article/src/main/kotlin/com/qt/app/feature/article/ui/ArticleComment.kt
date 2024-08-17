@@ -1,12 +1,18 @@
 package com.qt.app.feature.article.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.TransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,14 +47,23 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val context = LocalContext.current
             Box(modifier = Modifier.padding(horizontal = 5.dp)) {
                 AsyncImage(
                     model = c.userHeadImgInfo.thumbnailImageCdnUrl,
-                    imageLoader = Util.imageLoader(LocalContext.current),
+                    imageLoader = Util.imageLoader(context),
                     contentDescription = "",
                     modifier = Modifier
                         .size(50.dp)
-                        .clip(RoundedCornerShape(50)),
+                        .clip(RoundedCornerShape(50))
+                        .align(Alignment.Center)
+                    ,
+                )
+                AsyncImage(model = c.avatarImage, contentDescription = null,
+                    imageLoader = Util.imageLoader(context),
+                    modifier = Modifier.size(75.dp)
+                        .align(Alignment.Center)
+                        .absoluteOffset(y = (-5).dp)
                 )
             }
             Text(

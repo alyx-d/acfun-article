@@ -16,6 +16,7 @@ data class CommentPageVO(
 
     @Serializable
     data class Comment(
+        var avatarImage: String,
         var commentId: Int,
         var userId: Int,
         var userName: String,
