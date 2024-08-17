@@ -25,3 +25,5 @@ rootProject.name = "AcfunArticle"
 include(":app")
 include(":core:ui-state")
 include(":core:network")
+include(":core:navigation")
+include(":feature:article")

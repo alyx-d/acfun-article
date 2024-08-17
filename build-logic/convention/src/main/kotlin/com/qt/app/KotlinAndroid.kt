@@ -27,5 +27,8 @@ internal fun configureKotlinAndroid(
         lint {
             targetSdk = VersionConfig.targetSdk
         }
+        composeOptions {
+            kotlinCompilerExtensionVersion = "1.5.15"
+        }
     }
 }

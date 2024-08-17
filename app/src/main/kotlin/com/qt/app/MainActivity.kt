@@ -12,8 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.qt.app.ui.BottomNavBar
 import com.qt.app.ui.RouteView
-import com.qt.app.ui.article.BottomNavBar
 import com.qt.app.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
