@@ -20,5 +20,9 @@ gradlePlugin {
             id = "com.qt.app.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
+        register("androidHilt") {
+            id = "com.qt.app.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
     }
 }

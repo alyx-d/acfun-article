@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.qt.app.android.application)
-    alias(libs.plugins.google.devtools.ksp)
-    alias(libs.plugins.google.dagger.hilt.android)
+    alias(libs.plugins.qt.app.android.hilt)
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
 }
 
@@ -88,7 +87,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.jetbrains.kotlin.reflect)
-    implementation(libs.google.dagger.hilt.android)
-    ksp(libs.google.dagger.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
 }

@@ -10,5 +10,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization) apply false
     alias(libs.plugins.qt.app.android.application) apply false
     alias(libs.plugins.qt.app.android.library) apply false
+    alias(libs.plugins.qt.app.android.hilt) apply false
 }
 

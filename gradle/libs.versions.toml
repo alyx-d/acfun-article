@@ -72,3 +72,4 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin"
 #local-plugin
 qt-app-android-application = { id = "com.qt.app.android.application", version.ref = "unspecified"}
 qt-app-android-library = { id = "com.qt.app.android.library", version.ref = "unspecified"}
+qt-app-android-hilt = { id = "com.qt.app.android.hilt", version = "unspecified"}
