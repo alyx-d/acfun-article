@@ -95,8 +95,11 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                     "${it.formatViewCount}人阅读",
                                     "AC${it.articleId}"
                                 ).forEach {
-                                    Text(text = it, fontSize = 13.sp,
-                                        color = MaterialTheme.colorScheme.secondary)
+                                    Text(
+                                        text = it, fontSize = 13.sp,
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        modifier = Modifier.alignByBaseline()
+                                    )
                                     Spacer(modifier = Modifier.padding(end = 10.dp))
                                 }
                             }
