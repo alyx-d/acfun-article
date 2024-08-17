@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.qt.app.ui.BottomNavBar
-import com.qt.app.ui.RouteView
+import com.qt.app.ui.AppNavHost
 import com.qt.app.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     bottomBar = { BottomNavBar(navController, refreshState) }
                 ) { innerPadding ->
                     Surface(modifier = Modifier.padding(innerPadding)) {
-                        RouteView(navController, refreshState)
+                        AppNavHost(navController, refreshState)
                     }
                 }
             }

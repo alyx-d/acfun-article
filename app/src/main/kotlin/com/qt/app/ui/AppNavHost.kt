@@ -1,6 +1,7 @@
 package com.qt.app.ui
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -14,11 +15,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.qt.app.feature.article.ui.ArticleDetail
 import com.qt.app.feature.article.ui.ArticleList
-import com.qt.app.feature.article.util.Util
 import com.qt.app.core.navigation.AcfunScreens
 
 @Composable
-fun RouteView(navController: NavHostController, refreshState: MutableState<Boolean>) {
+fun AppNavHost(navController: NavHostController, refreshState: MutableState<Boolean>) {
     val context = LocalContext.current
     val activity = (context as? Activity)
     var time by remember {
@@ -26,7 +26,7 @@ fun RouteView(navController: NavHostController, refreshState: MutableState<Boole
     }
     BackHandler {
         if (System.currentTimeMillis() - time > 2000) {
-            Util.showToast(msg = "再次点击退出程序~", context)
+            Toast.makeText(context, "再次点击退出程序~", Toast.LENGTH_SHORT).show()
             time = System.currentTimeMillis()
         }else {
             activity?.finish()
