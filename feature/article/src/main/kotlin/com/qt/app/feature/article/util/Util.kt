@@ -38,23 +38,7 @@ object Util {
                     add(GifDecoder.Factory())
                 }
             }
-            .memoryCache {
-                MemoryCache.Builder(context)
-                    .maxSizePercent(0.2)
-                    .build()
-            }
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(context.filesDir.resolve("image_cache"))
-                    .maxSizeBytes(512L * 1024 * 1024)
-                    .build()
-            }
-            .okHttpClient {
-                OkHttpClient.Builder()
-                    .build()
-            }
             .crossfade(true)
-            .respectCacheHeaders(false)
             .build()
     }.value
 

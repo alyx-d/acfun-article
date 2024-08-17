@@ -97,10 +97,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                                 imageViewerState.value = true
                                                 currImage.value = src
                                             },
-                                        model = ImageRequest.Builder(context)
-                                            .data(src)
-                                            .crossfade(true)
-                                            .build(),
+                                        model = src,
                                         imageLoader = Util.imageLoader(context),
                                         contentDescription = "",
                                         contentScale = ContentScale.FillWidth
@@ -109,8 +106,10 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                             AsyncImagePainter.State.Empty -> {
                                             }
                                             is AsyncImagePainter.State.Error -> {
+                                                Text(text = "图片加载失败")
                                             }
                                             is AsyncImagePainter.State.Loading -> {
+                                                Text(text = "图片加载中")
                                             }
                                             is AsyncImagePainter.State.Success -> {
                                                 SubcomposeAsyncImageContent()
