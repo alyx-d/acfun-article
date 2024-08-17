@@ -9,7 +9,7 @@ enum class BaseService(val baseUrl: String) {
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class RetrofitService(val ApiContentType: ApiContentType)
+annotation class RetrofitService(val apiContentType: ApiContentType)
 
 enum class ApiContentType {
     STRING,
