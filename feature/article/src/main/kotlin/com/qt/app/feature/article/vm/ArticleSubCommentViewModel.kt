@@ -1,4 +1,4 @@
-package com.qt.app.vm
+package com.qt.app.feature.article.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

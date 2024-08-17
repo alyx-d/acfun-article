@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.qt.app.feature.article.api.vo.CommentPageVO
-import com.qt.app.vm.ArticleSubCommentViewModel
+import com.qt.app.feature.article.vm.ArticleSubCommentViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -37,8 +37,8 @@ import com.qt.app.feature.article.ui.common.PageLoading
 import com.qt.app.feature.article.util.Util
 import com.qt.app.ui.common.ImageViewer
 import com.qt.app.core.ui.state.UiState
-import com.qt.app.vm.ArticleCommentViewModel
-import com.qt.app.vm.ArticleViewModel
+import com.qt.app.feature.article.vm.ArticleCommentViewModel
+import com.qt.app.feature.article.vm.ArticleViewModel
 import org.jsoup.Jsoup
 
 @Composable

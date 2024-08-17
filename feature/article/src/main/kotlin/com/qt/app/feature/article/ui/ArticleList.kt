@@ -33,7 +33,7 @@ import coil.compose.AsyncImage
 import com.qt.app.feature.article.ui.common.PageLoading
 import com.qt.app.feature.article.util.Util
 import com.qt.app.core.navigation.AcfunScreens
-import com.qt.app.vm.ArticleViewModel
+import com.qt.app.feature.article.vm.ArticleViewModel
 
 @Composable
 fun ArticleList(

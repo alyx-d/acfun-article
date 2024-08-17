@@ -26,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.qt.app.feature.article.api.vo.CommentPageVO
 import com.qt.app.feature.article.util.Util
-import com.qt.app.vm.ArticleCommentViewModel
+import com.qt.app.feature.article.vm.ArticleCommentViewModel
 
 @Composable
 fun ArticleComment(comment: CommentPageVO.Comment?) {
