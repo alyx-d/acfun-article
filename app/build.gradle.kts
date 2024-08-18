@@ -58,7 +58,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:video"))
     implementation(project(":feature:article"))
+    implementation(project(":feature:dynamic"))
+    implementation(project(":feature:profile"))
     implementation(libs.jsoup)
     implementation(libs.coil.kt.compose)
     implementation(libs.coil.kt.gif)

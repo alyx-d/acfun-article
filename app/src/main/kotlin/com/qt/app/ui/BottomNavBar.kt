@@ -21,7 +21,7 @@ import com.qt.app.core.navigation.AcfunScreens
 fun BottomNavBar(navController: NavHostController, refreshState: MutableState<Boolean>) {
     var selected by remember { mutableIntStateOf(0) }
     // val itemArr = arrayOf("综合", "吐槽", "游戏", "动漫", "涂鸦", "漫文")
-    val itemArr = arrayOf("综合", "吐槽", "游戏", "涂鸦")
+    val itemArr = arrayOf("视频", "文章", "动态", "我的")
     val entry by navController.currentBackStackEntryAsState()
     val bottomBarState = remember {
         mutableStateOf(false)
@@ -35,7 +35,7 @@ fun BottomNavBar(navController: NavHostController, refreshState: MutableState<Bo
                     selected = selected == index,
                     onClick = {
                         if (index != selected) {
-                            navController.navigate(AcfunScreens.ArticleList.createRoute(index)) {
+                            navController.navigate(displayBottomBar[index].createRoute()) {
                                 launchSingleTop = true
                             }
                         } else {

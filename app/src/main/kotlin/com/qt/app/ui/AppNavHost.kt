@@ -13,9 +13,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.qt.app.feature.article.ui.ArticleDetail
-import com.qt.app.feature.article.ui.ArticleList
 import com.qt.app.core.navigation.AcfunScreens
+import com.qt.app.feature.article.ui.ArticleDetail
+import com.qt.app.feature.article.ui.ArticlePage
+import com.qt.app.feature.dynmic.ui.DynamicPage
+import com.qt.app.feature.profile.ui.ProfilePage
+import com.qt.app.feature.video.ui.VideoPage
 
 @Composable
 fun AppNavHost(navController: NavHostController, refreshState: MutableState<Boolean>) {
@@ -28,18 +31,26 @@ fun AppNavHost(navController: NavHostController, refreshState: MutableState<Bool
         if (System.currentTimeMillis() - time > 2000) {
             Toast.makeText(context, "再次点击退出程序~", Toast.LENGTH_SHORT).show()
             time = System.currentTimeMillis()
-        }else {
+        } else {
             activity?.finish()
         }
     }
     NavHost(
         navController = navController,
-        startDestination = AcfunScreens.ArticleList.route
+        startDestination = AcfunScreens.VideoPage.route
     ) {
+        composable(route = AcfunScreens.VideoPage.route) {
+            VideoPage()
+        }
+        composable(route = AcfunScreens.DynamicPage.route) {
+            DynamicPage()
+        }
+        composable(route = AcfunScreens.ProfilePage.route) {
+            ProfilePage()
+        }
         composable(
-            route = AcfunScreens.ArticleList.route,
-            arguments = AcfunScreens.ArticleList.arguments
-        ) { backStackEntry -> ArticleList(navController, backStackEntry, refreshState) }
+            route = AcfunScreens.ArticlePage.route,
+        ) { _ -> ArticlePage(navController, refreshState) }
         composable(
             route = AcfunScreens.ArticleDetail.route,
             arguments = AcfunScreens.ArticleDetail.arguments
@@ -48,7 +59,12 @@ fun AppNavHost(navController: NavHostController, refreshState: MutableState<Bool
 }
 
 val displayBottomBar =
-    arrayOf(AcfunScreens.ArticleList)
+    arrayOf(
+        AcfunScreens.VideoPage,
+        AcfunScreens.ArticlePage,
+        AcfunScreens.DynamicPage,
+        AcfunScreens.ProfilePage,
+    )
 
 
 

@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     bottomBar = { BottomNavBar(navController, refreshState) }
                 ) { innerPadding ->
                     Surface(modifier = Modifier.padding(innerPadding)) {
-                        AppNavHost(navController, refreshState)
+                         AppNavHost(navController, refreshState)
                     }
                 }
             }
