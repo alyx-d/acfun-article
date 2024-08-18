@@ -1,6 +1,7 @@
 package com.qt.app.feature.article.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -38,7 +39,9 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import coil.compose.rememberAsyncImagePainter
 import com.qt.app.core.ui.state.UiState
+import com.qt.app.feature.article.R
 import com.qt.app.feature.article.api.vo.ArticleDetailVO
 import com.qt.app.feature.article.ui.common.PageLoading
 import com.qt.app.feature.article.ui.common.usernameColor
@@ -149,7 +152,12 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                             }
 
                                             is AsyncImagePainter.State.Loading -> {
-                                                Text(text = "图片加载中")
+                                                Image(
+                                                    painter = rememberAsyncImagePainter(R.drawable.image_loading, Util.imageLoader(context)),
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(40.dp),
+                                                    contentScale = ContentScale.Inside
+                                                )
                                             }
 
                                             is AsyncImagePainter.State.Success -> {
