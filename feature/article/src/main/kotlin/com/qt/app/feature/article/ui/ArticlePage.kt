@@ -63,7 +63,7 @@ fun ArticlePage(
                     }
                     selectedIndex = index
                     coroutineScope.launch {
-                        state.scrollToPage(selectedIndex)
+                        state.animateScrollToPage(selectedIndex)
                     }
                 }) {
                     Text(text = tab,

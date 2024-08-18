@@ -15,11 +15,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.qt.app.core.navigation.AcfunScreens
 
 @Composable
 fun BottomNavBar(navController: NavHostController, refreshState: MutableState<Boolean>) {
-    var selected by remember { mutableIntStateOf(0) }
+    var selectedIndex by remember { mutableIntStateOf(0) }
     // val itemArr = arrayOf("综合", "吐槽", "游戏", "动漫", "涂鸦", "漫文")
     val itemArr = arrayOf("视频", "文章", "动态", "我的")
     val entry by navController.currentBackStackEntryAsState()
@@ -30,18 +29,19 @@ fun BottomNavBar(navController: NavHostController, refreshState: MutableState<Bo
     AnimatedVisibility(visible = bottomBarState.value) {
         NavigationBar {
             itemArr.forEachIndexed { index, s ->
+                val selected = selectedIndex == index
                 NavigationBarItem(
                     label = { Text(text = s) },
-                    selected = selected == index,
+                    selected = selected,
                     onClick = {
-                        if (index != selected) {
+                        if (!selected) {
                             navController.navigate(displayBottomBar[index].createRoute()) {
                                 launchSingleTop = true
                             }
                         } else {
                             refreshState.value = true
                         }
-                        selected = index
+                        selectedIndex = index
                     },
                     icon = { /* TODO */ },
                     colors = NavigationBarItemDefaults.colors(
