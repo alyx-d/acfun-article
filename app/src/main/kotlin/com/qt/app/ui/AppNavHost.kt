@@ -64,15 +64,17 @@ fun AppNavHost(
                 val videoPageState = rememberLazyGridState()
                 val selectedIndex = rememberSaveable { mutableIntStateOf(0) }
                 val articlePageState = rememberPagerState(pageCount = { 4 })
-                val articleListState = rememberLazyListState()
+                val articleListStates = List(4) { rememberLazyListState() }
                 AnimatedHomePage(visible = selectedPage.intValue == 0) {
                     VideoPage(state = videoPageState)
                 }
                 AnimatedHomePage(visible = selectedPage.intValue == 1) {
-                    ArticlePage(navController, refreshState,
+                    ArticlePage(
+                        navController,
+                        refreshState,
                         selectedIndex = selectedIndex,
                         articlePageState = articlePageState,
-                        articleListState = articleListState,
+                        articleListStates = articleListStates,
                     )
                 }
                 AnimatedHomePage(visible = selectedPage.intValue == 2) {
@@ -97,7 +99,11 @@ val displayBottomBar =
 
 @Composable
 fun AnimatedHomePage(visible: Boolean, content: @Composable () -> Unit) {
-    AnimatedVisibility(visible, enter = fadeIn() + expandHorizontally(), exit = shrinkHorizontally() + fadeOut()) {
+    AnimatedVisibility(
+        visible,
+        enter = fadeIn() + expandHorizontally(),
+        exit = shrinkHorizontally() + fadeOut()
+    ) {
         content()
     }
 }

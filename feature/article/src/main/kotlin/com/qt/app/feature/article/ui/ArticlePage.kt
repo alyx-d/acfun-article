@@ -36,7 +36,7 @@ fun ArticlePage(
     refreshState: MutableState<Boolean>,
     articlePageState: PagerState,
     selectedIndex: MutableIntState,
-    articleListState: LazyListState,
+    articleListStates: List<LazyListState>,
     vm: ArticleViewModel = hiltViewModel(),
 ) {
     val tabs = arrayOf("综合", "吐槽", "游戏", "涂鸦")
@@ -73,7 +73,7 @@ fun ArticlePage(
             }
         }
         HorizontalPager(state = articlePageState) { idx ->
-            ArticleList(navController, idx, refreshState, vm, articleListState)
+            ArticleList(navController, idx, refreshState, vm, articleListStates[idx])
         }
     }
 }
