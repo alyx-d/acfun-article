@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -79,7 +80,7 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
                 .padding(start = 60.dp)
                 .fillMaxWidth()
         ) {
-            ContentImageParse(c.content)
+            ContentImageParse(c.content, lineHeight = 18.sp)
             Box(
                 modifier = Modifier.padding(top = 5.dp)
             ) {
@@ -108,7 +109,7 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
 }
 
 @Composable
-fun ContentImageParse(content: String, fontSize: Int = 12) {
+fun ContentImageParse(content: String, fontSize: Int = 12, lineHeight: TextUnit = TextUnit.Unspecified) {
     val cvm = hiltViewModel<ArticleCommentViewModel>()
     val emotionMap by cvm.userEmotion.collectAsState()
     val rex = Regex(pattern = "\\[img=图片].+\\[/img]|\\[img].+\\[/img]|\\[emot=acfun,\\d+/]")
@@ -129,6 +130,7 @@ fun ContentImageParse(content: String, fontSize: Int = 12) {
                 Text(
                     text = text,
                     fontSize = fontSize.sp,
+                    lineHeight = lineHeight
                 )
             }
             if (idx < imgs.size) {
@@ -139,7 +141,8 @@ fun ContentImageParse(content: String, fontSize: Int = 12) {
     }else {
         Text(
             text = content,
-            fontSize = fontSize.sp
+            fontSize = fontSize.sp,
+            lineHeight = lineHeight
         )
     }
 }

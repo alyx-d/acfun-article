@@ -64,7 +64,7 @@ fun ArticleSubCommentItem(comment: SubCommentPageVO.SubComment?) {
             if (c.replyToUserName.isNotBlank() && c.content.contains("回复 @").not()) {
                 c.content = "回复 @${c.replyToUserName}: ${c.content}"
             }
-            ContentImageParse(c.content)
+            ContentImageParse(c.content, lineHeight = 18.sp)
             Box(
                 modifier = Modifier.padding(top = 5.dp)
             ) {

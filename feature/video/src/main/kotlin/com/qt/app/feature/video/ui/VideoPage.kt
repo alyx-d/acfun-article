@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,7 +59,9 @@ fun VideoPage(
         UiState.Loading -> PageLoading(context)
         is UiState.Success -> {
             val videos = ((uiState as UiState.Success).data as List<*>)[0] as List<*>
-            LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+            LazyVerticalGrid(columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(5.dp)
+                ) {
                 items(videos) {
                     val video = it as HomeBananaListVO.VideoInfo
                     VideoItem(video)
@@ -75,19 +79,21 @@ fun VideoItem(
     val context = LocalContext.current
     Card(
         modifier = Modifier
-            .padding(5.dp)
+            .padding(3.dp)
             .fillMaxWidth(),
+        shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
         Column {
             Box(modifier = Modifier.height(120.dp)
-                .fillMaxWidth()) {
+                .fillMaxWidth()
+            ) {
                 AsyncImage(
                     modifier = Modifier.height(120.dp)
                         .fillMaxWidth(),
                     model = video.coverImage, contentDescription = null,
                     imageLoader = Util.imageLoader(context),
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.Crop
                 )
                 Row(
                     modifier = Modifier
@@ -107,10 +113,10 @@ fun VideoItem(
                                 .border(
                                     width = 1.dp,
                                     color = Color.White,
-                                    shape = RoundedCornerShape(3.dp)
+                                    shape = RoundedCornerShape(5f)
                                 )
                         )
-                        Spacer(modifier = Modifier.width(5.dp))
+                        Spacer(modifier = Modifier.width(2.dp))
                         Text(
                             fontSize = 12.sp,
                             text = video.clickCount,
@@ -127,15 +133,16 @@ fun VideoItem(
             Spacer(modifier = Modifier.height(3.dp))
             Column {
                 Text(
-                    fontSize = 15.sp,
+                    fontSize = 12.sp,
                     minLines = 2,
                     text = video.title,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 14.sp
                 )
                 Text(
                     text = video.upName,
-                    fontSize = 13.sp,
+                    fontSize = 11.sp,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }

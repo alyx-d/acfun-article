@@ -73,6 +73,7 @@ fun ArticleSubComment(comment: CommentPageVO.Comment) {
                     },
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
+                    lineHeight = 18.sp
                 )
             }
             comment.subCommentCountFormat.let {
@@ -96,56 +97,6 @@ fun ArticleSubComment(comment: CommentPageVO.Comment) {
                     ArticleSubCommentItem(subCommentList[it])
                 }
             }
-        }
-    }
-}
-
-
-@Preview
-@Composable
-fun ArticleSubCommentTest() {
-    Card(
-        shape = ShapeDefaults.ExtraSmall,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Column(
-            modifier = Modifier.padding(5.dp)
-        ) {
-            Text(
-                buildAnnotatedString {
-                    withStyle(
-                        SpanStyle(
-                            fontSize = 11.sp,
-                            color = MaterialTheme.colorScheme.scrim
-                        )
-                    ) {
-                        append("用户名: ")
-                    }
-                    withStyle(SpanStyle(fontSize = 12.sp)) {
-                        append("评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容")
-                    }
-                },
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Text(text = "共有12条回复 >", fontSize = 11.sp)
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun BottomSheet() {
-    ModalBottomSheet(
-        onDismissRequest = {
-
-        },
-    ) {
-        // Sheet content
-        Button(onClick = {
-        }) {
-            Text("Hide bottom sheet")
         }
     }
 }
