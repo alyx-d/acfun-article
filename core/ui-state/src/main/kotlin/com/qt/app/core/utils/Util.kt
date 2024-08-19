@@ -1,4 +1,4 @@
-package com.qt.app.feature.article.util
+package com.qt.app.core.utils
 
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT

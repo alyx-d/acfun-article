@@ -1,4 +1,4 @@
-package com.qt.app.feature.article.ui.common
+package com.qt.app.core.ui.common
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.qt.app.feature.article.R
-import com.qt.app.feature.article.util.Util
+import com.qt.app.core.utils.Util
+import com.qt.app.ui.state.R
 
 @Composable
 fun PageLoading(context: Context) {

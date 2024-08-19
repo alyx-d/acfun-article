@@ -1,4 +1,4 @@
-package com.qt.app.ui.common
+package com.qt.app.core.ui.common
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -29,8 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil.compose.AsyncImage
-import coil.imageLoader
-import com.qt.app.feature.article.util.Util
+import com.qt.app.core.utils.Util
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)

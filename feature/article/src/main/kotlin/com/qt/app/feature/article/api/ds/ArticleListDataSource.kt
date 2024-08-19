@@ -6,7 +6,7 @@ import com.qt.app.feature.article.api.dto.ArticleListParamDTO
 import com.qt.app.feature.article.api.service.AcfunArticleService
 import com.qt.app.feature.article.api.service.realmIdList
 import com.qt.app.feature.article.api.vo.ArticleVO
-import com.qt.app.feature.article.util.Util.toMap
+import com.qt.app.core.utils.Util.toMap
 
 
 class ArticleListDataSource(private val service: AcfunArticleService, private var tabId: Int = 0) : PagingSource<String, ArticleVO>() {

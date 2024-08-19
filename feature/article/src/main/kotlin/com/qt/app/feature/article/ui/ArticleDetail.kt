@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -43,12 +44,12 @@ import coil.compose.rememberAsyncImagePainter
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.feature.article.R
 import com.qt.app.feature.article.api.vo.ArticleDetailVO
-import com.qt.app.feature.article.ui.common.PageLoading
+import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.feature.article.ui.common.usernameColor
-import com.qt.app.feature.article.util.Util
+import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.vm.ArticleCommentViewModel
 import com.qt.app.feature.article.vm.ArticleViewModel
-import com.qt.app.ui.common.ImageViewer
+import com.qt.app.core.ui.common.ImageViewer
 import org.jsoup.Jsoup
 
 @Composable
@@ -93,17 +94,20 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                             )
                             Spacer(modifier = Modifier.padding(vertical = 5.dp))
                             Row {
-                                arrayOf(
+                                val tips = arrayOf(
                                     it.createTime,
                                     "${it.formatViewCount}人阅读",
                                     "AC${it.articleId}"
-                                ).forEach {
+                                )
+                                tips.forEachIndexed { idx, it ->
                                     Text(
                                         text = it, fontSize = 13.sp,
                                         color = MaterialTheme.colorScheme.secondary,
                                         modifier = Modifier.alignByBaseline()
                                     )
-                                    Spacer(modifier = Modifier.padding(end = 10.dp))
+                                    if (idx != tips.lastIndex) {
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                    }
                                 }
                             }
                             Row(

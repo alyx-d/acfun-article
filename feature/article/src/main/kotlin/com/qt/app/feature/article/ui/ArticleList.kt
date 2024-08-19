@@ -26,12 +26,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.qt.app.feature.article.ui.common.PageLoading
-import com.qt.app.feature.article.util.Util
+import com.qt.app.core.ui.common.PageLoading
+import com.qt.app.core.utils.Util
 import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.feature.article.vm.ArticleViewModel
 

@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.qt.app.feature.article.api.dto.CommentListParamDTO
 import com.qt.app.feature.article.api.service.AcfunArticleCommentsService
 import com.qt.app.feature.article.api.vo.CommentPageVO
-import com.qt.app.feature.article.util.Util.toMap
+import com.qt.app.core.utils.Util.toMap
 
 class ArticleCommentsDataSource(
     private val service: AcfunArticleCommentsService,

@@ -6,7 +6,7 @@ import com.qt.app.feature.article.api.vo.CommentPageVO
 import com.qt.app.feature.article.api.vo.ResultVO
 import com.qt.app.feature.article.api.vo.SubCommentPageVO
 import com.qt.app.feature.article.api.vo.UserEmotionVO
-import com.qt.app.feature.article.util.Util.toMap
+import com.qt.app.core.utils.Util.toMap
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FieldMap

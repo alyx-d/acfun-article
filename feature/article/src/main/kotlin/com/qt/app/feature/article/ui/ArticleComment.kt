@@ -26,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.qt.app.feature.article.api.vo.CommentPageVO
 import com.qt.app.feature.article.ui.common.usernameColor
-import com.qt.app.feature.article.util.Util
+import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.vm.ArticleCommentViewModel
 
 @Composable
