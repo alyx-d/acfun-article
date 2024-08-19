@@ -4,8 +4,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
@@ -13,12 +14,9 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,21 +34,20 @@ import kotlinx.coroutines.launch
 fun ArticlePage(
     navController: NavHostController,
     refreshState: MutableState<Boolean>,
+    articlePageState: PagerState,
+    selectedIndex: MutableIntState,
+    articleListState: LazyListState,
     vm: ArticleViewModel = hiltViewModel(),
 ) {
     val tabs = arrayOf("综合", "吐槽", "游戏", "涂鸦")
-    var selectedIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    val state = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(state) {
-        snapshotFlow { state.currentPage }.collect {
-            selectedIndex = it
+    LaunchedEffect(articlePageState) {
+        snapshotFlow { articlePageState.currentPage }.collect {
+            selectedIndex.intValue = it
         }
     }
     Column {
-        TabRow(selectedTabIndex = selectedIndex,
+        TabRow(selectedTabIndex = selectedIndex.intValue,
             containerColor = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .padding(horizontal = 5.dp)
@@ -58,14 +55,14 @@ fun ArticlePage(
                 .clip(RoundedCornerShape(10))
         ) {
             tabs.forEachIndexed { index, tab ->
-                val selected = selectedIndex == index
+                val selected = selectedIndex.intValue == index
                 Tab(selected = selected, onClick = {
                     if (selected) {
                         refreshState.value = true
                     }
-                    selectedIndex = index
+                    selectedIndex.intValue = index
                     coroutineScope.launch {
-                        state.animateScrollToPage(selectedIndex)
+                        articlePageState.animateScrollToPage(selectedIndex.intValue)
                     }
                 }) {
                     Text(text = tab,
@@ -75,8 +72,8 @@ fun ArticlePage(
                 }
             }
         }
-        HorizontalPager(state = state) { idx ->
-            ArticleList(navController, idx, refreshState, vm)
+        HorizontalPager(state = articlePageState) { idx ->
+            ArticleList(navController, idx, refreshState, vm, articleListState)
         }
     }
 }

@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -46,11 +46,12 @@ import com.qt.app.feature.video.vm.VideoPageViewModule
 
 @Composable
 fun VideoPage(
-    vm: VideoPageViewModule = hiltViewModel()
+    vm: VideoPageViewModule = hiltViewModel(),
+    state: LazyGridState
 ) {
     val uiState by vm.videoUiState.collectAsState()
     val context = LocalContext.current
-    val state = rememberLazyGridState()
+
     when (uiState) {
         is UiState.Error -> Text(text = "Error")
         UiState.Loading -> PageLoading(context)

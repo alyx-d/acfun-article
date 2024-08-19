@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,13 +25,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
+import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.utils.Util
-import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.feature.article.vm.ArticleViewModel
 
 @Composable
@@ -40,13 +39,14 @@ fun ArticleList(
     tabId: Int,
     refreshState: MutableState<Boolean>,
     vm: ArticleViewModel,
+    state: LazyListState
 ) {
     val articleList = vm.articleListTab[tabId].collectAsLazyPagingItems()
     val context = LocalContext.current
     if (articleList.itemCount == 0) {
         PageLoading(context = context)
     }
-    val state = rememberLazyListState()
+
     if (refreshState.value) {
         articleList.refresh()
         refreshState.value = false

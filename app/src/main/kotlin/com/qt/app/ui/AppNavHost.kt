@@ -4,14 +4,23 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -24,6 +33,7 @@ import com.qt.app.feature.dynmic.ui.DynamicPage
 import com.qt.app.feature.profile.ui.ProfilePage
 import com.qt.app.feature.video.ui.VideoPage
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -50,17 +60,27 @@ fun AppNavHost(
         composable(
             route = AcfunScreens.HomePage.route,
         ) { _ ->
-            AnimatedHomePage(visible = selectedPage.intValue == 0) {
-                VideoPage()
-            }
-            AnimatedHomePage(visible = selectedPage.intValue == 1) {
-                ArticlePage(navController, refreshState)
-            }
-            AnimatedHomePage(visible = selectedPage.intValue == 2) {
-                DynamicPage()
-            }
-            AnimatedHomePage(visible = selectedPage.intValue == 3) {
-                ProfilePage()
+            Box {
+                val videoPageState = rememberLazyGridState()
+                val selectedIndex = rememberSaveable { mutableIntStateOf(0) }
+                val articlePageState = rememberPagerState(pageCount = { 4 })
+                val articleListState = rememberLazyListState()
+                AnimatedHomePage(visible = selectedPage.intValue == 0) {
+                    VideoPage(state = videoPageState)
+                }
+                AnimatedHomePage(visible = selectedPage.intValue == 1) {
+                    ArticlePage(navController, refreshState,
+                        selectedIndex = selectedIndex,
+                        articlePageState = articlePageState,
+                        articleListState = articleListState,
+                    )
+                }
+                AnimatedHomePage(visible = selectedPage.intValue == 2) {
+                    DynamicPage()
+                }
+                AnimatedHomePage(visible = selectedPage.intValue == 3) {
+                    ProfilePage()
+                }
             }
         }
         composable(
@@ -77,7 +97,7 @@ val displayBottomBar =
 
 @Composable
 fun AnimatedHomePage(visible: Boolean, content: @Composable () -> Unit) {
-    AnimatedVisibility(visible, enter = fadeIn(), exit = fadeOut()) {
+    AnimatedVisibility(visible, enter = fadeIn() + expandHorizontally(), exit = shrinkHorizontally() + fadeOut()) {
         content()
     }
 }
