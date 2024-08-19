@@ -3,7 +3,11 @@ package com.qt.app.ui
 import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -21,7 +25,11 @@ import com.qt.app.feature.profile.ui.ProfilePage
 import com.qt.app.feature.video.ui.VideoPage
 
 @Composable
-fun AppNavHost(navController: NavHostController, refreshState: MutableState<Boolean>) {
+fun AppNavHost(
+    navController: NavHostController,
+    refreshState: MutableState<Boolean>,
+    selectedPage: MutableIntState
+) {
     val context = LocalContext.current
     val activity = (context as? Activity)
     var time by remember {
@@ -37,20 +45,24 @@ fun AppNavHost(navController: NavHostController, refreshState: MutableState<Bool
     }
     NavHost(
         navController = navController,
-        startDestination = AcfunScreens.VideoPage.route
+        startDestination = AcfunScreens.HomePage.route
     ) {
-        composable(route = AcfunScreens.VideoPage.route) {
-            VideoPage()
-        }
-        composable(route = AcfunScreens.DynamicPage.route) {
-            DynamicPage()
-        }
-        composable(route = AcfunScreens.ProfilePage.route) {
-            ProfilePage()
-        }
         composable(
-            route = AcfunScreens.ArticlePage.route,
-        ) { _ -> ArticlePage(navController, refreshState) }
+            route = AcfunScreens.HomePage.route,
+        ) { _ ->
+            AnimatedHomePage(visible = selectedPage.intValue == 0) {
+                VideoPage()
+            }
+            AnimatedHomePage(visible = selectedPage.intValue == 1) {
+                ArticlePage(navController, refreshState)
+            }
+            AnimatedHomePage(visible = selectedPage.intValue == 2) {
+                DynamicPage()
+            }
+            AnimatedHomePage(visible = selectedPage.intValue == 3) {
+                ProfilePage()
+            }
+        }
         composable(
             route = AcfunScreens.ArticleDetail.route,
             arguments = AcfunScreens.ArticleDetail.arguments
@@ -60,12 +72,12 @@ fun AppNavHost(navController: NavHostController, refreshState: MutableState<Bool
 
 val displayBottomBar =
     arrayOf(
-        AcfunScreens.VideoPage,
-        AcfunScreens.ArticlePage,
-        AcfunScreens.DynamicPage,
-        AcfunScreens.ProfilePage,
+        AcfunScreens.HomePage,
     )
 
-
-
-
+@Composable
+fun AnimatedHomePage(visible: Boolean, content: @Composable () -> Unit) {
+    AnimatedVisibility(visible, enter = fadeIn(), exit = fadeOut()) {
+        content()
+    }
+}

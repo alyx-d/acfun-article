@@ -38,9 +38,9 @@ import com.qt.app.feature.article.vm.ArticleViewModel
 fun ArticleList(
     navController: NavHostController,
     tabId: Int,
-    refreshState: MutableState<Boolean>
+    refreshState: MutableState<Boolean>,
+    vm: ArticleViewModel,
 ) {
-    val vm = hiltViewModel<ArticleViewModel>()
     val articleList = vm.articleListTab[tabId].collectAsLazyPagingItems()
     val context = LocalContext.current
     if (articleList.itemCount == 0) {

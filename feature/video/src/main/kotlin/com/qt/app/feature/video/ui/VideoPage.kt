@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -25,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,18 +49,18 @@ fun VideoPage(
     vm: VideoPageViewModule = hiltViewModel()
 ) {
     val uiState by vm.videoUiState.collectAsState()
-    LaunchedEffect(Unit) {
-        vm.getHomePage()
-    }
     val context = LocalContext.current
+    val state = rememberLazyGridState()
     when (uiState) {
         is UiState.Error -> Text(text = "Error")
         UiState.Loading -> PageLoading(context)
         is UiState.Success -> {
             val videos = ((uiState as UiState.Success).data as List<*>)[0] as List<*>
-            LazyVerticalGrid(columns = GridCells.Fixed(2),
+            LazyVerticalGrid(
+                state = state,
+                columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(5.dp)
-                ) {
+            ) {
                 items(videos) {
                     val video = it as HomeBananaListVO.VideoInfo
                     VideoItem(video)
@@ -85,11 +84,14 @@ fun VideoItem(
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
         Column {
-            Box(modifier = Modifier.height(120.dp)
-                .fillMaxWidth()
+            Box(
+                modifier = Modifier
+                    .height(120.dp)
+                    .fillMaxWidth()
             ) {
                 AsyncImage(
-                    modifier = Modifier.height(120.dp)
+                    modifier = Modifier
+                        .height(120.dp)
                         .fillMaxWidth(),
                     model = video.coverImage, contentDescription = null,
                     imageLoader = Util.imageLoader(context),

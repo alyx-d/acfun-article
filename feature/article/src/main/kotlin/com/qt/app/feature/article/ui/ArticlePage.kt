@@ -1,7 +1,6 @@
 package com.qt.app.feature.article.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,8 +16,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -27,17 +26,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.qt.app.feature.article.vm.ArticleViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ArticlePage(
     navController: NavHostController,
-    refreshState: MutableState<Boolean>
+    refreshState: MutableState<Boolean>,
+    vm: ArticleViewModel = hiltViewModel(),
 ) {
     val tabs = arrayOf("综合", "吐槽", "游戏", "涂鸦")
-    var selectedIndex by remember {
+    var selectedIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
     val state = rememberPagerState(pageCount = { tabs.size })
@@ -74,7 +76,7 @@ fun ArticlePage(
             }
         }
         HorizontalPager(state = state) { idx ->
-            ArticleList(navController, idx, refreshState)
+            ArticleList(navController, idx, refreshState, vm)
         }
     }
 }

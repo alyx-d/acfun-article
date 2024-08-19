@@ -9,30 +9,10 @@ sealed class AcfunScreens(
     val arguments: List<NamedNavArgument> = emptyList()
 ) {
     val route = name.appendArguments(arguments)
-    fun createRoute() = route
 
-    data object VideoPage : AcfunScreens(
-        name = "video-page"
+    data object HomePage : AcfunScreens(
+        name = "home-page"
     )
-
-    data object DynamicPage : AcfunScreens(
-        name = "dynamic-page"
-    )
-
-    data object ProfilePage : AcfunScreens(
-        name = "profile-page"
-    )
-
-    data object ArticlePage : AcfunScreens(
-        name = "article-page",
-        arguments = listOf(navArgument("tabId") {
-            type = NavType.IntType
-            defaultValue = 0
-        })
-    ) {
-        fun createRoute(tabId: Int): String =
-            route.replace("{${arguments.first().name}}", tabId.toString())
-    }
 
     data object ArticleDetail : AcfunScreens(
         name = "article-detail",

@@ -21,10 +21,13 @@ class VideoPageViewModule @Inject constructor(
     private val videoService: VideoService,
 ) : ViewModel(){
 
+    init {
+        getHomePage()
+    }
     private val _videoUiState = MutableStateFlow<UiState>(UiState.Loading)
     val videoUiState = _videoUiState.asStateFlow()
 
-    fun getHomePage() {
+    private fun getHomePage() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = videoService.acfunHome()
             if (response.isSuccessful && response.body() != null) {

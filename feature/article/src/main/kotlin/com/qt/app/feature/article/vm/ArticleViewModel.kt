@@ -53,6 +53,15 @@ class ArticleViewModel @Inject constructor(
             }
         }
     }
+
+    private val _selectedIndex = MutableStateFlow(0)
+    val selectedIndex = _selectedIndex.asStateFlow()
+
+    fun setSelectedIndex(value: Int) {
+        viewModelScope.launch {
+            _selectedIndex.emit(value)
+        }
+    }
 }
 
 
