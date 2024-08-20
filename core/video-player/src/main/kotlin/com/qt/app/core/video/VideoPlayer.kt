@@ -1,65 +1,97 @@
 package com.qt.app.core.video
 
-import androidx.compose.foundation.layout.fillMaxWidth
+import android.content.Context
+import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 
 @Composable
 fun VideoPlayer(videoUrl: String) {
     val context = LocalContext.current
-    val player = remember {
-        ExoPlayer.Builder(context).build().apply {
-            setMediaItem(MediaItem.fromUri(videoUrl))
-        }
+    val player: Player by remember {
+        mutableStateOf(initPlayer(context, videoUrl))
     }
-    val playerView by remember {
-        mutableStateOf(PlayerView(context))
-    }
-    val playWhenReady by rememberSaveable {
-        mutableStateOf(true)
-    }
-    LaunchedEffect(player) {
-        player.prepare()
-        player.playWhenReady = playWhenReady
-        playerView.player = player
-    }
-    val lifecycleOwner by rememberUpdatedState(LocalLifecycleOwner.current)
-    DisposableEffect(
-        AndroidView(factory = { playerView },
-            modifier = Modifier.fillMaxWidth()
-        )
-    ) {
-        val observer = LifecycleEventObserver { _, event ->
-            when(event) {
-                Lifecycle.Event.ON_CREATE -> {}
-                Lifecycle.Event.ON_START -> {}
-                Lifecycle.Event.ON_RESUME -> player.play()
-                Lifecycle.Event.ON_PAUSE -> player.pause()
-                Lifecycle.Event.ON_STOP -> player.stop()
-                Lifecycle.Event.ON_DESTROY -> {}
-                Lifecycle.Event.ON_ANY -> {}
+    val playerView = createPlayerView(player)
+    ComposableLifeCycle { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                playerView.apply {
+                    onResume()
+                    visibility = View.VISIBLE
+                }
             }
-        }
-        val lifecycle = lifecycleOwner.lifecycle
-        lifecycle.addObserver(observer)
-        onDispose {
-            player.release()
-            lifecycle.removeObserver(observer)
+
+            Lifecycle.Event.ON_PAUSE -> {
+                playerView.onPause()
+                player.pause()
+            }
+
+            Lifecycle.Event.ON_STOP -> {
+                playerView.apply {
+                    onPause()
+                    visibility = View.INVISIBLE
+                }
+            }
+            else -> {}
         }
     }
+    AndroidView(
+        factory = { playerView }
+    )
+}
+
+private fun initPlayer(context: Context, url: String): ExoPlayer {
+    return ExoPlayer.Builder(context).build().apply {
+        addMediaItem(MediaItem.fromUri(url))
+        playWhenReady = true
+        prepare()
+    }
+}
+
+@Composable
+private fun ComposableLifeCycle(
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    onEvent: (LifecycleOwner, Lifecycle.Event) -> Unit
+) {
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { source, event ->
+            onEvent(source, event)
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+}
+
+@Composable
+private fun createPlayerView(player: Player): PlayerView {
+    val context = LocalContext.current
+    val playerView by remember {
+        mutableStateOf(PlayerView(context).apply {
+            this.player = player
+            this.keepScreenOn = true
+            this.setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
+        })
+    }
+    DisposableEffect(player) {
+        onDispose {
+            playerView.player?.release()
+            playerView.player = null
+        }
+    }
+    return playerView
 }

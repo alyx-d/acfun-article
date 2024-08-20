@@ -108,8 +108,8 @@ val displayBottomBar =
 fun AnimatedHomePage(visible: Boolean, content: @Composable () -> Unit) {
     AnimatedVisibility(
         visible,
-        enter = fadeIn() + expandHorizontally(),
-        exit = shrinkHorizontally() + fadeOut()
+        enter = fadeIn(),
+        exit = fadeOut()
     ) {
         content()
     }

@@ -1,9 +1,12 @@
 package com.qt.app.feature.video.ui
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
@@ -31,8 +34,12 @@ fun VideoPlay(
         is UiState.Error -> {}
         UiState.Loading -> PageLoading(context)
         is UiState.Success -> {
-            val (videoInfo, ksPlayJson) = (uiState as UiState.Success).data as Pair<VideoInfoVO, KsPlayJson>
-            VideoPlayer(videoUrl = ksPlayJson.adaptationSet[0].representation.last().url)
+            val (p1, p2) = (uiState as UiState.Success).data as Pair<*, *>
+            val videoInfo = p1 as VideoInfoVO
+            val ksPlayJson = p2 as KsPlayJson
+            Box(modifier = Modifier.wrapContentSize()){
+                VideoPlayer(videoUrl = ksPlayJson.adaptationSet.first().representation.last().url)
+            }
         }
     }
 }
