@@ -29,16 +29,17 @@ import androidx.navigation.compose.composable
 import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.feature.article.ui.ArticleDetail
 import com.qt.app.feature.article.ui.ArticlePage
-import com.qt.app.feature.dynmic.ui.DynamicPage
+import com.qt.app.feature.dynamic.ui.DynamicPage
 import com.qt.app.feature.profile.ui.ProfilePage
 import com.qt.app.feature.video.ui.VideoPage
+import com.qt.app.feature.video.ui.VideoPlay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     refreshState: MutableState<Boolean>,
-    selectedPage: MutableIntState
+    selectedPage: MutableIntState,
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
@@ -62,12 +63,12 @@ fun AppNavHost(
         ) { _ ->
             Box {
                 val videoPageState = rememberLazyGridState()
+                AnimatedHomePage(visible = selectedPage.intValue == 0) {
+                    VideoPage(navController, state = videoPageState)
+                }
                 val selectedIndex = rememberSaveable { mutableIntStateOf(0) }
                 val articlePageState = rememberPagerState(pageCount = { 4 })
                 val articleListStates = List(4) { rememberLazyListState() }
-                AnimatedHomePage(visible = selectedPage.intValue == 0) {
-                    VideoPage(state = videoPageState)
-                }
                 AnimatedHomePage(visible = selectedPage.intValue == 1) {
                     ArticlePage(
                         navController,
@@ -89,6 +90,12 @@ fun AppNavHost(
             route = AcfunScreens.ArticleDetail.route,
             arguments = AcfunScreens.ArticleDetail.arguments
         ) { backStackEntry -> ArticleDetail(navController, backStackEntry) }
+        composable(
+            route = AcfunScreens.VideoPlay.route,
+            arguments = AcfunScreens.VideoPlay.arguments
+        ) { entry ->
+            VideoPlay(navController, entry)
+        }
     }
 }
 

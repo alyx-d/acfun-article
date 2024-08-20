@@ -37,7 +37,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.core.utils.Util
@@ -46,6 +48,7 @@ import com.qt.app.feature.video.vm.VideoPageViewModule
 
 @Composable
 fun VideoPage(
+    navController: NavHostController,
     vm: VideoPageViewModule = hiltViewModel(),
     state: LazyGridState
 ) {
@@ -64,7 +67,7 @@ fun VideoPage(
             ) {
                 items(videos) {
                     val video = it as HomeBananaListVO.VideoInfo
-                    VideoItem(video)
+                    VideoItem(navController, video)
                 }
             }
         }
@@ -74,7 +77,8 @@ fun VideoPage(
 
 @Composable
 fun VideoItem(
-    video: HomeBananaListVO.VideoInfo
+    navController: NavHostController,
+    video: HomeBananaListVO.VideoInfo,
 ) {
     val context = LocalContext.current
     Card(
@@ -82,7 +86,8 @@ fun VideoItem(
             .padding(3.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(5.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.background)
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.background),
+        onClick = { navController.navigate(AcfunScreens.VideoPlay.createRoute(video.id)) }
     ) {
         Column {
             Box(
@@ -112,7 +117,7 @@ fun VideoItem(
                             Icons.Rounded.PlayArrow, contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier
-                                .size(12.dp)
+                                .size(10.dp)
                                 .border(
                                     width = 1.dp,
                                     color = Color.White,
@@ -121,20 +126,22 @@ fun VideoItem(
                         )
                         Spacer(modifier = Modifier.width(2.dp))
                         Text(
-                            fontSize = 12.sp,
+                            fontSize = 10.sp,
                             text = video.clickCount,
                             color = Color.White
                         )
                     }
                     Text(
-                        fontSize = 12.sp,
+                        fontSize = 10.sp,
                         text = video.videoTime,
                         color = Color.White,
                     )
                 }
             }
             Spacer(modifier = Modifier.height(3.dp))
-            Column {
+            Column(
+                modifier = Modifier.padding(horizontal = 5.dp)
+            ) {
                 Text(
                     fontSize = 12.sp,
                     minLines = 2,

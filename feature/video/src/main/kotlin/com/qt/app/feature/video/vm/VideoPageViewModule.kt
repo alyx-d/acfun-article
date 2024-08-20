@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.feature.video.api.service.VideoService
 import com.qt.app.feature.video.api.vo.HomeBananaListVO
+import com.qt.app.feature.video.api.vo.KsPlayJson
+import com.qt.app.feature.video.api.vo.VideoInfoVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +69,7 @@ class VideoPageViewModule @Inject constructor(
             val cover = element.select("a.banana-video-cover img").attr("src")
             val videoTime = element.select("span.video-time").first()?.ownText() ?: ""
             val titleEl = element.select("a.banana-video-title")
-            val info = titleEl.attr("title").split("/")
+            val info = titleEl.attr("title").split(" / ")
             if (info.size != 3) return@forEach
             val titleAndUp = info[0].split("\r").filter { it.isNotBlank() }
             data.add(HomeBananaListVO.VideoInfo(
@@ -75,11 +77,51 @@ class VideoPageViewModule @Inject constructor(
                 coverImage = cover,
                 id = id,
                 upName = titleAndUp[1],
-                clickCount =  info[1].substring(4),
-                commentCont = info[2].substring(4),
+                clickCount =  info[1].substring(3),
+                commentCont = info[2].substring(3),
                 videoTime = videoTime,
             ))
         }
         return data
+    }
+
+    private val _videoPlayInfo = MutableStateFlow<UiState>(UiState.Loading)
+    val videoPlayInfo = _videoPlayInfo.asStateFlow()
+
+    fun getVideoPlay(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = videoService.acfunVideo(id)
+            if (response.isSuccessful.not() || response.body() == null) {
+                _videoPlayInfo.emit(UiState.Error())
+            }else {
+                val body = response.body()!!
+                val html = Jsoup.parse(body)
+                val scripts = html.select("script")
+                scripts.forEach { script ->
+                    val innerHtml = script.html()
+                    if (innerHtml.contains("window.pageInfo")) {
+                        var content = innerHtml.substring(innerHtml.indexOf("{"), innerHtml.lastIndexOf("window.videoResource")).trim()
+                        if (content.last() == ';') {
+                            content = content.substring(0, content.length - 1)
+                        }
+                        val videoInfo = json.decodeFromString<VideoInfoVO>(content)
+                        val ksPlayJson = json.decodeFromString<KsPlayJson>(videoInfo.currentVideoInfo.ksPlayJson)
+                        _videoPlayInfo.emit(UiState.Success(videoInfo to ksPlayJson))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getVideoPlayInfo(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = videoService.acfunVideoInfo(id)
+            if (response.isSuccessful.not() || response.body() == null) {
+                _videoPlayInfo.emit(UiState.Error())
+            }else {
+                val body = response.body()!!
+                println(body)
+            }
+        }
     }
 }

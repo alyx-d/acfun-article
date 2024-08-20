@@ -23,7 +23,15 @@ sealed class AcfunScreens(
         fun createRoute(articleId: Int) =
             route.replace("{${arguments.first().name}}", articleId.toString())
     }
-
+    data object VideoPlay: AcfunScreens(
+        name = "video-play",
+        arguments = listOf(navArgument("videoId") {
+            type = NavType.StringType
+        })
+    ) {
+        fun createRoute(videoId: String) =
+            route.replace("{${arguments.first().name}}", videoId)
+    }
 }
 
 private fun String.appendArguments(arguments: List<NamedNavArgument>): String {

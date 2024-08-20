@@ -1,4 +1,4 @@
-package com.qt.app.feature.dynmic.ui
+package com.qt.app.feature.dynamic.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

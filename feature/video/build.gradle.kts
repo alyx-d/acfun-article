@@ -10,6 +10,8 @@ android {
 
 dependencies {
     api(project(":core:network"))
+    api(project(":core:navigation"))
     api(project(":core:ui-state"))
+    api(project(":core:video-player"))
     implementation(libs.jsoup)
 }
