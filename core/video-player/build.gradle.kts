@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.qt.app.core.video"
+    namespace = "com.qt.app.core.video.player"
 }
 
 dependencies {

@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.qt.app.ui.state"
+    namespace = "com.qt.app.core.ui.state"
 }
 
 dependencies {
