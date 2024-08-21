@@ -1,7 +1,6 @@
 package com.qt.app.ui
 
 import android.app.Activity
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -16,6 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.qt.app.core.navigation.AcfunScreens
+import com.qt.app.core.utils.SnackBarHostStateHolder
 import com.qt.app.feature.article.ui.ArticleDetail
 import com.qt.app.feature.article.ui.ArticlePage
 import com.qt.app.feature.dynamic.ui.DynamicPage
@@ -37,7 +37,7 @@ fun AppNavHost(
     }
     BackHandler {
         if (System.currentTimeMillis() - time > 2000) {
-            Toast.makeText(context, "再次点击退出程序~", Toast.LENGTH_SHORT).show()
+            SnackBarHostStateHolder.showMessage("再次点击退出程序~")
             time = System.currentTimeMillis()
         } else {
             activity?.finish()

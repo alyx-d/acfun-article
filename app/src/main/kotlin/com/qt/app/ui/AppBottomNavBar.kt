@@ -21,7 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
-fun BottomNavBar(
+fun AppBottomNavBar(
     navController: NavHostController,
     refreshState: MutableState<Boolean>,
 ) {
