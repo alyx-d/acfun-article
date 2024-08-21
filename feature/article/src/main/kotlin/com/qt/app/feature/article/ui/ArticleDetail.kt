@@ -81,11 +81,11 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                 mutableStateOf<String?>(null)
             }
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
             ) {
-                LazyColumn(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
-                ) {
+                LazyColumn {
                     item {
                         Column(
                             modifier = Modifier
@@ -160,7 +160,10 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
 
                                             is AsyncImagePainter.State.Loading -> {
                                                 Image(
-                                                    painter = rememberAsyncImagePainter(R.drawable.image_loading, Util.imageLoader(context)),
+                                                    painter = rememberAsyncImagePainter(
+                                                        R.drawable.image_loading,
+                                                        Util.imageLoader(context)
+                                                    ),
                                                     contentDescription = null,
                                                     modifier = Modifier.size(40.dp),
                                                     contentScale = ContentScale.Inside
