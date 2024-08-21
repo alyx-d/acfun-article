@@ -65,8 +65,8 @@ import com.qt.app.feature.video.vm.VideoPageViewModule
 @Composable
 fun VideoPage(
     navController: NavHostController,
-    vm: VideoPageViewModule = hiltViewModel(),
     refreshState: MutableState<Boolean>,
+    vm: VideoPageViewModule = hiltViewModel(),
 ) {
     val uiState by vm.videoUiState.collectAsState()
     val context = LocalContext.current
@@ -76,7 +76,7 @@ fun VideoPage(
         UiState.Loading -> PageLoading(context)
         is UiState.Success -> {
             val data = (uiState as UiState.Success).data as List<*>
-            val videoData = data.map { it as List<*> }
+            val videoData by remember { mutableStateOf(data.map { it as List<*> }) }
             var videos by remember { mutableStateOf(videoData[0]) }
             val isRefresh by vm.refreshState.collectAsState()
             val pullToRefreshState = rememberPullToRefreshState()
@@ -135,9 +135,9 @@ fun VideoPage(
                                     DropdownMenuItem(
                                         text = { Text(text = it) },
                                         onClick = {
+                                            toggleMenu()
                                             menu = it
                                             videos = videoData[idx]
-                                            toggleMenu()
                                         })
                                 }
                             }

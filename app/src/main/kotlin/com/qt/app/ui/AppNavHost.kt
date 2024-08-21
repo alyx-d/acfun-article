@@ -3,9 +3,6 @@ package com.qt.app.ui
 import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -52,7 +49,7 @@ fun AppNavHost(
     ) {
         composable(
             route = AcfunScreens.VideoPage.route,
-        ) { _ ->
+        ) {
             VideoPage(
                 navController = navController,
                 refreshState = refreshState,
@@ -90,14 +87,3 @@ val displayBottomBar =
         AcfunScreens.DynamicPage,
         AcfunScreens.ProfilePage,
     )
-
-@Composable
-fun AnimatedHomePage(visible: Boolean, content: @Composable () -> Unit) {
-    AnimatedVisibility(
-        visible,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        content()
-    }
-}

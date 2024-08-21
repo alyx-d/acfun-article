@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -31,10 +30,9 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 val navController = rememberNavController()
                 val refreshState = remember { mutableStateOf(false) }
-                val selectedPage = remember { mutableIntStateOf(0) }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = { BottomNavBar(navController, refreshState, selectedPage) }
+                    bottomBar = { BottomNavBar(navController, refreshState) }
                 ) { innerPadding ->
                     Surface(modifier = Modifier.padding(innerPadding)) {
                         AppNavHost(navController, refreshState)
