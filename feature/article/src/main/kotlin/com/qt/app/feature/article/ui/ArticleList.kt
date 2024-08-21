@@ -22,6 +22,10 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -32,6 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.qt.app.core.navigation.AcfunScreens
@@ -54,19 +59,30 @@ fun ArticleList(
         PageLoading(context = context)
     }
     val pullToRefreshState = rememberPullToRefreshState()
-    if (pullToRefreshState.isRefreshing || refreshState.value) {
+    var isRefreshing by remember {
+        mutableStateOf(false)
+    }
+    if (pullToRefreshState.isRefreshing && !isRefreshing) {
         articleList.refresh()
-        if (refreshState.value) refreshState.value = refreshState.value.not()
+        isRefreshing = true
     }
     LaunchedEffect(articleList.loadState.refresh) {
-        if (articleList.loadState.refresh.endOfPaginationReached) pullToRefreshState.startRefresh()
-        else pullToRefreshState.endRefresh()
-        state.animateScrollToItem(0)
+        if (articleList.loadState.refresh is LoadState.NotLoading && isRefreshing) {
+            pullToRefreshState.endRefresh()
+            state.animateScrollToItem(0)
+            isRefreshing = false
+        }
     }
-    Box {
+    if (refreshState.value) {
+        pullToRefreshState.startRefresh()
+        refreshState.value = false
+    }
+
+    Box(
+        modifier = Modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
+    ) {
         LazyColumn(
             modifier = Modifier
-                .nestedScroll(pullToRefreshState.nestedScrollConnection)
                 .background(color = MaterialTheme.colorScheme.surface),
             state = state,
             contentPadding = PaddingValues(10.dp),

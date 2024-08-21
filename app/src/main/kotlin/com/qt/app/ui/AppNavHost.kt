@@ -61,9 +61,13 @@ fun AppNavHost(
             route = AcfunScreens.HomePage.route,
         ) { _ ->
             Box {
-                val videoPageState = rememberLazyGridState()
+                val lazyGridState = rememberLazyGridState()
                 AnimatedHomePage(visible = selectedPage.intValue == 0) {
-                    VideoPage(navController, state = videoPageState)
+                    VideoPage(
+                        navController = navController,
+                        lazyGridState = lazyGridState,
+                        refreshState = refreshState,
+                    )
                 }
                 val selectedIndex = rememberSaveable { mutableIntStateOf(0) }
                 val articlePageState = rememberPagerState(pageCount = { 4 })

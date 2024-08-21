@@ -30,6 +30,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -56,7 +57,8 @@ import com.qt.app.feature.video.vm.VideoPageViewModule
 fun VideoPage(
     navController: NavHostController,
     vm: VideoPageViewModule = hiltViewModel(),
-    state: LazyGridState
+    lazyGridState: LazyGridState,
+    refreshState: MutableState<Boolean>
 ) {
     val uiState by vm.videoUiState.collectAsState()
     val context = LocalContext.current
@@ -69,18 +71,23 @@ fun VideoPage(
             val isRefresh by vm.refreshState.collectAsState()
             val pullToRefreshState = rememberPullToRefreshState()
             if (pullToRefreshState.isRefreshing) {
-                LaunchedEffect(true) {
-                    vm.refresh()
-                }
+                vm.refresh()
             }
             LaunchedEffect(isRefresh) {
                 if (isRefresh) pullToRefreshState.startRefresh()
-                else pullToRefreshState.endRefresh()
+                else {
+                    pullToRefreshState.endRefresh()
+                    lazyGridState.animateScrollToItem(0)
+                }
+            }
+            if (refreshState.value) {
+                vm.refresh()
+                refreshState.value = false
             }
             Box {
                 LazyVerticalGrid(
                     modifier = Modifier.nestedScroll(pullToRefreshState.nestedScrollConnection),
-                    state = state,
+                    state = lazyGridState,
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(5.dp)
                 ) {
