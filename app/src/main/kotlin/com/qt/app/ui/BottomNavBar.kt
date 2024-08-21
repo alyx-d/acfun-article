@@ -52,6 +52,13 @@ fun BottomNavBar(
                             refreshState.value = true
                         }
                         selectedPage.intValue = index
+                        navController.navigate(displayBottomBar[index].route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     },
                     icon = { /* TODO */ },
                     colors = NavigationBarItemDefaults.colors(

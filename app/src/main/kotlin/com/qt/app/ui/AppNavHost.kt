@@ -6,22 +6,15 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,12 +26,12 @@ import com.qt.app.feature.profile.ui.ProfilePage
 import com.qt.app.feature.video.ui.VideoPage
 import com.qt.app.feature.video.ui.VideoPlay
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@UnstableApi
+@ExperimentalMaterial3Api
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     refreshState: MutableState<Boolean>,
-    selectedPage: MutableIntState,
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
@@ -55,39 +48,27 @@ fun AppNavHost(
     }
     NavHost(
         navController = navController,
-        startDestination = AcfunScreens.HomePage.route
+        startDestination = AcfunScreens.VideoPage.route
     ) {
         composable(
-            route = AcfunScreens.HomePage.route,
+            route = AcfunScreens.VideoPage.route,
         ) { _ ->
-            Box {
-                val lazyGridState = rememberLazyGridState()
-                AnimatedHomePage(visible = selectedPage.intValue == 0) {
-                    VideoPage(
-                        navController = navController,
-                        lazyGridState = lazyGridState,
-                        refreshState = refreshState,
-                    )
-                }
-                val selectedIndex = rememberSaveable { mutableIntStateOf(0) }
-                val articlePageState = rememberPagerState(pageCount = { 4 })
-                val articleListStates = List(4) { rememberLazyListState() }
-                AnimatedHomePage(visible = selectedPage.intValue == 1) {
-                    ArticlePage(
-                        navController,
-                        refreshState,
-                        selectedIndex = selectedIndex,
-                        articlePageState = articlePageState,
-                        articleListStates = articleListStates,
-                    )
-                }
-                AnimatedHomePage(visible = selectedPage.intValue == 2) {
-                    DynamicPage()
-                }
-                AnimatedHomePage(visible = selectedPage.intValue == 3) {
-                    ProfilePage()
-                }
-            }
+            VideoPage(
+                navController = navController,
+                refreshState = refreshState,
+            )
+        }
+        composable(AcfunScreens.ArticlePage.route) {
+            ArticlePage(
+                navController,
+                refreshState,
+            )
+        }
+        composable(AcfunScreens.DynamicPage.route) {
+            DynamicPage()
+        }
+        composable(AcfunScreens.ProfilePage.route) {
+            ProfilePage()
         }
         composable(
             route = AcfunScreens.ArticleDetail.route,
@@ -96,15 +77,18 @@ fun AppNavHost(
         composable(
             route = AcfunScreens.VideoPlay.route,
             arguments = AcfunScreens.VideoPlay.arguments
-        ) { entry ->
-            VideoPlay(navController, entry)
+        ) { backStackEntry ->
+            VideoPlay(navController, backStackEntry)
         }
     }
 }
 
 val displayBottomBar =
     arrayOf(
-        AcfunScreens.HomePage,
+        AcfunScreens.VideoPage,
+        AcfunScreens.ArticlePage,
+        AcfunScreens.DynamicPage,
+        AcfunScreens.ProfilePage,
     )
 
 @Composable

@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -51,11 +52,11 @@ fun ArticleList(
     navController: NavHostController,
     tabId: Int,
     refreshState: MutableState<Boolean>,
-    vm: ArticleViewModel,
-    state: LazyListState
+    vm: ArticleViewModel = hiltViewModel(),
 ) {
     val articleList = vm.articleListTab[tabId].collectAsLazyPagingItems()
     val context = LocalContext.current
+    val state = rememberLazyListState()
     if (articleList.itemCount == 0) {
         PageLoading(context = context)
     }

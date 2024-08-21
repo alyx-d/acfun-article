@@ -10,8 +10,20 @@ sealed class AcfunScreens(
 ) {
     val route = name.appendArguments(arguments)
 
-    data object HomePage : AcfunScreens(
-        name = "home-page"
+    data object VideoPage : AcfunScreens(
+        name = "video-page"
+    )
+
+    data object ArticlePage : AcfunScreens(
+        name = "article-page"
+    )
+
+    data object DynamicPage : AcfunScreens(
+        name = "dynamic-page"
+    )
+
+    data object ProfilePage : AcfunScreens(
+        name = "profile-page"
     )
 
     data object ArticleDetail : AcfunScreens(

@@ -4,9 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -15,9 +14,10 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,9 +26,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.qt.app.feature.article.vm.ArticleViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -36,15 +34,13 @@ import kotlinx.coroutines.launch
 fun ArticlePage(
     navController: NavHostController,
     refreshState: MutableState<Boolean>,
-    articlePageState: PagerState,
-    selectedIndex: MutableIntState,
-    articleListStates: List<LazyListState>,
-    vm: ArticleViewModel = hiltViewModel(),
 ) {
     val tabs = arrayOf("综合", "吐槽", "游戏", "涂鸦")
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(articlePageState) {
-        snapshotFlow { articlePageState.currentPage }.collect {
+    val selectedIndex = rememberSaveable { mutableIntStateOf(0) }
+    val articlePagerState = rememberPagerState(pageCount = { tabs.size })
+    LaunchedEffect(articlePagerState) {
+        snapshotFlow { articlePagerState.currentPage }.collect {
             selectedIndex.intValue = it
         }
     }
@@ -65,7 +61,7 @@ fun ArticlePage(
                     }
                     selectedIndex.intValue = index
                     coroutineScope.launch {
-                        articlePageState.animateScrollToPage(selectedIndex.intValue)
+                        articlePagerState.animateScrollToPage(selectedIndex.intValue)
                     }
                 }) {
                     Text(text = tab,
@@ -75,8 +71,8 @@ fun ArticlePage(
                 }
             }
         }
-        HorizontalPager(state = articlePageState) { idx ->
-            ArticleList(navController, idx, refreshState, vm, articleListStates[idx])
+        HorizontalPager(state = articlePagerState) { idx ->
+            ArticleList(navController, idx, refreshState)
         }
     }
 }
