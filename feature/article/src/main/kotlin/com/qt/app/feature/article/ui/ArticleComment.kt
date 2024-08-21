@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.api.vo.CommentPageVO
 import com.qt.app.feature.article.ui.common.usernameColor
-import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.vm.ArticleCommentViewModel
 
 @Composable
@@ -57,7 +57,8 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
                 )
                 AsyncImage(model = c.avatarImage, contentDescription = null,
                     imageLoader = Util.imageLoader(context),
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier
+                        .size(50.dp)
                         .align(Alignment.Center)
                         .graphicsLayer {
                             scaleX = 1.2f
@@ -80,7 +81,7 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
                 .padding(start = 60.dp)
                 .fillMaxWidth()
         ) {
-            ContentImageParse(c.content, lineHeight = 18.sp)
+            ContentImageParse(c.content, lineHeight = 24.sp)
             Box(
                 modifier = Modifier.padding(top = 5.dp)
             ) {
@@ -109,7 +110,11 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
 }
 
 @Composable
-fun ContentImageParse(content: String, fontSize: Int = 12, lineHeight: TextUnit = TextUnit.Unspecified) {
+fun ContentImageParse(
+    content: String,
+    fontSize: Int = 14,
+    lineHeight: TextUnit = TextUnit.Unspecified
+) {
     val cvm = hiltViewModel<ArticleCommentViewModel>()
     val emotionMap by cvm.userEmotion.collectAsState()
     val rex = Regex(pattern = "\\[img=图片].+\\[/img]|\\[img].+\\[/img]|\\[emot=acfun,\\d+/]")

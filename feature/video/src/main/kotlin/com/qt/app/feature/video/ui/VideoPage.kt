@@ -1,5 +1,6 @@
 package com.qt.app.feature.video.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,12 +21,16 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -33,12 +38,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,7 +76,9 @@ fun VideoPage(
         is UiState.Error -> Text(text = "Error")
         UiState.Loading -> PageLoading(context)
         is UiState.Success -> {
-            val videos = ((uiState as UiState.Success).data as List<*>)[0] as List<*>
+            val data = (uiState as UiState.Success).data as List<*>
+            val videoData = data.map { it as List<*> }
+            var videos by remember { mutableStateOf(videoData[0]) }
             val isRefresh by vm.refreshState.collectAsState()
             val pullToRefreshState = rememberPullToRefreshState()
             if (pullToRefreshState.isRefreshing) {
@@ -84,16 +95,64 @@ fun VideoPage(
                 vm.refresh()
                 refreshState.value = false
             }
-            Box {
-                LazyVerticalGrid(
-                    modifier = Modifier.nestedScroll(pullToRefreshState.nestedScrollConnection),
-                    state = lazyGridState,
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(5.dp)
-                ) {
-                    items(videos) {
-                        val video = it as HomeBananaListVO.VideoInfo
-                        VideoItem(navController, video)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .nestedScroll(pullToRefreshState.nestedScrollConnection)
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background)
+                            .padding(horizontal = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        var expended by remember { mutableStateOf(false) }
+                        val menus = arrayOf("日榜", "三日榜", "周榜")
+                        var menu by remember { mutableStateOf(menus[0]) }
+                        val toggleMenu = { expended = !expended }
+                        Text(
+                            text = "香蕉榜", fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Column {
+                            TextButton(
+                                onClick = toggleMenu,
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                    contentColor = Color.Black
+                                )
+                            ) {
+                                Text(text = menu, fontSize = 14.sp)
+                            }
+                            DropdownMenu(
+                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                                expanded = expended,
+                                onDismissRequest = { /*TODO*/ }) {
+                                menus.forEachIndexed { idx, it ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = it) },
+                                        onClick = {
+                                            menu = it
+                                            videos = videoData[idx]
+                                            toggleMenu()
+                                        })
+                                }
+                            }
+                        }
+                    }
+                    LazyVerticalGrid(
+                        state = lazyGridState,
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(5.dp)
+                    ) {
+                        items(videos) {
+                            val video = it as HomeBananaListVO.VideoInfo
+                            VideoItem(navController, video)
+                        }
                     }
                 }
                 PullToRefreshContainer(

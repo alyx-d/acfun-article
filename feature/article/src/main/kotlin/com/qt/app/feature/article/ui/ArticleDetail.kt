@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -41,15 +42,15 @@ import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import coil.compose.rememberAsyncImagePainter
+import com.qt.app.core.ui.common.ImageViewer
+import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.state.UiState
+import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.R
 import com.qt.app.feature.article.api.vo.ArticleDetailVO
-import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.feature.article.ui.common.usernameColor
-import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.vm.ArticleCommentViewModel
 import com.qt.app.feature.article.vm.ArticleViewModel
-import com.qt.app.core.ui.common.ImageViewer
 import org.jsoup.Jsoup
 
 @Composable
@@ -79,7 +80,9 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
             val currImage = remember {
                 mutableStateOf<String?>(null)
             }
-            Box {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
                 LazyColumn(
                     modifier = Modifier.background(MaterialTheme.colorScheme.background)
                 ) {
