@@ -12,16 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.qt.app.ui.theme.Black75
 
 @Composable
 fun AppSnackBarHost(snackbarHostState: SnackbarHostState) {
     SnackbarHost(hostState = snackbarHostState) {
         Box(
             modifier = Modifier
-                .padding(10.dp)
-                .clip(RoundedCornerShape(15.dp))
-                .background(Color.Black)
-                .padding(10.dp)
+                .clip(RoundedCornerShape(13.dp))
+                .background(Black75)
+                .padding(horizontal = 15.dp, vertical = 5.dp)
         ) {
             Text(text = it.visuals.message, color = Color.White)
         }
