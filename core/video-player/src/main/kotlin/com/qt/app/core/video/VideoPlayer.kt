@@ -54,7 +54,7 @@ fun VideoPlayer(videoUrls: List<String>, modifier: Modifier = Modifier) {
         }
     }
     AndroidView(
-        modifier = Modifier,
+        modifier = modifier,
         factory = { playerView }
     )
 }
