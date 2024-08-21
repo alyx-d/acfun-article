@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -24,12 +25,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.qt.app.feature.article.vm.ArticleViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ArticlePage(
     navController: NavHostController,
@@ -50,6 +52,7 @@ fun ArticlePage(
         TabRow(selectedTabIndex = selectedIndex.intValue,
             containerColor = MaterialTheme.colorScheme.background,
             modifier = Modifier
+                .zIndex(10f)
                 .padding(horizontal = 5.dp)
                 .height(40.dp)
                 .clip(RoundedCornerShape(10))

@@ -12,10 +12,8 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -26,9 +24,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun BottomNavBar(
     navController: NavHostController,
     refreshState: MutableState<Boolean>,
-    selectedPage: MutableIntState
+    selectedPage: MutableIntState,
 ) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
     val itemArr = arrayOf("视频", "文章", "动态", "我的")
     val entry by navController.currentBackStackEntryAsState()
     val bottomBarState = remember {
@@ -41,7 +38,7 @@ fun BottomNavBar(
             contentColor = Color.Green,
         ) {
             itemArr.forEachIndexed { index, s ->
-                val selected = selectedIndex == index
+                val selected = selectedPage.intValue == index
                 val opacity by remember {
                     derivedStateOf {
                         if (selectedPage.intValue == index) 1.3f else 1.0f
@@ -51,12 +48,10 @@ fun BottomNavBar(
                     label = { Box(modifier = Modifier.scale(opacity)) { Text(text = s) } },
                     selected = selected,
                     onClick = {
-                        if (!selected) {
-                            selectedPage.intValue = index
-                        } else {
+                        if (index == selectedPage.intValue) {
                             refreshState.value = true
                         }
-                        selectedIndex = index
+                        selectedPage.intValue = index
                     },
                     icon = { /* TODO */ },
                     colors = NavigationBarItemDefaults.colors(

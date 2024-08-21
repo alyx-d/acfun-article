@@ -1,6 +1,5 @@
 package com.qt.app.feature.video.vm
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.qt.app.core.ui.state.UiState
@@ -29,8 +28,9 @@ class VideoPageViewModule @Inject constructor(
     private val _videoUiState = MutableStateFlow<UiState>(UiState.Loading)
     val videoUiState = _videoUiState.asStateFlow()
 
-    private fun getHomePage() {
+    private fun getHomePage(isRefresh: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
+            if (isRefresh) _refreshState.emit(true)
             val response = videoService.acfunHome()
             if (response.isSuccessful && response.body() != null) {
                 val body = response.body()!!
@@ -57,6 +57,7 @@ class VideoPageViewModule @Inject constructor(
             }else {
                 _videoUiState.emit(UiState.Error())
             }
+            if (isRefresh) _refreshState.emit(false)
         }
     }
 
@@ -85,14 +86,14 @@ class VideoPageViewModule @Inject constructor(
         return data
     }
 
-    private val _videoPlayInfo = MutableStateFlow<UiState>(UiState.Loading)
-    val videoPlayInfo = _videoPlayInfo.asStateFlow()
+    private val _videoPlayInfoUiState = MutableStateFlow<UiState>(UiState.Loading)
+    val videoPlayInfoUiState = _videoPlayInfoUiState.asStateFlow()
 
     fun getVideoPlay(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val response = videoService.acfunVideo(id)
             if (response.isSuccessful.not() || response.body() == null) {
-                _videoPlayInfo.emit(UiState.Error())
+                _videoPlayInfoUiState.emit(UiState.Error())
             }else {
                 val body = response.body()!!
                 val html = Jsoup.parse(body)
@@ -106,7 +107,7 @@ class VideoPageViewModule @Inject constructor(
                         }
                         val videoInfo = json.decodeFromString<VideoInfoVO>(content)
                         val ksPlayJson = json.decodeFromString<KsPlayJson>(videoInfo.currentVideoInfo.ksPlayJson)
-                        _videoPlayInfo.emit(UiState.Success(videoInfo to ksPlayJson))
+                        _videoPlayInfoUiState.emit(UiState.Success(videoInfo to ksPlayJson))
                     }
                 }
             }
@@ -117,11 +118,20 @@ class VideoPageViewModule @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val response = videoService.acfunVideoInfo(id)
             if (response.isSuccessful.not() || response.body() == null) {
-                _videoPlayInfo.emit(UiState.Error())
+                _videoPlayInfoUiState.emit(UiState.Error())
             }else {
                 val body = response.body()!!
                 println(body)
             }
+        }
+    }
+
+    private val _refreshState = MutableStateFlow(false)
+    val refreshState = _refreshState.asStateFlow()
+
+    fun refresh() {
+        viewModelScope.launch {
+            getHomePage(true)
         }
     }
 }

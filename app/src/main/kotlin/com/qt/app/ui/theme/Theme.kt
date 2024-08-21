@@ -27,7 +27,7 @@ private val LightColorScheme = lightColorScheme(
 
     scrim = Color(0xFF03A9F4),
     background = Color(0xFFFFFBFE),
-    surface = Color(0xDAEEEEEE),
+    surface = Color(0xFFEBEBEB),
 
 )
 

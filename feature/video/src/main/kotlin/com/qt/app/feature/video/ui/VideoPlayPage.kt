@@ -30,7 +30,7 @@ fun VideoPlay(
     LaunchedEffect(Unit) {
         vm.getVideoPlay(id)
     }
-    val uiState by vm.videoPlayInfo.collectAsState()
+    val uiState by vm.videoPlayInfoUiState.collectAsState()
     val context = LocalContext.current
     when(uiState) {
         is UiState.Error -> {}
