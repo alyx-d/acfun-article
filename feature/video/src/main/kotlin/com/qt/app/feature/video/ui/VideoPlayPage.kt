@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.qt.app.core.ui.common.PageLoading
@@ -18,6 +19,7 @@ import com.qt.app.feature.video.api.vo.KsPlayJson
 import com.qt.app.feature.video.api.vo.VideoInfoVO
 import com.qt.app.feature.video.vm.VideoPageViewModule
 
+@UnstableApi
 @Composable
 fun VideoPlay(
     navController: NavHostController,
@@ -38,7 +40,8 @@ fun VideoPlay(
             val videoInfo = p1 as VideoInfoVO
             val ksPlayJson = p2 as KsPlayJson
             Box(modifier = Modifier.wrapContentSize()){
-                VideoPlayer(videoUrl = ksPlayJson.adaptationSet.first().representation.last().url)
+                val urls = listOf(ksPlayJson.adaptationSet.first().representation.last().url)
+                VideoPlayer(videoUrls = urls)
             }
         }
     }

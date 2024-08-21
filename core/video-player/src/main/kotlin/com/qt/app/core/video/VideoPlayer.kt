@@ -7,6 +7,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
@@ -15,14 +16,17 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 
+@UnstableApi
 @Composable
-fun VideoPlayer(videoUrl: String) {
+fun VideoPlayer(videoUrls: List<String>, modifier: Modifier = Modifier) {
+    check(videoUrls.isNotEmpty())
     val context = LocalContext.current
     val player: Player by remember {
-        mutableStateOf(initPlayer(context, videoUrl))
+        mutableStateOf(initPlayer(context, videoUrls))
     }
     val playerView = createPlayerView(player)
     ComposableLifeCycle { _, event ->
@@ -45,17 +49,19 @@ fun VideoPlayer(videoUrl: String) {
                     visibility = View.INVISIBLE
                 }
             }
+
             else -> {}
         }
     }
     AndroidView(
+        modifier = Modifier,
         factory = { playerView }
     )
 }
 
-private fun initPlayer(context: Context, url: String): ExoPlayer {
+private fun initPlayer(context: Context, urls: List<String>): ExoPlayer {
     return ExoPlayer.Builder(context).build().apply {
-        addMediaItem(MediaItem.fromUri(url))
+        urls.forEach { url -> addMediaItem(MediaItem.fromUri(url)) }
         playWhenReady = true
         prepare()
     }
@@ -77,6 +83,7 @@ private fun ComposableLifeCycle(
     }
 }
 
+@UnstableApi
 @Composable
 private fun createPlayerView(player: Player): PlayerView {
     val context = LocalContext.current

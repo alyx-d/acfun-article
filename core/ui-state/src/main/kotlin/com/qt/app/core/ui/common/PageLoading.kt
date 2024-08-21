@@ -13,12 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.qt.app.core.ui.state.R
 import com.qt.app.core.utils.Util
-import com.qt.app.ui.state.R
 
 @Composable
 fun PageLoading(context: Context) {
-    Box(modifier = Modifier.fillMaxSize()
+    Box(modifier = Modifier
+        .fillMaxSize()
         .background(MaterialTheme.colorScheme.background)) {
         Image(
             modifier = Modifier
