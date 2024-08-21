@@ -1,6 +1,6 @@
 package com.qt.app.core.network.service
 
-import jakarta.inject.Qualifier
+import javax.inject.Qualifier
 
 
 enum class BaseService(val baseUrl: String) {
