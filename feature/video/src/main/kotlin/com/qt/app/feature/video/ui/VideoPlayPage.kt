@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.qt.app.core.ui.common.PageLoading
@@ -19,7 +18,6 @@ import com.qt.app.feature.video.api.vo.KsPlayJson
 import com.qt.app.feature.video.api.vo.VideoInfoVO
 import com.qt.app.feature.video.vm.VideoPageViewModule
 
-@UnstableApi
 @Composable
 fun VideoPlay(
     navController: NavHostController,

@@ -61,7 +61,7 @@ import com.qt.app.core.utils.Util
 import com.qt.app.feature.video.api.vo.HomeBananaListVO
 import com.qt.app.feature.video.vm.VideoPageViewModule
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VideoPage(
     navController: NavHostController,

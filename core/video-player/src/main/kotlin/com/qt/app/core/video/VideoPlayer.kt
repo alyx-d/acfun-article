@@ -16,11 +16,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 
-@UnstableApi
 @Composable
 fun VideoPlayer(videoUrls: List<String>, modifier: Modifier = Modifier) {
     check(videoUrls.isNotEmpty())
@@ -83,7 +81,6 @@ private fun ComposableLifeCycle(
     }
 }
 
-@UnstableApi
 @Composable
 private fun createPlayerView(player: Player): PlayerView {
     val context = LocalContext.current
@@ -91,7 +88,6 @@ private fun createPlayerView(player: Player): PlayerView {
         mutableStateOf(PlayerView(context).apply {
             this.player = player
             this.keepScreenOn = true
-            this.setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
         })
     }
     DisposableEffect(player) {
