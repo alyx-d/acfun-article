@@ -10,6 +10,7 @@ dependencies {
     api(libs.androidx.media3.exoplayer)
     api(libs.androidx.media3.exoplayer.dash)
     api(libs.androidx.media3.exoplayer.hls)
+    api(libs.coil.kt.compose)
     api(libs.androidx.media3.ui)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.material3)

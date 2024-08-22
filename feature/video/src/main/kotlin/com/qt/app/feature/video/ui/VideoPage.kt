@@ -169,7 +169,7 @@ fun VideoPage(
 @Composable
 fun VideoItem(
     navController: NavHostController,
-    video: com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo,
+    video: HomeBananaListVO.VideoInfo,
 ) {
     val context = LocalContext.current
     Card(
@@ -178,7 +178,16 @@ fun VideoItem(
             .fillMaxWidth(),
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.background),
-        onClick = { navController.navigate(AcfunScreens.VideoPlay.createRoute(video.id)) }
+        onClick = {
+            navController
+                .navigate(
+                    AcfunScreens.VideoPlay.createRoute(
+                        video.id,
+                        video.coverImage,
+                        video.clickCount,
+                    )
+                )
+        }
     ) {
         Column {
             Box(

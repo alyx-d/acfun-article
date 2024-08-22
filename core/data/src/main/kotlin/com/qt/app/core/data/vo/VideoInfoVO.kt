@@ -10,7 +10,6 @@ data class VideoInfoVO(
     var viewCountShow: String,
     var commentCountTenThousandShow: String,
     var title: String,
-    var sizeType: Int,
     var description: String?,
     var videoList: List<VideoPartition>,
     var createTime: String,
@@ -35,13 +34,14 @@ data class VideoInfoVO(
         var uploadTime: Long,
         var title: String,
         var id: Int,
-        var fileName: String,
+        var fileName: String = "",
     )
     @Serializable
     data class User(
         var id: String,
         var name: String,
         var nameStyle: String,
+        var nameColor: Int = 0,
         var userHeadImgInfo: ImgInfo,
         var fanCount: String,
     )
@@ -50,4 +50,12 @@ data class VideoInfoVO(
     data class ImgInfo(
         var thumbnailImageCdnUrl: String
     )
+
+    @Serializable
+    data class HtmlData(
+        var html: String,
+        var js: List<String>,
+        var css: List<String>,
+    )
+
 }

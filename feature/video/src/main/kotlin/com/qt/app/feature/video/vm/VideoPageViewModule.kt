@@ -2,6 +2,10 @@ package com.qt.app.feature.video.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.qt.app.core.data.service.VideoService
+import com.qt.app.core.data.vo.HomeBananaListVO
+import com.qt.app.core.data.vo.KsPlayJson
+import com.qt.app.core.data.vo.VideoInfoVO
 import com.qt.app.core.ui.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VideoPageViewModule @Inject constructor(
     private val json: Json,
-    private val videoService: com.qt.app.core.data.service.VideoService,
+    private val videoService: VideoService,
 ) : ViewModel(){
 
     init {
@@ -75,7 +79,7 @@ class VideoPageViewModule @Inject constructor(
             if (info.size != 3) return@forEach
             val titleAndUp = info[0].split("\r").filter { it.isNotBlank() }
             data.add(
-                com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo(
+                HomeBananaListVO.VideoInfo(
                 title = titleAndUp[0],
                 coverImage = cover,
                 id = id,
@@ -108,10 +112,9 @@ class VideoPageViewModule @Inject constructor(
                             content = content.substring(0, content.length - 1)
                         }
                         val videoInfo =
-                            json.decodeFromString<com.qt.app.core.data.vo.VideoInfoVO>(content)
+                            json.decodeFromString<VideoInfoVO>(content)
                         val ksPlayJson =
-                            json.decodeFromString<com.qt.app.core.data.vo.KsPlayJson>(videoInfo.currentVideoInfo.ksPlayJson)
-                        _videoPlayInfoUiState.emit(UiState.Success(videoInfo to ksPlayJson))
+                            json.decodeFromString<KsPlayJson>(videoInfo.currentVideoInfo.ksPlayJson)
                     }
                 }
             }
@@ -120,14 +123,40 @@ class VideoPageViewModule @Inject constructor(
 
     fun getVideoPlayInfo(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = videoService.acfunVideoInfo(id)
+            val response = videoService.acfunVideoInfo(id + "_1")
             if (response.isSuccessful.not() || response.body() == null) {
                 _videoPlayInfoUiState.emit(UiState.Error())
             }else {
                 val body = response.body()!!
-                println(body)
+                val (videoInfo, ksPlayJson) = parseKsPlayJson(body)
+                val infos = mutableListOf(ksPlayJson)
+                if (videoInfo.videoList.size > 1) {
+                    repeat(videoInfo.videoList.size - 1) {
+                        val pInfo = videoService.acfunVideoInfo(id + "_${it + 2}")
+                        if (pInfo.isSuccessful && pInfo.body() != null) {
+                            val (_, pk) = parseKsPlayJson(pInfo.body()!!)
+                            infos.add(pk)
+                        }
+                    }
+                }
+                _videoPlayInfoUiState.emit(UiState.Success(videoInfo to infos))
             }
         }
+    }
+
+    private fun parseKsPlayJson(body: String): Pair<VideoInfoVO, KsPlayJson> {
+        val htmlData = json.decodeFromString<VideoInfoVO.HtmlData>(
+            body.substring(
+                0,
+                body.lastIndexOf("}") + 1
+            )
+        )
+        val videoInfoJs =
+            Jsoup.parseBodyFragment(htmlData.html).body().select("script.videoInfo").html()
+        val content = videoInfoJs.substring(videoInfoJs.indexOf("{"))
+        val videoInfo = json.decodeFromString<VideoInfoVO>(content)
+        val ksPlayJson = json.decodeFromString<KsPlayJson>(videoInfo.currentVideoInfo.ksPlayJson)
+        return videoInfo to ksPlayJson
     }
 
     private val _refreshState = MutableStateFlow(false)
