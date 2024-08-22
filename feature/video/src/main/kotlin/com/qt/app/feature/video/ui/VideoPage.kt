@@ -54,11 +54,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.qt.app.core.data.vo.HomeBananaListVO
 import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.core.utils.Util
-import com.qt.app.feature.video.api.vo.HomeBananaListVO
 import com.qt.app.feature.video.vm.VideoPageViewModule
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -130,7 +130,8 @@ fun VideoPage(
                             DropdownMenu(
                                 modifier = Modifier.background(MaterialTheme.colorScheme.background),
                                 expanded = expended,
-                                onDismissRequest = { /*TODO*/ }) {
+                                onDismissRequest = { toggleMenu() }
+                            ) {
                                 menus.forEachIndexed { idx, it ->
                                     DropdownMenuItem(
                                         text = { Text(text = it) },
@@ -138,7 +139,8 @@ fun VideoPage(
                                             toggleMenu()
                                             menu = it
                                             videos = videoData[idx]
-                                        })
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -167,7 +169,7 @@ fun VideoPage(
 @Composable
 fun VideoItem(
     navController: NavHostController,
-    video: HomeBananaListVO.VideoInfo,
+    video: com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo,
 ) {
     val context = LocalContext.current
     Card(

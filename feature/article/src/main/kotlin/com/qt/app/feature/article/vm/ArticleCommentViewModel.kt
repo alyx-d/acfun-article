@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.qt.app.feature.article.api.Repository
-import com.qt.app.feature.article.api.vo.CommentPageVO
-import com.qt.app.feature.article.api.vo.UserEmotionVO
+import com.qt.app.core.data.repo.ArticleRepository
+import com.qt.app.core.data.vo.CommentPageVO
+import com.qt.app.core.data.vo.UserEmotionVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArticleCommentViewModel @Inject constructor(
-    private val repo: Repository,
+    private val repo: ArticleRepository,
 ) : ViewModel() {
 
     private val _commentList: MutableStateFlow<PagingData<CommentPageVO.Comment>> = MutableStateFlow(PagingData.empty())

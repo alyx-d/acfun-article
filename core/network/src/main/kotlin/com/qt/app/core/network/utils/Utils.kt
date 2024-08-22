@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import kotlin.reflect.KProperty1
 
 var connectivityManager: ConnectivityManager? = null
 
@@ -32,4 +33,12 @@ fun restartApp(context: Context) {
     mainIntent.`package` = context.packageName
     context.startActivity(mainIntent)
     Runtime.getRuntime().exit(0)
+}
+
+fun <T> T.toMap(): Map<String, String> {
+    return mutableMapOf<String, String>().apply {
+        this@toMap!!::class.members.filterIsInstance<KProperty1<T, *>>().forEach {
+            this[it.name] = it.get(this@toMap).toString()
+        }
+    }
 }

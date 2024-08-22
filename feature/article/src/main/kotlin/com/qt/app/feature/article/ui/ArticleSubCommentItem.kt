@@ -20,8 +20,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.qt.app.core.data.vo.SubCommentPageVO
 import com.qt.app.core.utils.Util
-import com.qt.app.feature.article.api.vo.SubCommentPageVO
 
 @Composable
 fun ArticleSubCommentItem(comment: SubCommentPageVO.SubComment?) {

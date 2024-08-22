@@ -24,6 +24,8 @@ dependencyResolutionManagement {
 rootProject.name = "AcfunArticle"
 include(":app")
 include(":core:ui-state")
+include(":core:data")
+include(":core:database")
 include(":core:network")
 include(":core:navigation")
 include(":core:video-player")

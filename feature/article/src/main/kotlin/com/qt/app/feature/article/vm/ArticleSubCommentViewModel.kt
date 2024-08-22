@@ -4,15 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.qt.app.feature.article.api.Repository
-import com.qt.app.feature.article.api.vo.SubCommentPageVO
+import com.qt.app.core.data.repo.ArticleRepository
+import com.qt.app.core.data.vo.SubCommentPageVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class ArticleSubCommentViewModel @Inject constructor(
-    private val repo: Repository
+    private val repo: ArticleRepository
 ) : ViewModel() {
 
     private val _subCommentList = MutableStateFlow<PagingData<SubCommentPageVO.SubComment>>(PagingData.empty())

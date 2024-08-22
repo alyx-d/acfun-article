@@ -3,10 +3,6 @@ package com.qt.app.feature.video.vm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.qt.app.core.ui.state.UiState
-import com.qt.app.feature.video.api.service.VideoService
-import com.qt.app.feature.video.api.vo.HomeBananaListVO
-import com.qt.app.feature.video.api.vo.KsPlayJson
-import com.qt.app.feature.video.api.vo.VideoInfoVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VideoPageViewModule @Inject constructor(
     private val json: Json,
-    private val videoService: VideoService,
+    private val videoService: com.qt.app.core.data.service.VideoService,
 ) : ViewModel(){
 
     init {
@@ -36,13 +32,15 @@ class VideoPageViewModule @Inject constructor(
                 val body = response.body()!!
                 val html = Jsoup.parse(body)
                 val scripts = html.select("script")
-                val videos = mutableListOf<List<HomeBananaListVO.VideoInfo>>()
+                val videos =
+                    mutableListOf<List<com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo>>()
                 if (scripts.isNotEmpty()) {
                     scripts.forEach {
                         val scriptText = it.html()
                         if (scriptText.contains("bigPipe.onPageletArrive")) {
                             val str = scriptText.substring(scriptText.indexOf("{"), scriptText.lastIndexOf("}") + 1)
-                            val data = json.decodeFromString<HomeBananaListVO>(str)
+                            val data =
+                                json.decodeFromString<com.qt.app.core.data.vo.HomeBananaListVO>(str)
                             when (data.id) {
                                 "pagelet_list_banana" -> {
                                     videos.add(parseVideoInfoFromHtml(data.html, "day-list"))
@@ -61,8 +59,11 @@ class VideoPageViewModule @Inject constructor(
         }
     }
 
-    private fun parseVideoInfoFromHtml(html: String, type: String): List<HomeBananaListVO.VideoInfo> {
-        val data = mutableListOf<HomeBananaListVO.VideoInfo>()
+    private fun parseVideoInfoFromHtml(
+        html: String,
+        type: String
+    ): List<com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo> {
+        val data = mutableListOf<com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo>()
         val part = Jsoup.parseBodyFragment(html)
         val el = part.body().selectFirst(".banana-list.$type")
         el?.select("div.banana-video")?.forEach { element ->
@@ -73,7 +74,8 @@ class VideoPageViewModule @Inject constructor(
             val info = titleEl.attr("title").split(" / ")
             if (info.size != 3) return@forEach
             val titleAndUp = info[0].split("\r").filter { it.isNotBlank() }
-            data.add(HomeBananaListVO.VideoInfo(
+            data.add(
+                com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo(
                 title = titleAndUp[0],
                 coverImage = cover,
                 id = id,
@@ -105,8 +107,10 @@ class VideoPageViewModule @Inject constructor(
                         if (content.last() == ';') {
                             content = content.substring(0, content.length - 1)
                         }
-                        val videoInfo = json.decodeFromString<VideoInfoVO>(content)
-                        val ksPlayJson = json.decodeFromString<KsPlayJson>(videoInfo.currentVideoInfo.ksPlayJson)
+                        val videoInfo =
+                            json.decodeFromString<com.qt.app.core.data.vo.VideoInfoVO>(content)
+                        val ksPlayJson =
+                            json.decodeFromString<com.qt.app.core.data.vo.KsPlayJson>(videoInfo.currentVideoInfo.ksPlayJson)
                         _videoPlayInfoUiState.emit(UiState.Success(videoInfo to ksPlayJson))
                     }
                 }

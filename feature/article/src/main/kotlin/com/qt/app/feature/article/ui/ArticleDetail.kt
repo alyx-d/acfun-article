@@ -42,12 +42,12 @@ import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import coil.compose.rememberAsyncImagePainter
+import com.qt.app.core.data.vo.ArticleDetailVO
 import com.qt.app.core.ui.common.ImageViewer
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.R
-import com.qt.app.feature.article.api.vo.ArticleDetailVO
 import com.qt.app.feature.article.ui.common.usernameColor
 import com.qt.app.feature.article.vm.ArticleCommentViewModel
 import com.qt.app.feature.article.vm.ArticleViewModel

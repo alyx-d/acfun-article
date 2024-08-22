@@ -10,7 +10,6 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import kotlin.reflect.KProperty1
 
 fun main() {
     val s = "[img=图片]134[/img]123[emot=acfun,1111/]"
@@ -45,13 +44,5 @@ object Util {
     fun dateFormat(value: Long): String {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.of("UTC+8"))
             .format(dateFormater)
-    }
-
-    fun <T> T.toMap(): Map<String, String> {
-        return mutableMapOf<String, String>().apply {
-            this@toMap!!::class.members.filterIsInstance<KProperty1<T, *>>().forEach {
-                this[it.name] = it.get(this@toMap).toString()
-            }
-        }
     }
 }

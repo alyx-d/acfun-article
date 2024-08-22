@@ -11,11 +11,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.qt.app.core.data.vo.KsPlayJson
+import com.qt.app.core.data.vo.VideoInfoVO
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.core.video.VideoPlayer
-import com.qt.app.feature.video.api.vo.KsPlayJson
-import com.qt.app.feature.video.api.vo.VideoInfoVO
 import com.qt.app.feature.video.vm.VideoPageViewModule
 
 @Composable

@@ -5,14 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.qt.app.feature.video"
+    namespace = "com.qt.app.core.data"
 }
 
 dependencies {
     api(project(":core:network"))
-    api(project(":core:navigation"))
-    api(project(":core:ui-state"))
-    api(project(":core:video-player"))
-    api(project(":core:data"))
-    implementation(libs.jsoup)
+    api(libs.androidx.paging.rumtime)
+    api(libs.androidx.paging.compose)
 }

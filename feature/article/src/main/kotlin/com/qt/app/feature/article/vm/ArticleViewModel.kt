@@ -3,8 +3,8 @@ package com.qt.app.feature.article.vm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.qt.app.feature.article.api.Repository
-import com.qt.app.feature.article.api.vo.ArticleDetailVO
+import com.qt.app.core.data.repo.ArticleRepository
+import com.qt.app.core.data.vo.ArticleDetailVO
 import com.qt.app.core.ui.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArticleViewModel @Inject constructor(
-    private val repo: Repository,
+    private val repo: ArticleRepository,
     private val json: Json,
 ) : ViewModel() {
 

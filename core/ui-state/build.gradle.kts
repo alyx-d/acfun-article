@@ -10,6 +10,7 @@ dependencies {
     api(libs.coil.kt.gif)
     api(libs.coil.kt.compose)
     api(libs.androidx.ui)
+    api(libs.androidx.core.ktx)
     api(libs.androidx.material3)
     api(libs.androidx.ui.graphics)
     api(libs.androidx.activity.compose)
