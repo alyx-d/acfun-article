@@ -87,3 +87,14 @@ val displayBottomBar =
         AcfunScreens.DynamicPage,
         AcfunScreens.ProfilePage,
     )
+
+fun NavHostController.singleTopTo(route: String) {
+    this.navigate(route) {
+        popUpTo(this@singleTopTo.graph.startDestinationId) {
+            inclusive = true
+            saveState = true
+        }
+        restoreState = true
+        launchSingleTop = true
+    }
+}

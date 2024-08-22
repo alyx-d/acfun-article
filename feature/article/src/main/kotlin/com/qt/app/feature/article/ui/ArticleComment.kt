@@ -52,12 +52,14 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
                     modifier = Modifier
                         .size(40.dp)
                         .clip(RoundedCornerShape(50))
-                        .align(Alignment.Center)
-                    ,
+                        .align(Alignment.Center),
                 )
-                AsyncImage(model = c.avatarImage, contentDescription = null,
+                AsyncImage(
+                    model = c.avatarImage,
+                    contentDescription = null,
                     imageLoader = Util.imageLoader(context),
                     modifier = Modifier
+                        .clip(RoundedCornerShape(7.dp))
                         .size(50.dp)
                         .align(Alignment.Center)
                         .graphicsLayer {
@@ -65,7 +67,6 @@ fun ArticleComment(comment: CommentPageVO.Comment?) {
                             scaleY = 1.2f
                             translationY = -16f
                         }
-                        .clip(RoundedCornerShape(5))
                 )
             }
             Text(
