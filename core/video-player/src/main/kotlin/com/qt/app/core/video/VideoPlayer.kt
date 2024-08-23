@@ -4,7 +4,10 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -12,6 +15,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -25,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,12 +38,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import com.qt.app.core.utils.ComposableLifeCycle
 import com.qt.app.core.video.player.R
 
+@OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayer(
     videoUrls: List<String>,
@@ -76,33 +83,37 @@ fun VideoPlayer(
         }
     }
     var coverImageVisible by remember { mutableStateOf(true) }
+    val videoAlpha by animateFloatAsState(
+        targetValue = if (coverImageVisible) 0f else 1f,
+        label = "alpha",
+        animationSpec = tween()
+    )
+    val height = 280.dp
     Box(modifier = modifier) {
-        AnimatedVisibility(
-            enter = fadeIn(),
-            exit = fadeOut(),
-            visible = !coverImageVisible
+        Box(
+            modifier = Modifier
+                .height(height)
+                .graphicsLayer(alpha = videoAlpha)
         ) {
-            Box {
-                AndroidView(
-                    modifier = modifier
-                        .background(Color.Black)
-                        .fillMaxWidth(),
-                    factory = {
-                        playerView.apply {
-                            layoutParams = FrameLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT,
-                            )
-                        }
+            AndroidView(
+                modifier = modifier
+                    .background(Color.Black)
+                    .fillMaxWidth(),
+                factory = {
+                    playerView.apply {
+                        layoutParams = FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                        )
                     }
-                )
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(10.dp)
-                ) {
-                    // ControllerView(player)
                 }
+            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(10.dp)
+            ) {
+                // ControllerView(player)
             }
         }
         AnimatedVisibility(
@@ -113,9 +124,11 @@ fun VideoPlayer(
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(height)
                     .clickable {
                         coverImageVisible = false
                         player.play()
+                        playerView.hideController()
                     },
                 model = coverImage,
                 contentDescription = "coverImage",
