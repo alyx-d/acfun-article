@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -35,16 +36,17 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val refreshState = remember { mutableStateOf(false) }
                 val snackbarHostState = remember { SnackbarHostState() }
+                val selectedPage = remember { mutableIntStateOf(0) }
                 LaunchedEffect(Unit) {
                     SnackBarHostStateHolder.handleHostState(snackbarHostState)
                 }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = { AppSnackBarHost(snackbarHostState) },
-                    bottomBar = { AppBottomNavBar(navController, refreshState) },
+                    bottomBar = { AppBottomNavBar(navController, selectedPage, refreshState) },
                 ) { innerPadding ->
                     Surface(modifier = Modifier.padding(innerPadding)) {
-                        AppNavHost(navController, refreshState)
+                        AppNavHost(navController, selectedPage, refreshState)
                     }
                 }
             }

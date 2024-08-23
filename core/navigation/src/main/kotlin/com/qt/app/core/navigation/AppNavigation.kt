@@ -70,3 +70,11 @@ private fun String.appendArguments(arguments: List<NamedNavArgument>): String {
         .orEmpty()
     return "$this$requiredArguments$optionalArguments"
 }
+
+val displayBottomBar =
+    arrayOf(
+        AcfunScreens.VideoPage,
+        AcfunScreens.ArticlePage,
+        AcfunScreens.DynamicPage,
+        AcfunScreens.ProfilePage,
+    )

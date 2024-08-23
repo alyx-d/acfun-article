@@ -9,7 +9,6 @@ internal fun configureKotlinAndroid(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
 ) {
     commonExtension.apply {
-
         compileSdk = VersionConfig.targetSdk
 
         defaultConfig {
@@ -26,9 +25,6 @@ internal fun configureKotlinAndroid(
         }
         lint {
             targetSdk = VersionConfig.targetSdk
-        }
-        composeOptions {
-            kotlinCompilerExtensionVersion = "1.5.15"
         }
     }
 }

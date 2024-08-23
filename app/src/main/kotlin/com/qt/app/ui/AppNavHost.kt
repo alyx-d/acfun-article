@@ -10,6 +10,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -35,6 +36,7 @@ import com.qt.app.feature.video.ui.VideoPlay
 @Composable
 fun AppNavHost(
     navController: NavHostController,
+    selectedPage: MutableIntState,
     refreshState: MutableState<Boolean>,
 ) {
     val context = LocalContext.current
@@ -79,6 +81,7 @@ fun AppNavHost(
         ) {
             VideoPage(
                 navController = navController,
+                selectedPage = selectedPage,
                 refreshState = refreshState,
             )
         }
@@ -107,18 +110,10 @@ fun AppNavHost(
     }
 }
 
-val displayBottomBar =
-    arrayOf(
-        AcfunScreens.VideoPage,
-        AcfunScreens.ArticlePage,
-        AcfunScreens.DynamicPage,
-        AcfunScreens.ProfilePage,
-    )
 
 fun NavHostController.singleTopTo(route: String) {
     this.navigate(route) {
         popUpTo(this@singleTopTo.graph.startDestinationId) {
-            inclusive = true
             saveState = true
         }
         restoreState = true

@@ -8,10 +8,10 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,16 +19,18 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.qt.app.core.navigation.displayBottomBar
 
 @Composable
 fun AppBottomNavBar(
     navController: NavHostController,
+    selectedPage: MutableIntState,
     refreshState: MutableState<Boolean>,
 ) {
     val itemArr = arrayOf("视频", "文章", "动态", "我的")
     val entry by navController.currentBackStackEntryAsState()
     val bottomBarState = remember { mutableStateOf(false) }
-    val selectedPage = remember { mutableIntStateOf(0) }
+
     bottomBarState.value = displayBottomBar.any { it.route == entry?.destination?.route }
     AnimatedVisibility(visible = bottomBarState.value) {
         NavigationBar(

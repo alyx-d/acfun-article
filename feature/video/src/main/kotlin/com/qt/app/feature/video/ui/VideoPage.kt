@@ -35,6 +35,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,12 +53,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.qt.app.core.data.vo.HomeBananaListVO
 import com.qt.app.core.navigation.AcfunScreens
+import com.qt.app.core.navigation.displayBottomBar
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.state.UiState
+import com.qt.app.core.utils.ComposableLifeCycle
 import com.qt.app.core.utils.Util
 import com.qt.app.feature.video.vm.VideoPageViewModule
 
@@ -66,6 +70,7 @@ import com.qt.app.feature.video.vm.VideoPageViewModule
 fun VideoPage(
     navController: NavHostController,
     refreshState: MutableState<Boolean>,
+    selectedPage: MutableIntState,
     vm: VideoPageViewModule = hiltViewModel(),
 ) {
     val uiState by vm.videoUiState.collectAsState()
@@ -82,6 +87,12 @@ fun VideoPage(
             val pullToRefreshState = rememberPullToRefreshState()
             if (pullToRefreshState.isRefreshing) {
                 vm.refresh()
+            }
+            ComposableLifeCycle { _, event ->
+                when (event) {
+                    Lifecycle.Event.ON_CREATE -> handleBottomBar(navController, selectedPage)
+                    else -> {}
+                }
             }
             LaunchedEffect(isRefresh) {
                 if (isRefresh) pullToRefreshState.startRefresh()
@@ -256,6 +267,16 @@ fun VideoItem(
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
+        }
+    }
+}
+
+fun handleBottomBar(navController: NavHostController, selectedPage: MutableIntState) {
+    val route =
+        navController.currentBackStackEntry?.destination?.route ?: AcfunScreens.VideoPage.route
+    displayBottomBar.forEachIndexed { idx, it ->
+        if (it.route == route) {
+            selectedPage.intValue = idx
         }
     }
 }
