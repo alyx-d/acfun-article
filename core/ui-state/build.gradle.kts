@@ -17,4 +17,5 @@ dependencies {
     api(libs.androidx.ui.tooling.preview)
     api(libs.jetbrains.kotlin.reflect)
     api(platform(libs.androidx.compose.bom))
+    api(project(":core:data"))
 }

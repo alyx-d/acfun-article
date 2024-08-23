@@ -13,6 +13,5 @@ dependencies {
     api(project(":core:navigation"))
     api(project(":core:ui-state"))
     api(project(":core:video-player"))
-    api(project(":core:data"))
     implementation(libs.jsoup)
 }

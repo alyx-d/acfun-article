@@ -46,6 +46,7 @@ import com.qt.app.core.data.vo.ArticleDetailVO
 import com.qt.app.core.ui.common.ImageViewer
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.common.usernameColor
+import com.qt.app.core.ui.components.ContentImageParse
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.R
@@ -59,6 +60,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
     val vm = hiltViewModel<ArticleViewModel>()
     val cvm = hiltViewModel<ArticleCommentViewModel>()
     val articleDetailUiState by vm.articleDetailUiState.collectAsState()
+    val emotionMap by cvm.userEmotion.collectAsState()
     val comments = cvm.commentList.collectAsLazyPagingItems()
     LaunchedEffect(articleId) {
         articleId?.let {
@@ -134,7 +136,11 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                         .isNotBlank()
                                 ) {
                                     // 可能存在存在表情包
-                                    ContentImageParse(el.ownText(), fontSize = 16)
+                                    ContentImageParse(
+                                        content = el.ownText(),
+                                        emotionMap = emotionMap,
+                                        fontSize = 16
+                                    )
                                 } else if (el.nameIs("img")) {
                                     val src = el.attr("src")
                                     imageSet.add(src)

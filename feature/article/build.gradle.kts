@@ -8,7 +8,6 @@ android {
 }
 
 dependencies {
-    api(project(":core:data"))
     api(project(":core:ui-state"))
     api(project(":core:navigation"))
     implementation(libs.jsoup)

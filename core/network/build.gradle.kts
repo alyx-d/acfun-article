@@ -14,5 +14,4 @@ dependencies {
     api(libs.retrofit2.converter.scalars)
     api(libs.jetbrains.kotlinx.serialization.json)
     api(libs.okhttp3.logging.interceptor)
-    implementation(project(":core:ui-state"))
 }

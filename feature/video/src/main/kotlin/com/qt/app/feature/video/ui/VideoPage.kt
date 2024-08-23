@@ -195,7 +195,7 @@ fun VideoItem(
                     AcfunScreens.VideoPlay.createRoute(
                         video.id,
                         video.coverImage,
-                        video.clickCount,
+                        video.commentCont,
                     )
                 )
         }
