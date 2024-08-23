@@ -152,8 +152,8 @@ fun SubCommentComment(
                     buildAnnotatedString {
                         withStyle(
                             SpanStyle(
-                                fontSize = 10.sp,
-                                color = MaterialTheme.colorScheme.secondary
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.primary
                             )
                         ) {
                             append("${it.userName}: ")
