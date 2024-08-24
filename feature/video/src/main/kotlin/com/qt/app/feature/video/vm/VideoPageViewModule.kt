@@ -2,9 +2,15 @@ package com.qt.app.feature.video.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.qt.app.core.data.repo.ArticleRepository
 import com.qt.app.core.data.service.VideoService
+import com.qt.app.core.data.vo.CommentPageVO
 import com.qt.app.core.data.vo.HomeBananaListVO
 import com.qt.app.core.data.vo.KsPlayJson
+import com.qt.app.core.data.vo.SubCommentPageVO
+import com.qt.app.core.data.vo.UserEmotionVO
 import com.qt.app.core.data.vo.VideoInfoVO
 import com.qt.app.core.ui.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,11 +26,13 @@ import javax.inject.Inject
 class VideoPageViewModule @Inject constructor(
     private val json: Json,
     private val videoService: VideoService,
+    private val articleRepository: ArticleRepository,
 ) : ViewModel(){
 
     init {
         getHomePage()
     }
+
     private val _videoUiState = MutableStateFlow<UiState>(UiState.Loading)
     val videoUiState = _videoUiState.asStateFlow()
 
@@ -165,6 +173,46 @@ class VideoPageViewModule @Inject constructor(
     fun refresh() {
         viewModelScope.launch {
             getHomePage(true)
+        }
+    }
+
+    private val _comments = MutableStateFlow<PagingData<CommentPageVO.Comment>>(PagingData.empty())
+    val comments = _comments.cachedIn(viewModelScope)
+    fun getComments(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            articleRepository.getArticleCommentList(id.toInt()).collect {
+                _comments.emit(it)
+            }
+        }
+    }
+
+    private val _userEmotion = MutableStateFlow<Map<String, UserEmotionVO.Emotion>>(mapOf())
+    val userEmotion = _userEmotion.asStateFlow()
+
+    fun getUserEmotion() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val data = articleRepository.getUserEmotion()
+            if (data.result == 0) {
+                val map = mutableMapOf<String, UserEmotionVO.Emotion>()
+                data.emotionPackageList.forEach { pack ->
+                    pack.emotions.forEach { emo ->
+                        map[emo.id.toString()] = emo
+                    }
+                }
+                _userEmotion.emit(map)
+            }
+        }
+    }
+
+    private val _subComments =
+        MutableStateFlow<PagingData<SubCommentPageVO.SubComment>>(PagingData.empty())
+    val subComments = _subComments.cachedIn(viewModelScope)
+
+    fun getSubCommentList(sourceId: Int, rootCommentId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            articleRepository.getArticleSubCommentList(sourceId, rootCommentId).collect {
+                _subComments.emit(it)
+            }
         }
     }
 }

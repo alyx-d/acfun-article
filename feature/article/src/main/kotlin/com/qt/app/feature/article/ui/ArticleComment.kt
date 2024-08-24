@@ -7,7 +7,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.qt.app.core.data.vo.CommentPageVO
-import com.qt.app.core.ui.components.CommentComment
+import com.qt.app.core.ui.components.CommentComponent
 import com.qt.app.feature.article.vm.ArticleCommentViewModel
 import com.qt.app.feature.article.vm.ArticleSubCommentViewModel
 import kotlinx.coroutines.launch
@@ -22,10 +22,9 @@ fun ArticleComment(
     val scope = rememberCoroutineScope()
     val emotionMap by cvm.userEmotion.collectAsState()
     val subCommentList = subCommentVm.subComment.collectAsLazyPagingItems()
-    CommentComment(comment, subCommentList, emotionMap) { showBottomSheet ->
+    CommentComponent(comment, subCommentList, emotionMap) { _ ->
         scope.launch {
             subCommentVm.getSubCommentList(comment.sourceId, comment.commentId)
         }
-        showBottomSheet.value = true
     }
 }

@@ -44,7 +44,7 @@ import com.qt.app.core.ui.common.usernameColor
 import com.qt.app.core.utils.Util
 
 @Composable
-fun CommentComment(
+fun CommentComponent(
     comment: CommentPageVO.Comment,
     subCommentList: LazyPagingItems<SubCommentPageVO.SubComment>,
     emotionMap: Map<String, UserEmotionVO.Emotion>,
@@ -140,7 +140,10 @@ fun SubCommentComment(
     val showBottomSheet = remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.fillMaxWidth(),
-        onClick = { onClick(showBottomSheet) },
+        onClick = {
+            onClick(showBottomSheet)
+            showBottomSheet.value = true
+        },
         shape = ShapeDefaults.ExtraSmall,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
@@ -269,12 +272,13 @@ fun ContentImageParse(
     fontSize: Int = 12,
     lineHeight: TextUnit = TextUnit.Unspecified,
 ) {
-    val rex = Regex(pattern = "\\[img=图片].+\\[/img]|\\[img].+\\[/img]|\\[emot=acfun,\\d+/]")
+    val rex =
+        Regex(pattern = "\\[img=图片].+\\[/img]|\\[img].+\\[/img]|\\[emot=acfun,\\d+/]|\\[emot=ac,\\d+/]")
     val imgs = rex.findAll(content).mapTo(mutableListOf()) {
         if (it.value.contains("img")) {
-            it.value.substring(8, it.value.length - 6)
+            it.value.substring(it.value.indexOf("]") + 1, it.value.lastIndexOf("["))
         } else {
-            val id = it.value.substring(12, it.value.length - 2)
+            val id = it.value.substring(it.value.indexOf(",") + 1, it.value.length - 2)
             emotionMap[id]?.smallImageInfo?.thumbnailImageCdnUrl ?: ""
         }
     }
