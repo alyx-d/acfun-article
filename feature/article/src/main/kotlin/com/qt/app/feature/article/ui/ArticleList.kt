@@ -46,7 +46,7 @@ import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.vm.ArticleViewModel
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleList(
     navController: NavHostController,
