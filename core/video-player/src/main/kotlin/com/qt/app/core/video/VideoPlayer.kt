@@ -179,7 +179,8 @@ fun ControllerView(player: Player) {
                         isPlaying = false
                     },
                 tint = Color.White,
-                painter = painterResource(R.drawable.pause_24px), contentDescription = "pause"
+                painter = painterResource(R.drawable.pause_24px),
+                contentDescription = "pause"
             )
 
             false -> Icon(
