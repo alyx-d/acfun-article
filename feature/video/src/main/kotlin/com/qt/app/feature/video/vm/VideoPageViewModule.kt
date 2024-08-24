@@ -45,14 +45,14 @@ class VideoPageViewModule @Inject constructor(
                 val html = Jsoup.parse(body)
                 val scripts = html.select("script")
                 val videos =
-                    mutableListOf<List<com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo>>()
+                    mutableListOf<List<HomeBananaListVO.VideoInfo>>()
                 if (scripts.isNotEmpty()) {
                     scripts.forEach {
                         val scriptText = it.html()
                         if (scriptText.contains("bigPipe.onPageletArrive")) {
                             val str = scriptText.substring(scriptText.indexOf("{"), scriptText.lastIndexOf("}") + 1)
                             val data =
-                                json.decodeFromString<com.qt.app.core.data.vo.HomeBananaListVO>(str)
+                                json.decodeFromString<HomeBananaListVO>(str)
                             when (data.id) {
                                 "pagelet_list_banana" -> {
                                     videos.add(parseVideoInfoFromHtml(data.html, "day-list"))
@@ -74,8 +74,8 @@ class VideoPageViewModule @Inject constructor(
     private fun parseVideoInfoFromHtml(
         html: String,
         type: String
-    ): List<com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo> {
-        val data = mutableListOf<com.qt.app.core.data.vo.HomeBananaListVO.VideoInfo>()
+    ): List<HomeBananaListVO.VideoInfo> {
+        val data = mutableListOf<HomeBananaListVO.VideoInfo>()
         val part = Jsoup.parseBodyFragment(html)
         val el = part.body().selectFirst(".banana-list.$type")
         el?.select("div.banana-video")?.forEach { element ->
