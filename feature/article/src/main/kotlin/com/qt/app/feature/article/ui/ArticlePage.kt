@@ -54,14 +54,17 @@ fun ArticlePage(
         ) {
             tabs.forEachIndexed { index, tab ->
                 val selected = articlePagerState.currentPage == index
-                Tab(selected = selected, onClick = {
-                    if (selected) {
-                        refreshState.value = true
-                    }
-                    coroutineScope.launch {
-                        articlePagerState.animateScrollToPage(index)
-                    }
-                }) {
+                Tab(
+                    selectedContentColor = MaterialTheme.colorScheme.background,
+                    selected = selected,
+                    onClick = {
+                        if (selected) {
+                            refreshState.value = true
+                        }
+                        coroutineScope.launch {
+                            articlePagerState.animateScrollToPage(index)
+                        }
+                    }) {
                     Text(
                         text = tab,
                         fontSize = if (selected) 18.sp else TextUnit.Unspecified,

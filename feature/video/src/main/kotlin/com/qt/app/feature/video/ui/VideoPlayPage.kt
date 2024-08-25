@@ -197,6 +197,7 @@ fun VideoAndCommentTab(
                     .wrapContentSize()
                     .padding(horizontal = 5.dp, vertical = 8.dp),
                 selected = idx == pagerState.currentPage,
+                selectedContentColor = MaterialTheme.colorScheme.background,
                 onClick = {
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(idx)
