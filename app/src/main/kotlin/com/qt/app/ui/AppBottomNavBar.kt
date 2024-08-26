@@ -56,7 +56,6 @@ fun AppBottomNavBar(
                         val route = displayBottomBar[index].route
                         navController.navigate(route) {
                             popUpTo(AcfunScreens.VideoPage.route) {
-                                inclusive = true
                                 saveState = true
                             }
                             launchSingleTop = true
