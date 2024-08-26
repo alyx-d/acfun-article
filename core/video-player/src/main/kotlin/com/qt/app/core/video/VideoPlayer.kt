@@ -88,7 +88,7 @@ fun VideoPlayer(
         label = "alpha",
         animationSpec = tween()
     )
-    val height = 240.dp
+    val height = 230.dp
     Box(modifier = modifier) {
         Box(
             modifier = Modifier

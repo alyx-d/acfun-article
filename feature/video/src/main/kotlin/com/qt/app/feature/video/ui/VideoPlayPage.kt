@@ -215,6 +215,7 @@ fun VideoAndCommentTab(
         }
     }
     HorizontalPager(
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
         state = pagerState,
     ) { idx ->
         content(idx)
