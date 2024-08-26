@@ -39,6 +39,7 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -121,7 +122,7 @@ fun VideoPage(
                     ) {
                         var expended by remember { mutableStateOf(false) }
                         val menus = arrayOf("日榜", "三日榜", "周榜")
-                        var menu by remember { mutableStateOf(menus[0]) }
+                        var menuIndex by remember { mutableIntStateOf(0) }
                         val toggleMenu = { expended = !expended }
                         Text(
                             text = "香蕉榜", fontSize = 18.sp,
@@ -136,7 +137,7 @@ fun VideoPage(
                                     contentColor = MaterialTheme.colorScheme.onBackground,
                                 )
                             ) {
-                                Text(text = menu, fontSize = 14.sp)
+                                Text(text = menus[menuIndex], fontSize = 14.sp)
                             }
                             DropdownMenu(
                                 modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -148,7 +149,7 @@ fun VideoPage(
                                         text = { Text(text = it) },
                                         onClick = {
                                             toggleMenu()
-                                            menu = it
+                                            menuIndex = idx
                                             videos = videoData[idx]
                                         }
                                     )

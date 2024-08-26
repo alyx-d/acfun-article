@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.core.navigation.displayBottomBar
 
 @Composable
@@ -52,7 +53,15 @@ fun AppBottomNavBar(
                             refreshState.value = true
                         }
                         selectedPage.intValue = index
-                        navController.singleTopTo(displayBottomBar[index].route)
+                        val route = displayBottomBar[index].route
+                        navController.navigate(route) {
+                            popUpTo(AcfunScreens.VideoPage.route) {
+                                inclusive = true
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     },
                     icon = { /* TODO */ },
                     colors = NavigationBarItemDefaults.colors(

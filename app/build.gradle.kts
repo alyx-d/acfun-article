@@ -58,6 +58,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:splash"))
     implementation(project(":feature:video"))
     implementation(project(":feature:article"))
     implementation(project(":feature:dynamic"))

@@ -30,6 +30,7 @@ import com.qt.app.feature.article.ui.ArticleDetail
 import com.qt.app.feature.article.ui.ArticlePage
 import com.qt.app.feature.dynamic.ui.DynamicPage
 import com.qt.app.feature.profile.ui.ProfilePage
+import com.qt.app.feature.splash.SplashPage
 import com.qt.app.feature.video.ui.VideoPage
 import com.qt.app.feature.video.ui.VideoPlay
 
@@ -43,14 +44,6 @@ fun AppNavHost(
     val activity = (context as? Activity)
     var time by remember {
         mutableLongStateOf(0L)
-    }
-    BackHandler {
-        if (System.currentTimeMillis() - time > 2000) {
-            SnackBarHostStateHolder.showMessage("再次点击退出程序~")
-            time = System.currentTimeMillis()
-        } else {
-            activity?.finish()
-        }
     }
     if (isOnline().not()) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -72,10 +65,23 @@ fun AppNavHost(
             return
         }
     }
+    BackHandler {
+        if (System.currentTimeMillis() - time > 2000) {
+            SnackBarHostStateHolder.showMessage("再次点击退出程序~")
+            time = System.currentTimeMillis()
+        } else {
+            activity?.finish()
+        }
+    }
     NavHost(
         navController = navController,
-        startDestination = AcfunScreens.VideoPage.route
+        startDestination = AcfunScreens.SplashPage.route
     ) {
+        composable(
+            route = AcfunScreens.SplashPage.route
+        ) {
+            SplashPage(navController)
+        }
         composable(
             route = AcfunScreens.VideoPage.route,
         ) {
@@ -111,12 +117,3 @@ fun AppNavHost(
 }
 
 
-fun NavHostController.singleTopTo(route: String) {
-    this.navigate(route) {
-        popUpTo(this@singleTopTo.graph.startDestinationId) {
-            saveState = true
-        }
-        restoreState = true
-        launchSingleTop = true
-    }
-}
