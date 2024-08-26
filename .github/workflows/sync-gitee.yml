@@ -1,5 +1,5 @@
-name: Sync To Gitee  #名字  可自定义
-on: push  #触发条件   page_build表示Github Page部署完成后触发
+name: Sync To Gitee  #名字
+on: push  #触发条件
 jobs:
   sync:
     runs-on: ubuntu-latest
