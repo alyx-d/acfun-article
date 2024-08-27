@@ -15,20 +15,18 @@ class ArticleSubCommentDataSource(
     override fun getRefreshKey(state: PagingState<Int, SubCommentPageVO.SubComment>): Int? {
         return null
     }
-    private var totalPage: Int = -1
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SubCommentPageVO.SubComment> {
         val currPage = params.key ?: 1
         return try {
-            if (totalPage > -1 && currPage > totalPage) return LoadResult.Error(Exception("no more"))
             val query = SubCommentListParamDTO(sourceId, rootCommentId).apply {
                 this.page = currPage
             }.toMap()
             val data = service.getArticleSubCommentList(query)
-            totalPage = data.totalPage
             LoadResult.Page(
                 data = data.subComments,
                 prevKey = if (currPage == 1) null else currPage - 1,
-                nextKey = currPage + 1
+                nextKey = data.nextPage
             )
         }catch (ex: Exception) {
             LoadResult.Error(ex)

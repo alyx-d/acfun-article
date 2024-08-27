@@ -10,6 +10,8 @@ data class SubCommentPageVO(
     var subCommentCount: Int,
     var subComments: List<SubComment>
 ) {
+    val nextPage: Int?
+        get() = if (curPage <= totalPage) curPage + 1 else null
 
     @Serializable
     data class SubComment(
