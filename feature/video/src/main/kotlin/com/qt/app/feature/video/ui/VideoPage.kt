@@ -42,6 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -91,7 +92,8 @@ fun VideoPage(
             }
             ComposableLifeCycle { _, event ->
                 when (event) {
-                    Lifecycle.Event.ON_CREATE -> handleBottomBar(navController, selectedPage)
+                    Lifecycle.Event.ON_START -> handleBottomBar(navController, selectedPage)
+                    Lifecycle.Event.ON_RESUME -> handleBottomBar(navController, selectedPage)
                     else -> {}
                 }
             }
@@ -122,7 +124,7 @@ fun VideoPage(
                     ) {
                         var expended by remember { mutableStateOf(false) }
                         val menus = arrayOf("日榜", "三日榜", "周榜")
-                        var menuIndex by remember { mutableIntStateOf(0) }
+                        var menuIndex by rememberSaveable { mutableIntStateOf(0) }
                         val toggleMenu = { expended = !expended }
                         Text(
                             text = "香蕉榜", fontSize = 18.sp,
