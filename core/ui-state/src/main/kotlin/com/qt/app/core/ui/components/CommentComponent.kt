@@ -121,7 +121,7 @@ fun CommentComponent(
                 }
             }
             if (comment.info?.subCommentsMap?.isNotEmpty() == true) {
-                SubCommentComment(comment, subCommentList, emotionMap) { state -> onClick(state) }
+                SubCommentComponent(comment, subCommentList, emotionMap) { state -> onClick(state) }
             }
         }
     }
@@ -129,7 +129,7 @@ fun CommentComponent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubCommentComment(
+fun SubCommentComponent(
     comment: CommentPageVO.Comment,
     subCommentList: LazyPagingItems<SubCommentPageVO.SubComment>,
     emotionMap: Map<String, UserEmotionVO.Emotion>,
@@ -179,6 +179,7 @@ fun SubCommentComment(
     }
     if (showBottomSheet.value) {
         ModalBottomSheet(
+            tonalElevation = 10.dp,
             onDismissRequest = {
                 showBottomSheet.value = false
             },
@@ -202,8 +203,8 @@ fun SubCommentItemComment(
 ) {
     Column(
         modifier = Modifier
-            .padding(5.dp)
-            .clip(RoundedCornerShape(10))
+            .padding(horizontal = 5.dp, vertical = 2.5.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colorScheme.background)
             .padding(5.dp)
     ) {
