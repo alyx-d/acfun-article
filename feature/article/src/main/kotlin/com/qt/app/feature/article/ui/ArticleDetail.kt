@@ -210,6 +210,20 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                     items(comments.itemCount) {
                         ArticleComment(comments[it])
                     }
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                modifier = Modifier.align(Alignment.Center),
+                                text = "( ゜- ゜)つロ 再怎么找也没有了",
+                                color = MaterialTheme.colorScheme.outline,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
                 }
                 if (imageViewerState.value && imageSet.isNotEmpty()) {
                     AnimatedVisibility(visible = imageViewerState.value) {

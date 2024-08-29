@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ShapeDefaults
@@ -124,6 +125,9 @@ fun CommentComponent(
                 SubCommentComponent(comment, subCommentList, emotionMap) { state -> onClick(state) }
             }
         }
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.surface
+        )
     }
 }
 
@@ -148,7 +152,7 @@ fun SubCommentComponent(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
         Column(
-            modifier = Modifier.padding(5.dp)
+            modifier = Modifier.padding(vertical = 5.dp)
         ) {
             subComment.subComments.forEach {
                 Text(
@@ -179,7 +183,6 @@ fun SubCommentComponent(
     }
     if (showBottomSheet.value) {
         ModalBottomSheet(
-            tonalElevation = 10.dp,
             onDismissRequest = {
                 showBottomSheet.value = false
             },
@@ -190,6 +193,11 @@ fun SubCommentComponent(
                 items(subCommentList.itemCount) {
                     if (subCommentList[it] == null) return@items
                     SubCommentItemComment(subCommentList[it]!!, emotionMap)
+                    if (it < subCommentList.itemCount) {
+                        HorizontalDivider(
+                            color = MaterialTheme.colorScheme.surface
+                        )
+                    }
                 }
             }
         }
@@ -203,10 +211,9 @@ fun SubCommentItemComment(
 ) {
     Column(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 5.dp, vertical = 2.5.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colorScheme.background)
-            .padding(5.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
