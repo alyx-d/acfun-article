@@ -374,7 +374,7 @@ fun CommentResourceParse(
         }
     /*TODO resource parse*/
     Text(
-        text = regex.replace(content, ""),
+        text = regex.replace(content, "").trim(),
         fontSize = fontSize,
         lineHeight = lineHeight,
     )
