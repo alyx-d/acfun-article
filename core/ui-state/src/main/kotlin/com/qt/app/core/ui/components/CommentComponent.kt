@@ -372,6 +372,7 @@ fun CommentResourceParse(
             val title = it.value.substring(it.value.indexOf("]") + 1, it.value.lastIndexOf("["))
             Resource(id, title)
         }
+    /*TODO resource parse*/
     Text(
         text = regex.replace(content, ""),
         fontSize = fontSize,
