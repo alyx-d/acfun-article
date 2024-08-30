@@ -1,7 +1,6 @@
 package com.qt.app.core.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -373,36 +372,9 @@ fun CommentResourceParse(
             val title = it.value.substring(it.value.indexOf("]") + 1, it.value.lastIndexOf("["))
             Resource(id, title)
         }
-    if (results.isNotEmpty()) {
-        var idx = 0
-        val c = regex.replace(content, ReplaceStr)
-        c.split(ReplaceStr).forEach { text ->
-            Row {
-                Text(
-                    text = text,
-                    fontSize = fontSize,
-                    lineHeight = lineHeight,
-                )
-                if (idx < results.size) {
-                    val id = results[idx].id
-                    Text(
-                        modifier = Modifier
-                            .clickable {
-                                onResourceClick(id)
-                            },
-                        text = "[${results[idx].title}]",
-                        fontSize = fontSize,
-                        color = Color.Blue,
-                    )
-                    idx++
-                }
-            }
-        }
-    } else {
-        Text(
-            text = content,
-            fontSize = fontSize,
-            lineHeight = lineHeight,
-        )
-    }
+    Text(
+        text = regex.replace(content, ""),
+        fontSize = fontSize,
+        lineHeight = lineHeight,
+    )
 }
