@@ -41,6 +41,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import coil.compose.rememberAsyncImagePainter
 import com.qt.app.core.data.vo.ArticleDetailVO
+import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.core.ui.common.ImageViewer
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.common.usernameColor
@@ -139,7 +140,12 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                     ContentImageParse(
                                         content = el.ownText(),
                                         emotionMap = emotionMap,
-                                        fontSize = 16
+                                        fontSize = 16.sp,
+                                        onResourceClick = { id ->
+                                            navController.navigate(
+                                                AcfunScreens.ArticleDetail.createRoute(id.toInt())
+                                            )
+                                        },
                                     )
                                 } else if (el.nameIs("img")) {
                                     val src = el.attr("src")
@@ -200,7 +206,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                             )
                         }
                         items(comments.itemCount) {
-                            ArticleComment(comments[it])
+                            ArticleComment(navController, comments[it])
                         }
                         item {
                             PagingFooter()

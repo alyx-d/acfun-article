@@ -1,6 +1,7 @@
 package com.qt.app.core.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,7 +52,8 @@ fun CommentComponent(
     comment: CommentPageVO.Comment,
     subCommentList: LazyPagingItems<SubCommentPageVO.SubComment>,
     emotionMap: Map<String, UserEmotionVO.Emotion>,
-    onClick: (MutableState<Boolean>) -> Unit,
+    onMoreCommentClick: (MutableState<Boolean>) -> Unit,
+    onResourceClick: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -102,7 +104,12 @@ fun CommentComponent(
                 .padding(start = 60.dp)
                 .fillMaxWidth()
         ) {
-            ContentImageParse(comment.content, emotionMap, lineHeight = 24.sp)
+            ContentImageParse(
+                comment.content,
+                emotionMap,
+                lineHeight = 24.sp,
+                onResourceClick = onResourceClick,
+            )
             Box(
                 modifier = Modifier.padding(top = 5.dp)
             ) {
@@ -124,7 +131,13 @@ fun CommentComponent(
                 }
             }
             if (comment.info?.subCommentsMap?.isNotEmpty() == true) {
-                SubCommentComponent(comment, subCommentList, emotionMap) { state -> onClick(state) }
+                SubCommentComponent(
+                    comment,
+                    subCommentList,
+                    emotionMap,
+                    onMoreCommentClick = { state -> onMoreCommentClick(state) },
+                    onResourceClick = onResourceClick,
+                )
             }
         }
         HorizontalDivider(
@@ -139,7 +152,8 @@ fun SubCommentComponent(
     comment: CommentPageVO.Comment,
     subCommentList: LazyPagingItems<SubCommentPageVO.SubComment>,
     emotionMap: Map<String, UserEmotionVO.Emotion>,
-    onClick: (MutableState<Boolean>) -> Unit,
+    onMoreCommentClick: (MutableState<Boolean>) -> Unit,
+    onResourceClick: (String) -> Unit = {},
 ) {
     val subComment = comment.info?.subCommentsMap?.get(comment.commentId) ?: return
     val sheetState = rememberModalBottomSheetState()
@@ -147,7 +161,7 @@ fun SubCommentComponent(
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
-            onClick(showBottomSheet)
+            onMoreCommentClick(showBottomSheet)
             showBottomSheet.value = true
         },
         shape = ShapeDefaults.ExtraSmall,
@@ -194,7 +208,11 @@ fun SubCommentComponent(
             LazyColumn {
                 items(subCommentList.itemCount) {
                     if (subCommentList[it] == null) return@items
-                    SubCommentItemComment(subCommentList[it]!!, emotionMap)
+                    SubCommentItemComment(
+                        subCommentList[it]!!,
+                        emotionMap,
+                        onResourceClick = onResourceClick,
+                    )
                     if (it < subCommentList.itemCount) {
                         HorizontalDivider(
                             color = MaterialTheme.colorScheme.surface
@@ -210,6 +228,7 @@ fun SubCommentComponent(
 fun SubCommentItemComment(
     comment: SubCommentPageVO.SubComment,
     emotionMap: Map<String, UserEmotionVO.Emotion>,
+    onResourceClick: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -250,7 +269,8 @@ fun SubCommentItemComment(
             ContentImageParse(
                 content = comment.content,
                 emotionMap = emotionMap,
-                lineHeight = 24.sp
+                lineHeight = 24.sp,
+                onResourceClick = onResourceClick,
             )
             Box(
                 modifier = Modifier.padding(top = 5.dp)
@@ -275,12 +295,15 @@ fun SubCommentItemComment(
     }
 }
 
+const val ReplaceStr = "||-=-=-||"
+
 @Composable
 fun ContentImageParse(
     content: String,
     emotionMap: Map<String, UserEmotionVO.Emotion>,
-    fontSize: Int = 12,
+    fontSize: TextUnit = 12.sp,
     lineHeight: TextUnit = TextUnit.Unspecified,
+    onResourceClick: (String) -> Unit,
 ) {
     val rex =
         Regex(pattern = "\\[img=图片].+\\[/img]|\\[img].+\\[/img]|\\[emot=acfun,\\d+/]|\\[emot=ac,\\d+/]")
@@ -293,15 +316,15 @@ fun ContentImageParse(
         }
     }
     if (imgs.isNotEmpty()) {
-        val str = "||-=-=-||"
-        val c = rex.replace(content, str)
+        val c = rex.replace(content, ReplaceStr)
         var idx = 0
-        c.split(str).forEach { text ->
+        c.split(ReplaceStr).forEach { text ->
             if (text.isNotBlank()) {
-                Text(
-                    text = text,
-                    fontSize = fontSize.sp,
-                    lineHeight = lineHeight
+                CommentResourceParse(
+                    content = text,
+                    fontSize = fontSize,
+                    lineHeight = lineHeight,
+                    onResourceClick = onResourceClick,
                 )
             }
             if (idx < imgs.size) {
@@ -312,10 +335,11 @@ fun ContentImageParse(
             }
         }
     } else {
-        Text(
-            text = content,
-            fontSize = fontSize.sp,
-            lineHeight = lineHeight
+        CommentResourceParse(
+            content = content,
+            onResourceClick = onResourceClick,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
         )
     }
 }
@@ -330,4 +354,55 @@ fun NoCommentComponent() {
         text = "暂无评论",
         color = MaterialTheme.colorScheme.secondary
     )
+}
+
+@Composable
+fun CommentResourceParse(
+    content: String,
+    fontSize: TextUnit = 12.sp,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    onResourceClick: (String) -> Unit,
+) {
+    val regex = Regex("\\[resource id=\\d+.*]")
+
+    data class Resource(val id: String, val title: String)
+
+    val results = regex.findAll(content)
+        .mapTo(mutableListOf()) {
+            val id = it.value.substring(it.value.indexOf("id=") + 3, it.value.indexOf("type=") - 1)
+            val title = it.value.substring(it.value.indexOf("]") + 1, it.value.lastIndexOf("["))
+            Resource(id, title)
+        }
+    if (results.isNotEmpty()) {
+        var idx = 0
+        val c = regex.replace(content, ReplaceStr)
+        c.split(ReplaceStr).forEach { text ->
+            Row {
+                Text(
+                    text = text,
+                    fontSize = fontSize,
+                    lineHeight = lineHeight,
+                )
+                if (idx < results.size) {
+                    val id = results[idx].id
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                onResourceClick(id)
+                            },
+                        text = "[${results[idx].title}]",
+                        fontSize = fontSize,
+                        color = Color.Blue,
+                    )
+                    idx++
+                }
+            }
+        }
+    } else {
+        Text(
+            text = content,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+        )
+    }
 }

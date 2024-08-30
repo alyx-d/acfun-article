@@ -42,6 +42,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.qt.app.core.data.vo.KsPlayJson
 import com.qt.app.core.data.vo.VideoInfoVO
+import com.qt.app.core.navigation.AcfunScreens
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.common.pagerTabIndicatorOffset
 import com.qt.app.core.ui.common.usernameColor
@@ -85,7 +86,7 @@ fun VideoPlay(
                 VideoAndCommentTab(navController, commentCount) { index ->
                     when (index) {
                         0 -> VideoTabContent(videoInfo)
-                        1 -> CommentTabContent()
+                        1 -> CommentTabContent(navController)
                     }
                 }
 
@@ -96,6 +97,7 @@ fun VideoPlay(
 
 @Composable
 fun CommentTabContent(
+    navController: NavHostController,
     vm: VideoPageViewModule = hiltViewModel()
 ) {
     val comments = vm.comments.collectAsLazyPagingItems()
@@ -111,17 +113,21 @@ fun CommentTabContent(
                 NoCommentComponent()
             }
         } else {
-            items(comments.itemCount, key = { comments[it]?.commentId ?: it }) {
+            items(comments.itemCount, key = { comments[it]?.commentId ?: it }) { it ->
                 val comment = comments[it] ?: return@items
                 CommentComponent(
                     comment = comment,
                     subCommentList = subComments,
-                    emotionMap = userEmotion
-                ) { _ ->
-                    scope.launch {
-                        vm.getSubCommentList(comment.sourceId, comment.commentId)
+                    emotionMap = userEmotion,
+                    onMoreCommentClick = { _ ->
+                        scope.launch {
+                            vm.getSubCommentList(comment.sourceId, comment.commentId)
+                        }
+                    },
+                    onResourceClick = { id ->
+                        navController.navigate(AcfunScreens.ArticleDetail.createRoute(id.toInt()))
                     }
-                }
+                )
             }
             item {
                 PagingFooter()
