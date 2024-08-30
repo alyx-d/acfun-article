@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,6 +45,8 @@ import com.qt.app.core.ui.common.ImageViewer
 import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.common.usernameColor
 import com.qt.app.core.ui.components.ContentImageParse
+import com.qt.app.core.ui.components.NoCommentComponent
+import com.qt.app.core.ui.components.PagingFooter
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.core.utils.Util
 import com.qt.app.feature.article.R
@@ -73,8 +73,8 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
     when (articleDetailUiState) {
         is UiState.Error -> {}
         UiState.Loading -> PageLoading(context = context)
-        is UiState.Success -> {
-            val it = (articleDetailUiState as UiState.Success).data as ArticleDetailVO
+        is UiState.Success<*> -> {
+            val it = articleDetailUiState.success<ArticleDetailVO>()
             val imageSet = remember { mutableSetOf<String>() }
             val imageViewerState = remember {
                 mutableStateOf(false)
@@ -187,14 +187,7 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                     }
                     if (comments.itemCount == 0) {
                         item {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp),
-                                textAlign = TextAlign.Center,
-                                text = "暂无评论",
-                                color = MaterialTheme.colorScheme.secondary
-                            )
+                            NoCommentComponent()
                         }
                     } else {
                         val commentCount = comments[0]?.info?.commentCount ?: 0
@@ -206,22 +199,11 @@ fun ArticleDetail(navController: NavHostController, backStackEntry: NavBackStack
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                    }
-                    items(comments.itemCount) {
-                        ArticleComment(comments[it])
-                    }
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .padding(vertical = 8.dp)
-                                .fillMaxWidth()
-                        ) {
-                            Text(
-                                modifier = Modifier.align(Alignment.Center),
-                                text = "( ゜- ゜)つロ 再怎么找也没有了",
-                                color = MaterialTheme.colorScheme.outline,
-                                fontSize = 12.sp
-                            )
+                        items(comments.itemCount) {
+                            ArticleComment(comments[it])
+                        }
+                        item {
+                            PagingFooter()
                         }
                     }
                 }

@@ -81,9 +81,9 @@ fun VideoPage(
     when (uiState) {
         is UiState.Error -> Text(text = "Error")
         UiState.Loading -> PageLoading(context)
-        is UiState.Success -> {
-            val data = (uiState as UiState.Success).data as List<*>
-            val videoData by remember { mutableStateOf(data.map { it as List<*> }) }
+        is UiState.Success<*> -> {
+            val data = uiState.success<List<List<HomeBananaListVO.VideoInfo>>>()
+            val videoData by remember { mutableStateOf(data) }
             var videos by remember { mutableStateOf(videoData[0]) }
             val isRefresh by vm.refreshState.collectAsState()
             val pullToRefreshState = rememberPullToRefreshState()

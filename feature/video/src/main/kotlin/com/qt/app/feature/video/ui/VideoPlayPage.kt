@@ -46,6 +46,8 @@ import com.qt.app.core.ui.common.PageLoading
 import com.qt.app.core.ui.common.pagerTabIndicatorOffset
 import com.qt.app.core.ui.common.usernameColor
 import com.qt.app.core.ui.components.CommentComponent
+import com.qt.app.core.ui.components.NoCommentComponent
+import com.qt.app.core.ui.components.PagingFooter
 import com.qt.app.core.ui.state.UiState
 import com.qt.app.core.video.VideoPlayer
 import com.qt.app.feature.video.vm.VideoPageViewModule
@@ -67,10 +69,8 @@ fun VideoPlay(
     when (uiState) {
         is UiState.Error -> {}
         UiState.Loading -> PageLoading(context)
-        is UiState.Success -> {
-            val (p1, p2) = (uiState as UiState.Success).data as Pair<*, *>
-            val videoInfo = p1 as VideoInfoVO
-            val ksPlayJsons = (p2 as List<*>).map { it as KsPlayJson }
+        is UiState.Success<*> -> {
+            val (videoInfo, ksPlayJsons) = uiState.success<Pair<VideoInfoVO, List<KsPlayJson>>>()
             val urls =
                 ksPlayJsons.mapTo(mutableListOf()) { it.adaptationSet.first().representation.last().url }
             Column(
@@ -106,16 +106,25 @@ fun CommentTabContent(
     LazyColumn(
         state = state,
     ) {
-        items(comments.itemCount, key = { comments[it]?.commentId ?: it }) {
-            val comment = comments[it] ?: return@items
-            CommentComponent(
-                comment = comment,
-                subCommentList = subComments,
-                emotionMap = userEmotion
-            ) { _ ->
-                scope.launch {
-                    vm.getSubCommentList(comment.sourceId, comment.commentId)
+        if (comments.itemCount == 0) {
+            item {
+                NoCommentComponent()
+            }
+        } else {
+            items(comments.itemCount, key = { comments[it]?.commentId ?: it }) {
+                val comment = comments[it] ?: return@items
+                CommentComponent(
+                    comment = comment,
+                    subCommentList = subComments,
+                    emotionMap = userEmotion
+                ) { _ ->
+                    scope.launch {
+                        vm.getSubCommentList(comment.sourceId, comment.commentId)
+                    }
                 }
+            }
+            item {
+                PagingFooter()
             }
         }
     }

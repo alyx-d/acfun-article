@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.TextUnit
@@ -316,4 +318,16 @@ fun ContentImageParse(
             lineHeight = lineHeight
         )
     }
+}
+
+@Composable
+fun NoCommentComponent() {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        textAlign = TextAlign.Center,
+        text = "暂无评论",
+        color = MaterialTheme.colorScheme.secondary
+    )
 }
