@@ -17,5 +17,8 @@ dependencies {
     api(libs.androidx.ui.tooling.preview)
     api(libs.jetbrains.kotlin.reflect)
     api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.lifecycle.viewmodel.ktx)
+    api(libs.androidx.lifecycle.viewmodel.compose)
+    api(libs.androidx.lifecycle.runtime.compose)
     api(project(":core:data"))
 }

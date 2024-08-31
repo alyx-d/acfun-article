@@ -11,7 +11,4 @@ dependencies {
     api(project(":core:ui-state"))
     api(project(":core:navigation"))
     implementation(libs.jsoup)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.runtime.compose)
 }

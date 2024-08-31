@@ -13,7 +13,9 @@ import com.qt.app.core.data.vo.SubCommentPageVO
 import com.qt.app.core.data.vo.UserEmotionVO
 import com.qt.app.core.data.vo.VideoInfoVO
 import com.qt.app.core.ui.state.UiState
+import com.qt.app.core.utils.SnackBarHostStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,15 +31,16 @@ class VideoPageViewModule @Inject constructor(
     private val articleRepository: ArticleRepository,
 ) : ViewModel(){
 
-    init {
-        getHomePage()
-    }
-
     private val _videoUiState = MutableStateFlow<UiState>(UiState.Loading)
     val videoUiState = _videoUiState.asStateFlow()
 
-    private fun getHomePage(isRefresh: Boolean = false) {
-        viewModelScope.launch(Dispatchers.IO) {
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+        SnackBarHostStateHolder.showMessage(exception.message ?: "error")
+        viewModelScope.launch { _videoUiState.emit(UiState.Error(exception)) }
+    }
+
+    fun getHomePage(isRefresh: Boolean = false) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             if (isRefresh) _refreshState.emit(true)
             val response = videoService.acfunHome()
             if (response.isSuccessful && response.body() != null) {
@@ -104,7 +107,7 @@ class VideoPageViewModule @Inject constructor(
     val videoPlayInfoUiState = _videoPlayInfoUiState.asStateFlow()
 
     fun getVideoPlay(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val response = videoService.acfunVideo(id)
             if (response.isSuccessful.not() || response.body() == null) {
                 _videoPlayInfoUiState.emit(UiState.Error())
@@ -130,7 +133,7 @@ class VideoPageViewModule @Inject constructor(
     }
 
     fun getVideoPlayInfo(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val response = videoService.acfunVideoInfo(id + "_1")
             if (response.isSuccessful.not() || response.body() == null) {
                 _videoPlayInfoUiState.emit(UiState.Error())
@@ -171,15 +174,13 @@ class VideoPageViewModule @Inject constructor(
     val refreshState = _refreshState.asStateFlow()
 
     fun refresh() {
-        viewModelScope.launch {
-            getHomePage(true)
-        }
+        getHomePage(true)
     }
 
     private val _comments = MutableStateFlow<PagingData<CommentPageVO.Comment>>(PagingData.empty())
     val comments = _comments.cachedIn(viewModelScope)
     fun getComments(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             articleRepository.getArticleCommentList(id.toInt()).collect {
                 _comments.emit(it)
             }
@@ -190,7 +191,7 @@ class VideoPageViewModule @Inject constructor(
     val userEmotion = _userEmotion.asStateFlow()
 
     fun getUserEmotion() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val data = articleRepository.getUserEmotion()
             if (data.result == 0) {
                 val map = mutableMapOf<String, UserEmotionVO.Emotion>()
@@ -209,7 +210,7 @@ class VideoPageViewModule @Inject constructor(
     val subComments = _subComments.cachedIn(viewModelScope)
 
     fun getSubCommentList(sourceId: Int, rootCommentId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             articleRepository.getArticleSubCommentList(sourceId, rootCommentId).collect {
                 _subComments.emit(it)
             }

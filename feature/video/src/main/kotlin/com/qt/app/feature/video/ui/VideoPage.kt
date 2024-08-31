@@ -75,6 +75,9 @@ fun VideoPage(
     selectedPage: MutableIntState,
     vm: VideoPageViewModule = hiltViewModel(),
 ) {
+    LaunchedEffect(Unit) {
+        vm.getHomePage()
+    }
     val uiState by vm.videoUiState.collectAsState()
     val context = LocalContext.current
     val lazyGridState = rememberLazyGridState()
